@@ -12,13 +12,14 @@ import descriptive from './descriptive'
 import ttest from './ttest'
 import correlation from './correlation'
 import simpleRegression from './simpleRegression'
+import oneWayAnova from './oneWayAnova'
 
 const REGISTRY = {
-  'desc-stats':       descriptive,
-  't-test':           ttest,
-  'correlation':      correlation,
+  'desc-stats':        descriptive,
+  't-test':            ttest,
+  'correlation':       correlation,
   'simple-regression': simpleRegression,
-  // 'one-way-anova':  oneWayAnova,    // PR-3d
+  'one-way-anova':     oneWayAnova,
   // 'cronbach-alpha': cronbachAlpha,  // PR-3e
 }
 

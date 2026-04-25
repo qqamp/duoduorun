@@ -355,4 +355,99 @@ export default {
       strengthStrong: '較強',
     },
   },
+  anova: {
+    title: '單因子變異數分析',
+    config: {
+      depVar: '依變項',
+      factor: '因子（分組變項）',
+      pickDep: '請選依變項',
+      pickFactor: '請選因子',
+      factorHint: '需為類別變項且至少 3 組',
+      factorBadGroups: '此變項有 {k} 組，需要至少 3 組',
+    },
+    result: {
+      groupStatsTitle: '各組敘述統計',
+      anovaTitle: 'ANOVA 表',
+      effectSizeTitle: '效果量',
+      tukeyTitle: 'Tukey HSD 事後比較',
+      assumpTitle: '假設前提檢核',
+      groupCol: '組別',
+      cols: {
+        source: '變異來源',
+        ss: 'SS',
+        df: 'df',
+        ms: 'MS',
+        f: 'F',
+        p: 'p',
+        between: '組間',
+        within: '組內',
+        total: '總和',
+        eta2: 'η²',
+        omega2: 'ω²',
+        pair: '比較',
+        meanDiff: '平均差',
+        se: 'SE',
+        q: 'q',
+      },
+      effectInterp: {
+        eta2Label: 'η²（樣本內效果量）：',
+        omega2Label: 'ω²（無偏估計）：',
+        small: '小',
+        medium: '中',
+        large: '大',
+        // Cohen 慣例：η² < 0.06 小、< 0.14 中、≥ 0.14 大
+      },
+      assumpViolationWarn:
+        '注意：偵測到前提違反。傳統單因子 ANOVA 對中度違反具一定穩健性，但若常態性嚴重違反或變異數差距大，考慮改用 Welch ANOVA 或 Kruskal-Wallis 無母數檢定。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '比較三組（含）以上獨立樣本的平均數是否有差異。\n' +
+        'F 檢定回答「至少有一組與其他組不同嗎？」（整體效果）；達顯著後再用 Tukey HSD 找出「具體是哪幾對組別不同」（事後比較）。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 各組獨立\n' +
+        '2. 各組母體呈常態分布（n ≥ 30 時可由中央極限定理放寬）\n' +
+        '3. 各組母體變異數相等（homogeneity of variance）— 違反時改用 Welch ANOVA',
+      formulasTitle: '核心公式',
+      formulaSSb: 'SS_組間 = Σ n_i · (M_i - M̄)²',
+      formulaSSw: 'SS_組內 = Σ_i Σ_j (X_ij - M_i)²',
+      formulaF: 'F = (SS_組間 / df_組間) / (SS_組內 / df_組內)，df_組間 = k-1，df_組內 = N-k',
+      formulaEta2: 'η² = SS_組間 / SS_總和',
+      formulaOmega2: 'ω² = (SS_組間 - df_組間 · MS_組內) / (SS_總和 + MS_組內)',
+      formulaTukey:
+        'Tukey HSD：q_ij = |M_i - M_j| / √(MS_組內 · (1/n_i + 1/n_j) / 2)，' +
+        'p 值用 studentized range 分布（k, df_組內）右尾',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. F 檢定 p < .05 → 至少一對組別不同（整體效果顯著），可進事後比較。\n' +
+        '2. F 檢定 p ≥ .05 → 不可進事後比較（族系錯誤率失控）。\n\n' +
+        'η² 解讀（Cohen, 1988）：< 0.06 小、0.06-0.14 中、≥ 0.14 大。\n\n' +
+        'ω² 較 η² 無偏，特別是小樣本時建議報告。\n\n' +
+        'Tukey HSD 已自動控制族系錯誤率（family-wise error），所有兩兩比較共用 α = .05。',
+    },
+    apa: {
+      sentence:
+        '單因子變異數分析結果顯示，{factor}對{depVar}的影響{sigWord}，F({df1}, {df2}) = {f}, p = {pStr}，η² = {eta2}（{etaInterp}效果量）。' +
+        '{tukeySection}',
+      sentenceNs:
+        '單因子變異數分析結果顯示，{factor}對{depVar}的影響{sigWord}，F({df1}, {df2}) = {f}, p = {pStr}，η² = {eta2}。',
+      tukeyOpener: 'Tukey HSD 事後比較顯示：',
+      tukeyPairLine: '{a}（M = {ma}）與{b}（M = {mb}）之間達顯著差異（平均差 = {diff}, p = {pStr}）',
+      tukeyNoSig: 'Tukey HSD 事後比較中，無任何兩組達顯著差異。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      overall:
+        '整體 F 檢定 {sigWord}：F({df1}, {df2}) = {f}, p = {pStr}。' +
+        '\n效果量 η² = {eta2}，屬於{etaInterp}效果量；ω² = {omega2}（無偏估計）。',
+      tukeyOpener: 'Tukey HSD 事後比較結果：',
+      tukeyPair: '{a} vs {b}：平均差 = {diff}，q = {q}，p = {pStr} → {sigWord}',
+      noPosthoc: '整體 F 不顯著，不進行事後比較。',
+      sigYes: '顯著',
+      sigNo: '不顯著',
+    },
+  },
 }

@@ -351,4 +351,98 @@ export default {
       strengthStrong: 'strong',
     },
   },
+  anova: {
+    title: 'One-way ANOVA',
+    config: {
+      depVar: 'Dependent variable',
+      factor: 'Factor (grouping variable)',
+      pickDep: 'Pick a dependent variable',
+      pickFactor: 'Pick a factor',
+      factorHint: 'Must be categorical with at least 3 groups',
+      factorBadGroups: 'This factor has {k} groups; needs at least 3',
+    },
+    result: {
+      groupStatsTitle: 'Group descriptives',
+      anovaTitle: 'ANOVA table',
+      effectSizeTitle: 'Effect size',
+      tukeyTitle: 'Tukey HSD post-hoc',
+      assumpTitle: 'Assumption checks',
+      groupCol: 'Group',
+      cols: {
+        source: 'Source',
+        ss: 'SS',
+        df: 'df',
+        ms: 'MS',
+        f: 'F',
+        p: 'p',
+        between: 'Between',
+        within: 'Within',
+        total: 'Total',
+        eta2: 'η²',
+        omega2: 'ω²',
+        pair: 'Comparison',
+        meanDiff: 'Mean diff',
+        se: 'SE',
+        q: 'q',
+      },
+      effectInterp: {
+        eta2Label: 'η² (within-sample effect):',
+        omega2Label: 'ω² (unbiased estimate):',
+        small: 'small',
+        medium: 'medium',
+        large: 'large',
+      },
+      assumpViolationWarn:
+        'Note: assumption violation detected. Classic one-way ANOVA is moderately robust to mild violations, but for severe normality violation or large variance differences, consider Welch ANOVA or Kruskal-Wallis nonparametric test.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Compare means of three or more independent groups.\n' +
+        'F-test answers "is at least one group different from the others?" (omnibus effect); if significant, use Tukey HSD to find "which specific pairs differ" (post-hoc).',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Groups are independent\n' +
+        '2. Each population is normally distributed (relaxed by CLT for n ≥ 30)\n' +
+        '3. Equal population variances (homogeneity) — if violated, use Welch ANOVA',
+      formulasTitle: 'Core formulas',
+      formulaSSb: 'SS_between = Σ n_i · (M_i - M̄)²',
+      formulaSSw: 'SS_within = Σ_i Σ_j (X_ij - M_i)²',
+      formulaF: 'F = (SS_between / df_between) / (SS_within / df_within), df_between = k-1, df_within = N-k',
+      formulaEta2: 'η² = SS_between / SS_total',
+      formulaOmega2: 'ω² = (SS_between - df_between · MS_within) / (SS_total + MS_within)',
+      formulaTukey:
+        'Tukey HSD: q_ij = |M_i - M_j| / √(MS_within · (1/n_i + 1/n_j) / 2), ' +
+        'p-value from upper tail of studentized range distribution (k, df_within)',
+      readingTitle: 'How to read it',
+      reading:
+        '1. F-test p < .05 → at least one pair differs (omnibus significant), proceed to post-hoc.\n' +
+        '2. F-test p ≥ .05 → do not run post-hoc (inflates family-wise error).\n\n' +
+        'η² (Cohen, 1988): < 0.06 small, 0.06-0.14 medium, ≥ 0.14 large.\n\n' +
+        'ω² is less biased than η², especially with small samples.\n\n' +
+        "Tukey HSD already controls the family-wise error rate; all pairwise comparisons share α = .05.",
+    },
+    apa: {
+      sentence:
+        'A one-way ANOVA showed a {sigWord} effect of {factor} on {depVar}, F({df1}, {df2}) = {f}, p = {pStr}, η² = {eta2} ({etaInterp} effect). {tukeySection}',
+      sentenceNs:
+        'A one-way ANOVA showed no significant effect of {factor} on {depVar}, F({df1}, {df2}) = {f}, p = {pStr}, η² = {eta2}.',
+      tukeyOpener: 'Tukey HSD post-hoc revealed: ',
+      tukeyPairLine:
+        '{a} (M = {ma}) and {b} (M = {mb}) differed significantly (mean diff = {diff}, p = {pStr})',
+      tukeyNoSig: 'Tukey HSD post-hoc found no pairs significantly different.',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      overall:
+        'Overall F-test is {sigWord}: F({df1}, {df2}) = {f}, p = {pStr}.' +
+        '\nEffect size η² = {eta2}, indicating a {etaInterp} effect; ω² = {omega2} (unbiased).',
+      tukeyOpener: 'Tukey HSD post-hoc results:',
+      tukeyPair: '{a} vs {b}: mean diff = {diff}, q = {q}, p = {pStr} → {sigWord}',
+      noPosthoc: 'Overall F is not significant; post-hoc not performed.',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+    },
+  },
 }
