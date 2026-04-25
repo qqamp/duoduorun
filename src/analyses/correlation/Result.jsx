@@ -44,9 +44,22 @@ function Result() {
 
   const labelMap = dataset.labels?.[lang === 'zh-TW' ? 'zh' : 'en'] || {}
   const cols = result.columns
+  const method = result.method || 'pearson'
+  const sym = t.corr.symbol[method] || 'r'
+  const methodInline = t.corr.methodLabelInline[method]
 
   return (
     <div>
+      {/* 方法指示條 */}
+      <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 rounded-md bg-duo-cream-50 border border-duo-cocoa-100 text-xs">
+        <span className="text-duo-cocoa-400">
+          {lang === 'zh-TW' ? '相關方法：' : 'Method:'}
+        </span>
+        <span className="font-medium text-duo-cocoa-800">
+          {methodInline} (<span className="font-mono">{sym}</span>)
+        </span>
+      </div>
+
       <div className="overflow-x-auto bg-white border border-duo-cream-200 rounded-lg">
         <table className="text-xs">
           <thead>
@@ -119,6 +132,8 @@ function strengthFor(r) {
 }
 
 function Interpretation({ result, labelMap, t }) {
+  const method = result.method || 'pearson'
+  const sym = t.corr.symbol[method] || 'r'
   const sigPairs = []
   const cols = result.columns
   // 取上三角，避免重複
@@ -156,6 +171,7 @@ function Interpretation({ result, labelMap, t }) {
           const text = t.corr.interp.pairLine
             .replace('{labelA}', labelMap[p.a] || p.a)
             .replace('{labelB}', labelMap[p.b] || p.b)
+            .replace('{sym}', sym)
             .replace('{r}', fmtNum(p.r, 3))
             .replace('{strengthWord}', strengthWord)
             .replace('{directionWord}', directionWord)

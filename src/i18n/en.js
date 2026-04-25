@@ -720,31 +720,46 @@ export default {
       pearson: 'Linear correlation; assumes bivariate normality with continuous variables',
       spearman: 'Rank-based monotonic correlation; no normality assumption, ordinal scales OK',
     },
+    symbol: {
+      pearson: 'r',
+      spearman: 'ρ',
+    },
+    methodLabelInline: {
+      pearson: 'Pearson product-moment correlation',
+      spearman: 'Spearman rank-order correlation',
+    },
     selectVarsTitle: 'Select variables for analysis',
     selectVarsHint:
       'Tick at least 2 numeric variables (continuous or ordinal); all pairs computed',
     needAtLeastTwo: 'Tick at least 2 variables',
     cellHint:
-      'Upper triangle: r. Lower triangle: p. * p < .05, ** p < .01, *** p < .001.',
+      'Cells show {sym} (with significance stars), p, and n. * p < .05, ** p < .01, *** p < .001.',
     notes: {
       purposeTitle: 'Purpose',
-      purpose:
+      purposePearson:
         'Describe the direction and strength of linear association between two continuous/ordinal variables.\nPositive r: variables move together.\nNegative r: variables move in opposite directions.\nr ≈ 0: no linear association (non-linear relationship may still exist).',
+      purposeSpearman:
+        'Describe the direction and strength of monotonic association (need not be linear).\nAlgorithm: rank X and Y separately, then apply Pearson on ranks.\nAdvantages over Pearson: no normality assumption, robust to outliers, works with ordinal scales.',
       assumpTitle: 'Assumptions',
-      assumptions:
+      assumptionsPearson:
         '1. Both variables are continuous (5+ point ordinal scales acceptable)\n2. Bivariate normality (relaxed by CLT for n ≥ 30)\n3. Linear relationship — do not use Pearson r for clearly curved scatterplots\n4. Independent observations\n5. Homoscedasticity — residuals should not vary systematically with X',
+      assumptionsSpearman:
+        '1. Both variables at least ordinal\n2. Monotonic relationship (need not be linear)\n3. Independent observations\n(No normality, no linearity, robust to outliers)',
       formulasTitle: 'Core formulas',
       formulaR: 'r = Σ((Xi - Mx)(Yi - My)) / √(Σ(Xi - Mx)² · Σ(Yi - My)²)',
       formulaT: 't = r √(n - 2) / √(1 - r²), df = n - 2',
+      formulaRho: 'ρ = Pearson(rank(X), rank(Y)) (average ranks for ties)',
+      formulaTSpearman: 't = ρ √(n - 2) / √(1 - ρ²), df = n - 2',
       readingTitle: 'How to read it',
       reading:
-        '|r| strength (Cohen, 1988): < 0.1 trivial, 0.1-0.3 weak, 0.3-0.5 moderate, > 0.5 strong.\n\n' +
-        'r² is the proportion of shared variance (coefficient of determination). E.g., r = 0.5 → r² = 0.25 → X explains 25% of Y\'s variance.\n\n' +
+        '|{sym}| strength (Cohen, 1988): < 0.1 trivial, 0.1-0.3 weak, 0.3-0.5 moderate, > 0.5 strong.\n\n' +
+        '{sym}² is the proportion of shared variance (coefficient of determination). E.g., {sym} = 0.5 → {sym}² = 0.25 → 25% of variance explained.\n\n' +
         'Correlation ≠ causation. Even if significant, you cannot infer direction or causality.',
     },
     apa: {
+      methodPrefix: 'A {methodInline} was computed.',
       pairLine:
-        '{labelA} and {labelB} showed a {strengthWord} {directionWord} correlation (r = {r}, p = {pStr}, n = {n}).',
+        '{labelA} and {labelB} showed a {strengthWord} {directionWord} correlation ({sym} = {r}, p = {pStr}, n = {n}).',
       noSig: 'No significant correlations were found in this dataset (α = .05).',
       copyHint: 'Copy APA narrative',
       strengthWord: { weak: 'weak', moderate: 'moderate', strong: 'strong' },
@@ -753,7 +768,7 @@ export default {
     interp: {
       header: 'Reading',
       pairLine:
-        '{labelA} ↔ {labelB}: r = {r} → {strengthWord} {directionWord} correlation, p = {pStr} → {sigWord}',
+        '{labelA} ↔ {labelB}: {sym} = {r} → {strengthWord} {directionWord} correlation, p = {pStr} → {sigWord}',
       noSig: 'No pair was significant at α = .05. Could be a true null, or insufficient power.',
       sigYes: 'significant',
       sigNo: 'not significant',

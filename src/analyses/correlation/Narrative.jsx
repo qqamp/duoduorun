@@ -19,6 +19,12 @@ function strengthFor(r) {
 function buildNarrative(result, dataset, lang) {
   const t = getStrings(lang)
   const labelMap = dataset.labels?.[lang === 'zh-TW' ? 'zh' : 'en'] || {}
+  const method = result.method || 'pearson'
+  const sym = t.corr.symbol[method] || 'r'
+  const methodInline = t.corr.methodLabelInline[method]
+
+  const prefix = fillTemplate(t.corr.apa.methodPrefix, { methodInline })
+
   const sigPairs = []
   const cols = result.columns
   for (let i = 0; i < cols.length; i++) {
@@ -29,13 +35,14 @@ function buildNarrative(result, dataset, lang) {
       }
     }
   }
-  if (sigPairs.length === 0) return t.corr.apa.noSig
+  if (sigPairs.length === 0) return `${prefix} ${t.corr.apa.noSig}`
 
-  return sigPairs
+  const body = sigPairs
     .map((p) =>
       fillTemplate(t.corr.apa.pairLine, {
         labelA: labelMap[p.a] || p.a,
         labelB: labelMap[p.b] || p.b,
+        sym,
         strengthWord: t.corr.apa.strengthWord[strengthFor(p.r)],
         directionWord: t.corr.apa.directionWord[p.r > 0 ? 'positive' : 'negative'],
         r: fmtNum(p.r, 3),
@@ -44,6 +51,8 @@ function buildNarrative(result, dataset, lang) {
       })
     )
     .join(' ')
+
+  return `${prefix} ${body}`
 }
 
 function CopyButton({ text, label, hint }) {

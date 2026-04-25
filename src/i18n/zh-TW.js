@@ -723,29 +723,44 @@ export default {
       pearson: '線性相關；要求兩變數為連續且呈雙變量常態',
       spearman: '基於秩的單調相關；不要求常態，順序量表也適用',
     },
+    symbol: {
+      pearson: 'r',
+      spearman: 'ρ',
+    },
+    methodLabelInline: {
+      pearson: 'Pearson 積差相關',
+      spearman: 'Spearman 等級相關',
+    },
     selectVarsTitle: '選擇要分析的變數',
     selectVarsHint: '至少勾選 2 個數值變數（連續或順序）；會計算所有兩兩配對',
     needAtLeastTwo: '請勾選至少 2 個變數',
-    cellHint: '上三角顯示 r，下三角顯示 p。* p < .05、** p < .01、*** p < .001',
+    cellHint: '矩陣顯示 {sym}（顯著時加星號）+ p 值與 n。* p < .05、** p < .01、*** p < .001',
     notes: {
       purposeTitle: '用途',
-      purpose:
+      purposePearson:
         '描述兩個連續／順序變數之間「線性關聯的方向與強度」。\n正相關（r > 0）：兩變數同向變動。\n負相關（r < 0）：兩變數反向變動。\nr ≈ 0：無線性關聯（可能仍有非線性關係）。',
+      purposeSpearman:
+        '描述兩個變數之間「單調關聯的方向與強度」（不要求線性）。\n演算法：對 X 與 Y 各自取秩後，套 Pearson 公式。\n相對於 Pearson r 的優點：不要求常態、對極端值較穩健、可處理順序量表。',
       assumpTitle: '前提假設',
-      assumptions:
+      assumptionsPearson:
         '1. 兩變數均為連續變項（順序量表 ≥ 5 階亦可使用）\n2. 兩變數呈雙變量常態分布（n ≥ 30 時可由中央極限定理放寬）\n3. 兩變數呈線性關係 — 散佈圖明顯曲線時不應使用 Pearson r\n4. 觀察值之間獨立\n5. 同質變異（homoscedasticity）— 殘差散佈不應隨 X 改變',
+      assumptionsSpearman:
+        '1. 兩變數至少為順序測量尺度\n2. 兩變數呈單調關係（同向或反向，不必線性）\n3. 觀察值之間獨立\n（不要求常態、不要求線性、對極端值較穩健）',
       formulasTitle: '核心公式',
       formulaR: 'r = Σ((Xi - Mx)(Yi - My)) / √(Σ(Xi - Mx)² · Σ(Yi - My)²)',
       formulaT: 't = r √(n - 2) / √(1 - r²)，df = n - 2',
+      formulaRho: 'ρ = Pearson(rank(X), rank(Y))（並列值用平均秩）',
+      formulaTSpearman: 't = ρ √(n - 2) / √(1 - ρ²)，df = n - 2',
       readingTitle: '怎麼讀',
       reading:
-        '|r| 強度建議（Cohen, 1988）：< 0.1 微弱、0.1-0.3 弱、0.3-0.5 中等、> 0.5 強。\n\n' +
-        'r² 表示 X 與 Y 共享變異的比例（決定係數）。例：r = 0.5 → r² = 0.25 → X 解釋 Y 的 25% 變異。\n\n' +
+        '|{sym}| 強度建議（Cohen, 1988）：< 0.1 微弱、0.1-0.3 弱、0.3-0.5 中等、> 0.5 強。\n\n' +
+        '{sym}² 表示 X 與 Y 共享變異的比例（決定係數）。例：{sym} = 0.5 → {sym}² = 0.25 → 解釋 25% 變異。\n\n' +
         '相關 ≠ 因果。即使達顯著，也不能推論方向與因果。',
     },
     apa: {
       // 顯著的配對列出，無顯著時用 noSig 段落
-      pairLine: '{labelA} 與 {labelB} 之間呈{strengthWord}{directionWord}相關（r = {r}, p = {pStr}, n = {n}）。',
+      methodPrefix: '本研究採用{methodInline}分析。',
+      pairLine: '{labelA} 與 {labelB} 之間呈{strengthWord}{directionWord}相關（{sym} = {r}, p = {pStr}, n = {n}）。',
       noSig: '本資料中無達顯著的相關配對（α = .05）。',
       copyHint: '一鍵複製 APA 敘述',
       strengthWord: { weak: '弱', moderate: '中等', strong: '強' },
@@ -754,7 +769,7 @@ export default {
     interp: {
       header: '解讀',
       // 教學模式：列出每個達顯著的配對
-      pairLine: '{labelA} ↔ {labelB}：r = {r} → {strengthWord}{directionWord}相關，p = {pStr} → {sigWord}',
+      pairLine: '{labelA} ↔ {labelB}：{sym} = {r} → {strengthWord}{directionWord}相關，p = {pStr} → {sigWord}',
       noSig: '所有變數兩兩之間在 α = .05 下都未達顯著。可能是真的無關，或樣本太小檢定力不足。',
       sigYes: '顯著',
       sigNo: '不顯著',
