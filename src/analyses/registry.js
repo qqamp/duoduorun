@@ -15,6 +15,7 @@ import ttest from './ttest'
 import correlation from './correlation'
 import simpleRegression from './simpleRegression'
 import oneWayAnova from './oneWayAnova'
+import twoWayAnova from './twoWayAnova'
 import cronbachAlpha from './cronbachAlpha'
 import multipleRegression from './multipleRegression'
 import chiSquare from './chiSquare'
@@ -29,6 +30,7 @@ const REGISTRY = {
   'simple-regression':  simpleRegression,
   'multiple-regression': multipleRegression,
   'one-way-anova':      oneWayAnova,
+  'two-way-anova':      twoWayAnova,
   'cronbach-alpha':     cronbachAlpha,
   'chi-square':         chiSquare,
   'nonparametric':      nonparametric,

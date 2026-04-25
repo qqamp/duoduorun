@@ -30,6 +30,7 @@ export const ANALYSIS_GROUPS = [
       { id: 't-test',          i18nKey: 'tTest',           priority: 1 },
       { id: 'one-way-anova',   i18nKey: 'oneWayAnova',     priority: 1 },
       { id: 'two-way-anova',   i18nKey: 'twoWayAnova',     priority: 3 },
+      // priority 3 in spec; implemented in PR-6a
       { id: 'chi-square',      i18nKey: 'chiSquare',       priority: 2 },
       { id: 'nonparametric',   i18nKey: 'nonparametric',   priority: 2 },
     ],

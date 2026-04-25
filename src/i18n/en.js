@@ -838,6 +838,103 @@ export default {
       strengthStrong: 'strong',
     },
   },
+  anova2: {
+    title: 'Two-way ANOVA',
+    config: {
+      depVar: 'Dependent (continuous or ordinal)',
+      factorA: 'Factor A',
+      factorB: 'Factor B',
+      pickDep: 'Pick a dependent variable',
+      pickFactorA: 'Pick factor A',
+      pickFactorB: 'Pick factor B',
+      sameFactor: 'Factor A and B cannot be the same variable',
+      hint: 'Both factors must be categorical with ≥ 2 levels each',
+    },
+    result: {
+      cellMeansTitle: 'Cell means',
+      anovaTitle: 'ANOVA table (Type III SS)',
+      effectSizeTitle: 'Effect size',
+      interactionPlotTitle: 'Interaction plot',
+      cols: {
+        source: 'Source',
+        ss: 'SS',
+        df: 'df',
+        ms: 'MS',
+        f: 'F',
+        p: 'p',
+        partialEta2: 'Partial η²',
+        effectA: 'Main effect A',
+        effectB: 'Main effect B',
+        effectAB: 'A × B interaction',
+        error: 'Error',
+        total: 'Total',
+        cell: 'Cell',
+        marginalRow: 'Marginal A',
+        marginalCol: 'Marginal B',
+        grandMean: 'Grand mean',
+        n: 'n',
+        mean: 'M',
+        sd: 'SD',
+      },
+      effectInterp: {
+        small: 'small', medium: 'medium', large: 'large',
+      },
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Examine the effects of two categorical IVs on a continuous DV simultaneously. Answers:\n' +
+        '(1) Main effect of A: ignoring B, do A levels differ?\n' +
+        '(2) Main effect of B: ignoring A, do B levels differ?\n' +
+        "(3) A × B interaction: does A's effect on Y depend on B?\n" +
+        'When the interaction is significant, main effects must be interpreted within levels of the other factor (not from the marginal alone).',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Independent observations\n' +
+        '2. Normal distribution within each cell (relaxed for n ≥ 30 per cell)\n' +
+        "3. Homogeneity of variances across cells (Levene's to be added later)\n" +
+        '4. Correct categorization (no misclassification)\n' +
+        '5. Sample: at least 5 per cell recommended',
+      formulasTitle: 'Core formulas (Type III SS)',
+      formulaSS:
+        'For each effect E, fit OLS with effect coding:\n' +
+        'SS_E = ESS(full model minus E) − ESS(full model)',
+      formulaDf:
+        'df_A = nA − 1, df_B = nB − 1, df_AB = (nA − 1)(nB − 1), df_error = N − nA · nB',
+      formulaPartialEta2: 'Partial η² = SS_effect / (SS_effect + SS_error)',
+      readingTitle: 'How to read it',
+      reading:
+        'Reading order:\n' +
+        '1. Look at the A × B interaction p first — significant?\n' +
+        '2. If significant → main effects must be interpreted within levels of the other factor (simple effects analysis), not via marginal means alone\n' +
+        '3. If not significant → interpret main effects directly\n' +
+        '4. Partial η²: < 0.06 small, 0.06-0.14 medium, ≥ 0.14 large\n\n' +
+        'Interaction plot:\n' +
+        '- Parallel lines → no interaction\n' +
+        '- Lines cross → disordinal interaction\n' +
+        '- Same direction but different slopes → ordinal interaction',
+    },
+    apa: {
+      sentence:
+        'A two-way ANOVA showed a {sigA} main effect of {factorA}, F({df1A}, {df2}) = {fA}, p = {pA}, partial η² = {peA}; ' +
+        'a {sigB} main effect of {factorB}, F({df1B}, {df2}) = {fB}, p = {pB}, partial η² = {peB}; ' +
+        'and a {sigAB} {factorA} × {factorB} interaction, F({df1AB}, {df2}) = {fAB}, p = {pAB}, partial η² = {peAB}.',
+      sigYes: 'significant',
+      sigNo: 'non-significant',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      summary:
+        'Main effect A ({factorA}): F({df1A}, {df2}) = {fA}, p = {pA} → {sigA} (partial η² = {peA}, {effectA})\n' +
+        'Main effect B ({factorB}): F({df1B}, {df2}) = {fB}, p = {pB} → {sigB} (partial η² = {peB}, {effectB})\n' +
+        'Interaction A × B: F({df1AB}, {df2}) = {fAB}, p = {pAB} → {sigAB} (partial η² = {peAB}, {effectAB})',
+      interactionWarn:
+        'Significant interaction: main effects can only be interpreted within specific levels of the other factor; pair with the interaction plot and simple-effects analysis.',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+    },
+  },
   anova: {
     title: 'One-way ANOVA',
     config: {

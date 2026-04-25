@@ -839,6 +839,101 @@ export default {
       strengthStrong: '較強',
     },
   },
+  anova2: {
+    title: '雙因子變異數分析',
+    config: {
+      depVar: '依變項（連續或順序）',
+      factorA: '因子 A',
+      factorB: '因子 B',
+      pickDep: '請選依變項',
+      pickFactorA: '請選因子 A',
+      pickFactorB: '請選因子 B',
+      sameFactor: '兩個因子不可為同一變項',
+      hint: '兩個因子均需為類別型，且各 ≥ 2 組',
+    },
+    result: {
+      cellMeansTitle: '細格平均（Cell Means）',
+      anovaTitle: 'ANOVA 表（Type III SS）',
+      effectSizeTitle: '效果量',
+      interactionPlotTitle: '交互作用圖',
+      cols: {
+        source: '變異來源',
+        ss: 'SS',
+        df: 'df',
+        ms: 'MS',
+        f: 'F',
+        p: 'p',
+        partialEta2: '偏 η²',
+        effectA: '主效果 A',
+        effectB: '主效果 B',
+        effectAB: '交互作用 A × B',
+        error: '誤差',
+        total: '總和',
+        cell: '細格',
+        marginalRow: '邊際 A',
+        marginalCol: '邊際 B',
+        grandMean: '總平均',
+        n: 'n',
+        mean: 'M',
+        sd: 'SD',
+      },
+      effectInterp: {
+        small: '小', medium: '中', large: '大',
+      },
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '同時檢驗兩個類別自變項對一個連續依變項的影響。回答的問題：\n' +
+        '（1）A 因子的主效果：忽略 B 時，A 各組是否有差？\n' +
+        '（2）B 因子的主效果：忽略 A 時，B 各組是否有差？\n' +
+        '（3）A × B 交互作用：A 對 Y 的效果是否會隨 B 的層級而不同？\n' +
+        '當交互作用顯著時，主效果的解讀需在交互作用條件下進行（不能只看邊際）。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 觀察值獨立\n' +
+        '2. 每個細格的母體呈常態分布（n ≥ 30 / 細格時可放寬）\n' +
+        '3. 細格間變異數同質（Levene\'s 待後續加入）\n' +
+        '4. 各變項均正確分類（無誤分組）\n' +
+        '5. 樣本量：建議每細格至少 5 筆',
+      formulasTitle: '核心公式（Type III SS）',
+      formulaSS:
+        '對每個效果 E，採設計矩陣效果編碼後跑 OLS：\n' +
+        'SS_E = ESS(完整模型移除 E) − ESS(完整模型)',
+      formulaDf: 'df_A = nA − 1, df_B = nB − 1, df_AB = (nA − 1)(nB − 1), df_誤差 = N − nA · nB',
+      formulaPartialEta2: '偏 η² = SS_效果 / (SS_效果 + SS_誤差)',
+      readingTitle: '怎麼讀',
+      reading:
+        '解讀步驟：\n' +
+        '1. 先看交互作用 A × B 的 p — 顯著嗎？\n' +
+        '2. 若交互作用顯著 → 主效果的解讀必須在不同 B 層級分別檢視（簡單主效應分析），不能單純看邊際平均\n' +
+        '3. 若交互作用不顯著 → 可分別解讀兩個主效果\n' +
+        '4. 偏 η² 解讀：< 0.06 小、0.06-0.14 中、≥ 0.14 大\n\n' +
+        '交互作用圖判讀：\n' +
+        '- 兩條線平行 → 無交互作用\n' +
+        '- 兩條線交叉 → 序級交互作用（disordinal）\n' +
+        '- 兩條線同向但斜率不同 → 量級交互作用（ordinal）',
+    },
+    apa: {
+      sentence:
+        '雙因子變異數分析結果顯示，{factorA} 主效果{sigA}（F({df1A}, {df2}) = {fA}, p = {pA}, 偏 η² = {peA}）、' +
+        '{factorB} 主效果{sigB}（F({df1B}, {df2}) = {fB}, p = {pB}, 偏 η² = {peB}）、' +
+        '{factorA} × {factorB} 交互作用{sigAB}（F({df1AB}, {df2}) = {fAB}, p = {pAB}, 偏 η² = {peAB}）。',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      summary:
+        '主效果 A（{factorA}）：F({df1A}, {df2}) = {fA}, p = {pA} → {sigA}（偏 η² = {peA}, {effectA}）\n' +
+        '主效果 B（{factorB}）：F({df1B}, {df2}) = {fB}, p = {pB} → {sigB}（偏 η² = {peB}, {effectB}）\n' +
+        '交互作用 A × B：F({df1AB}, {df2}) = {fAB}, p = {pAB} → {sigAB}（偏 η² = {peAB}, {effectAB}）',
+      interactionWarn: '交互作用顯著：主效果只能在「特定 B 層級」內解讀；建議搭配交互作用圖與簡單主效應檢定。',
+      sigYes: '顯著',
+      sigNo: '不顯著',
+    },
+  },
   anova: {
     title: '單因子變異數分析',
     config: {
