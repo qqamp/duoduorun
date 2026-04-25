@@ -10,6 +10,7 @@
  */
 import descriptive from './descriptive'
 import normality from './normality'
+import visualization from './visualization'
 import ttest from './ttest'
 import correlation from './correlation'
 import simpleRegression from './simpleRegression'
@@ -22,6 +23,7 @@ import nonparametric from './nonparametric'
 const REGISTRY = {
   'desc-stats':         descriptive,
   'normality':          normality,
+  'visualization':      visualization,
   't-test':             ttest,
   'correlation':        correlation,
   'simple-regression':  simpleRegression,

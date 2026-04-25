@@ -18,8 +18,9 @@ export const ANALYSIS_GROUPS = [
     id: 'descriptive',
     i18nKey: 'descriptive',
     items: [
-      { id: 'desc-stats', i18nKey: 'descStats', priority: 1 },
-      { id: 'normality',  i18nKey: 'normality',  priority: 2 },
+      { id: 'desc-stats',     i18nKey: 'descStats',     priority: 1 },
+      { id: 'normality',      i18nKey: 'normality',     priority: 2 },
+      { id: 'visualization',  i18nKey: 'visualization', priority: 2 },
     ],
   },
   {

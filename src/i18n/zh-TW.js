@@ -30,6 +30,7 @@ export default {
     scale: '量表分析',
     descStats: '基本敘述統計',
     normality: '常態性檢定',
+    visualization: '資料視覺化',
     tTest: 't 檢定',
     oneWayAnova: '單因子 ANOVA',
     twoWayAnova: '雙因子 ANOVA',
@@ -71,6 +72,62 @@ export default {
     addTransform: '新增轉換',
     transformsTitle: '已建立的轉換',
     noTransforms: '尚未建立任何轉換',
+  },
+  viz: {
+    title: '資料視覺化',
+    types: {
+      scatter: '散佈圖',
+      histogram: '直方圖',
+      boxplot: '盒鬚圖',
+      heatmap: '相關矩陣熱圖',
+    },
+    typeHint: {
+      scatter: '兩變數的線性關係，可選 X 與 Y；自動加上迴歸線',
+      histogram: '單變數的次數分布；用 Freedman-Diaconis 規則自動分箱',
+      boxplot: '單變數的中位數、四分位距與離群值；可分組',
+      heatmap: '多變數兩兩相關矩陣，正相關 amber、負相關 denim',
+    },
+    config: {
+      typeLabel: '圖型',
+      xLabel: 'X 變數',
+      yLabel: 'Y 變數',
+      pickX: '請選 X',
+      pickY: '請選 Y',
+      groupVar: '分組變項（可選）',
+      groupVarHint: '若選定類別變項，盒鬚圖會分組顯示',
+      none: '不分組',
+      multiVarsTitle: '選擇變數',
+      multiVarsHint: '至少 2 個（熱圖）或 1 個（直方圖）',
+      needAtLeastOne: '請選擇至少 1 個變數',
+      needAtLeastTwo: '請選擇至少 2 個變數',
+      regressionLine: '加上迴歸線',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '視覺化是統計分析的「先看一眼」工具。\n' +
+        '- 散佈圖：判斷兩變數是否線性、是否有離群值、是否有非線性關係\n' +
+        '- 直方圖：判斷分布形狀（是否常態、偏態、雙峰）\n' +
+        '- 盒鬚圖：比較多組的中央趨勢與離散；快速辨識離群值\n' +
+        '- 熱圖：在多變數情境一眼看出相關結構',
+      tipsTitle: '解讀提示',
+      tips:
+        '散佈圖：\n' +
+        '- 點分布越接近一條直線 → 線性相關越強\n' +
+        '- 點散得開但有方向感 → 弱線性相關\n' +
+        '- 曲線形狀 → Pearson r 不適用，考慮 Spearman 或非線性模型\n\n' +
+        '直方圖：\n' +
+        '- 對稱單峰 → 接近常態\n' +
+        '- 右尾長 → 右偏（如收入、反應時間）\n' +
+        '- 雙峰 → 樣本可能混合兩個族群\n\n' +
+        '盒鬚圖：\n' +
+        '- 中位線在盒中位置偏離 → 偏態\n' +
+        '- 鬚位不對稱 → 偏態\n' +
+        '- 離群點散佈 → 極端值需檢視\n\n' +
+        '熱圖：\n' +
+        '- amber 越深 → 正相關越強；denim 越深 → 負相關越強\n' +
+        '- 對角線是自相關（永遠 = 1）',
+    },
   },
   norm: {
     title: '常態性檢定',

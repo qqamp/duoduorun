@@ -23,6 +23,7 @@ export default {
     scale: 'Scale analysis',
     descStats: 'Basic descriptive stats',
     normality: 'Normality tests',
+    visualization: 'Visualization',
     tTest: 't-test',
     oneWayAnova: 'One-way ANOVA',
     twoWayAnova: 'Two-way ANOVA',
@@ -64,6 +65,62 @@ export default {
     addTransform: 'Add transform',
     transformsTitle: 'Existing transforms',
     noTransforms: 'No transforms yet',
+  },
+  viz: {
+    title: 'Data visualization',
+    types: {
+      scatter: 'Scatter plot',
+      histogram: 'Histogram',
+      boxplot: 'Box plot',
+      heatmap: 'Correlation heatmap',
+    },
+    typeHint: {
+      scatter: 'Linear relationship between two variables; auto-adds a regression line',
+      histogram: 'Frequency distribution of one variable; bins via Freedman-Diaconis',
+      boxplot: 'Median, IQR, and outliers; can be grouped by a categorical variable',
+      heatmap: 'Pairwise correlation matrix; amber = positive, denim = negative',
+    },
+    config: {
+      typeLabel: 'Chart type',
+      xLabel: 'X variable',
+      yLabel: 'Y variable',
+      pickX: 'Pick X',
+      pickY: 'Pick Y',
+      groupVar: 'Grouping variable (optional)',
+      groupVarHint: 'If a categorical variable is picked, the box plot will be grouped',
+      none: 'No grouping',
+      multiVarsTitle: 'Select variables',
+      multiVarsHint: 'At least 2 (heatmap) or 1 (histogram)',
+      needAtLeastOne: 'Pick at least 1 variable',
+      needAtLeastTwo: 'Pick at least 2 variables',
+      regressionLine: 'Show regression line',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Visualization is the "always-look-first" companion to statistical analysis.\n' +
+        '- Scatter: linearity, outliers, non-linear patterns between two variables\n' +
+        '- Histogram: distribution shape (normal, skewed, bimodal)\n' +
+        '- Box plot: central tendency and spread across groups; quick outlier ID\n' +
+        '- Heatmap: spot the correlation structure across many variables at a glance',
+      tipsTitle: 'Reading hints',
+      tips:
+        'Scatter:\n' +
+        '- Tighter line → stronger linear correlation\n' +
+        '- Diffuse but directional → weak linear correlation\n' +
+        '- Curve shape → Pearson r misleading; try Spearman or nonlinear models\n\n' +
+        'Histogram:\n' +
+        '- Single-peaked symmetric → near normal\n' +
+        '- Long right tail → right-skewed (income, reaction time)\n' +
+        '- Two peaks → sample may mix two subpopulations\n\n' +
+        'Box plot:\n' +
+        '- Median offset within the box → skewed\n' +
+        '- Asymmetric whiskers → skewed\n' +
+        '- Outlier dots → values to inspect\n\n' +
+        'Heatmap:\n' +
+        '- Darker amber → stronger positive correlation; darker denim → stronger negative\n' +
+        '- Diagonal is self-correlation (always = 1)',
+    },
   },
   norm: {
     title: 'Normality tests',
