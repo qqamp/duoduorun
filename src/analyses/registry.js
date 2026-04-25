@@ -9,10 +9,11 @@
  * MainContent 透過 getAnalysisModule(activeAnalysis) 找到對應模組後 render。
  */
 import descriptive from './descriptive'
+import ttest from './ttest'
 
 const REGISTRY = {
   'desc-stats': descriptive,
-  // 't-test': ttest,                 // PR-3b
+  't-test': ttest,
   // 'one-way-anova': oneWayAnova,    // PR-3d
   // 'correlation': correlation,      // PR-3c
   // 'simple-regression': simpleReg,  // PR-3c

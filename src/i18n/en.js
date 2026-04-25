@@ -134,4 +134,116 @@ export default {
       kurtNormal: 'close to normal',
     },
   },
+  ttest: {
+    types: {
+      independent: 'Independent samples',
+      paired: 'Paired samples',
+      oneSample: 'One sample',
+    },
+    typeHint: {
+      independent: "Welch's correction (does not assume equal variances)",
+      paired: 'Two variables on the same subjects (e.g., pre/post test)',
+      oneSample: 'Compare to a specified value (μ₀)',
+    },
+    config: {
+      typeLabel: 't-test type',
+      depVar: 'Dependent variable',
+      groupVar: 'Grouping variable',
+      groupVarHint: 'Must be categorical with exactly 2 groups',
+      groupVarBadGroups: 'This variable has {k} groups; needs exactly 2',
+      var1: 'Variable 1',
+      var2: 'Variable 2',
+      mu0: 'Test value μ₀',
+      pickDep: 'Pick a dependent variable',
+      pickGroup: 'Pick a grouping variable',
+      pickVar1: 'Pick variable 1',
+      pickVar2: 'Pick variable 2',
+      enterMu0: 'Enter a test value',
+    },
+    result: {
+      groupStatsTitle: 'Group descriptives',
+      groupCol: 'Group',
+      ttestTitle: 't-test results',
+      pairedDescTitle: 'Paired difference descriptives',
+      oneSampleDescTitle: 'Sample descriptives',
+      cols: {
+        t: 't',
+        df: 'df',
+        p: 'p',
+        meanDiff: 'Mean diff',
+        se: 'SE',
+        d: "Cohen's d",
+        effect: 'Effect',
+      },
+      assumpTitle: 'Assumption checks',
+      normality: 'Shapiro-Wilk normality',
+      homogeneity: "Levene's homogeneity",
+      assumpOk: 'OK (p ≥ .05)',
+      assumpViolated: 'Violated (p < .05)',
+      assumpViolationWarn:
+        "Note: assumption violation detected. Welch's correction is already applied for independent t-test (robust to unequal variances). " +
+        'For severe normality violation with small n (< 30), consider nonparametric alternatives (Mann-Whitney U / Wilcoxon).',
+    },
+    effectSize: {
+      trivial: 'trivial',
+      small: 'small',
+      medium: 'medium',
+      large: 'large',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      independentPurpose:
+        'Compare means of two independent groups (e.g., experimental vs control).',
+      pairedPurpose:
+        'Compare the same subjects across two time points or conditions (e.g., pre vs post).',
+      oneSamplePurpose:
+        'Compare a sample mean to a known population value (μ₀).',
+      assumpTitle: 'Assumptions',
+      independentAssump:
+        '1. The two groups are independent\n2. Each population is normally distributed (relaxed by CLT for n ≥ 30)\n3. Equal population variances — if violated, use Welch (default in this tool)',
+      pairedAssump: '1. The paired differences are normally distributed\n2. Pairs are independent',
+      oneSampleAssump: '1. Sample comes from a normal population\n2. Observations are independent',
+      formulasTitle: 'Core formulas',
+      formulaIndepT: 't = (M₁ - M₂) / √(s₁²/n₁ + s₂²/n₂)',
+      formulaIndepDf:
+        'df = (s₁²/n₁ + s₂²/n₂)² / [ (s₁²/n₁)²/(n₁-1) + (s₂²/n₂)²/(n₂-1) ] (Welch–Satterthwaite)',
+      formulaPairedT: 't = M_D / (SD_D / √n), where D = X₁ - X₂',
+      formulaOneT: 't = (M - μ₀) / (SD / √n)',
+      formulaCohenIndep:
+        "Cohen's d = (M₁ - M₂) / s_pooled, s_pooled = √[((n₁-1)s₁² + (n₂-1)s₂²) / (n₁+n₂-2)]",
+      formulaCohenPaired: "Cohen's d = M_D / SD_D",
+      formulaCohenOne: "Cohen's d = (M - μ₀) / SD",
+      readingTitle: 'How to read it',
+      reading:
+        'p < .05: the mean difference is statistically significant (reject H₀).\n\n' +
+        "Cohen's d interpretation: |d| < 0.2 trivial, 0.2-0.5 small, 0.5-0.8 medium, > 0.8 large.\n\n" +
+        'Statistical significance ≠ practical importance. Larger samples make significance easier to reach but small effects may have no practical meaning. Always interpret p alongside d.',
+    },
+    apa: {
+      independent:
+        "An independent samples t-test revealed a {sigWord} difference between {g1Name} (M = {m1}, SD = {sd1}, n = {n1}) and {g2Name} (M = {m2}, SD = {sd2}, n = {n2}), t({df}) = {t}, p = {pStr}, Cohen's d = {d} ({effectWord} effect).",
+      paired:
+        "A paired samples t-test revealed a {sigWord} difference between {var1Name} (M = {m1}, SD = {sd1}) and {var2Name} (M = {m2}, SD = {sd2}); mean of paired differences = {meanDiff} (SD = {sdDiff}), t({df}) = {t}, p = {pStr}, Cohen's d = {d} ({effectWord} effect).",
+      oneSample:
+        "A one-sample t-test revealed a {sigWord} difference between the sample mean (M = {m}, SD = {sd}, n = {n}) and the test value μ₀ = {mu0}, t({df}) = {t}, p = {pStr}, Cohen's d = {d} ({effectWord} effect).",
+      sigYes: 'significant',
+      sigNo: 'non-significant',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      independent:
+        'Conclusion: the mean difference between {g1Name} (M = {m1}) and {g2Name} (M = {m2}) is {sigWord} (t = {t}, p = {pStr}). ' +
+        "Cohen's d = {d}, indicating a {effectWord} effect. {practical}",
+      paired:
+        'Conclusion: the paired difference between {var1Name} (M = {m1}) and {var2Name} (M = {m2}) is {sigWord} (t = {t}, p = {pStr}). ' +
+        "Cohen's d = {d}, indicating a {effectWord} effect. {practical}",
+      oneSample:
+        'Conclusion: the difference between the sample mean (M = {m}) and μ₀ = {mu0} is {sigWord} (t = {t}, p = {pStr}). ' +
+        "Cohen's d = {d}, indicating a {effectWord} effect. {practical}",
+      practicalSig:
+        'The difference is statistically meaningful; the effect size informs practical interpretation.',
+      practicalNs:
+        'Cannot reject the null hypothesis of no difference; this could be a true null, or insufficient power due to small sample.',
+    },
+  },
 }
