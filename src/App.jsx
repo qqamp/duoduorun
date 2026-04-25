@@ -1,4 +1,4 @@
-import DuoMascot from './components/DuoMascot'
+import duoHead from './assets/duoduo-head.jpg'
 
 function App() {
   return (
@@ -9,15 +9,22 @@ function App() {
           Step 1 — scaffold deployed
         </div>
 
-        <div className="flex items-center justify-center gap-4 mb-1">
-          <DuoMascot state="idle" size={64} />
-          <h1 className="text-5xl font-bold tracking-tight text-duo-cocoa-800">
-            多多快跑
-          </h1>
+        {/* hero: 照片在左、中英文標題在右且左對齊 */}
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <img
+            src={duoHead}
+            alt="多多"
+            className="h-[76px] w-[76px] rounded-2xl object-cover"
+          />
+          <div className="text-left">
+            <h1 className="text-5xl font-bold tracking-tight text-duo-cocoa-800 leading-none">
+              多多快跑
+            </h1>
+            <p className="text-sm font-medium tracking-[0.2em] text-duo-amber-500 mt-2">
+              DUODUORUN
+            </p>
+          </div>
         </div>
-        <p className="text-sm font-medium tracking-[0.2em] text-duo-amber-500 mb-6">
-          DUODUORUN
-        </p>
 
         <p className="text-lg text-duo-cocoa-600 mb-2">
           純前端統計分析工具，瀏覽器即可使用，免安裝、免費、隱私不外流
