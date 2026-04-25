@@ -4,13 +4,15 @@
  * 左側：brand（縮小版多多照片 + 中英文標題）
  * 右側：教學/報告模式切換、語言切換、示範資料集下拉、匯出按鈕
  */
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import duoHead from '../assets/duoduo-head.jpg'
 import { useApp } from '../context/AppContext'
 import { SUPPORTED_LANGUAGES, getStrings } from '../i18n'
 import { DEMO_DATASETS, ANALYSIS_GROUPS } from '../config/analyses'
 import { isAnalysisImplemented } from '../analyses/registry'
 import { exportToPdf } from '../lib/pdfExport'
+import { parseFile } from '../lib/fileParser'
+import { fillTemplate } from '../lib/format'
 import TransformDialog from './TransformDialog'
 import HistoryDialog from './HistoryDialog'
 
@@ -68,6 +70,7 @@ function TopToolbar() {
     mode, setMode,
     activeDataset, setActiveDataset,
     activeAnalysis,
+    uploadedDataset, setUploadedDataset,
     history,
     t,
   } = useApp()
@@ -75,6 +78,40 @@ function TopToolbar() {
   const [exporting, setExporting] = useState(false)
   const [transformOpen, setTransformOpen] = useState(false)
   const [historyOpen, setHistoryOpen] = useState(false)
+  const [uploadStatus, setUploadStatus] = useState({ kind: 'idle', msg: '' })
+  const fileInputRef = useRef(null)
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click()
+  }
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // 允許重複選同一個檔
+    if (!file) return
+    setUploadStatus({ kind: 'parsing', msg: '' })
+    try {
+      const parsed = await parseFile(file)
+      setUploadedDataset(parsed)
+      setUploadStatus({
+        kind: 'success',
+        msg: fillTemplate(t.toolbar.uploadSuccess, {
+          n: parsed.rows.length,
+          k: parsed.columns.length,
+        }),
+      })
+      setTimeout(() => setUploadStatus({ kind: 'idle', msg: '' }), 3000)
+    } catch (err) {
+      let msg
+      if (err.message === 'unsupported-format') {
+        msg = fillTemplate(t.toolbar.unsupportedFormat, { ext: err.ext || '?' })
+      } else {
+        msg = fillTemplate(t.toolbar.uploadError, { msg: err.message || String(err) })
+      }
+      setUploadStatus({ kind: 'error', msg })
+      setTimeout(() => setUploadStatus({ kind: 'idle', msg: '' }), 5000)
+    }
+  }
 
   // 副標若是英文（DUODUORUN）拉開字距，若是中文（多多快跑）保持正常字距
   const subtitleTracking = lang === 'zh-TW' ? 'tracking-[0.25em]' : 'tracking-normal'
@@ -147,19 +184,51 @@ function TopToolbar() {
           onChange={setLang}
         />
 
-        {/* 示範資料集下拉 */}
+        {/* 資料集下拉（含上傳組） */}
         <select
           value={activeDataset || ''}
           onChange={e => setActiveDataset(e.target.value || null)}
-          className="h-8 px-3 pr-8 text-xs rounded-md bg-white border border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-200 focus:outline-none focus:border-duo-amber-500 cursor-pointer"
+          className="h-8 px-3 pr-8 text-xs rounded-md bg-white border border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-200 focus:outline-none focus:border-duo-amber-500 cursor-pointer max-w-[180px]"
         >
           <option value="">{t.toolbar.selectDataset}</option>
-          {DEMO_DATASETS.map(d => (
-            <option key={d.id} value={d.id}>
-              {t.datasets[d.i18nKey]}
-            </option>
-          ))}
+          {uploadedDataset && (
+            <optgroup label={t.toolbar.uploadedGroupLabel}>
+              <option value="uploaded">
+                {fillTemplate(t.toolbar.uploadedLabel, { name: uploadedDataset.name })}
+              </option>
+            </optgroup>
+          )}
+          <optgroup label={t.toolbar.demoGroupLabel}>
+            {DEMO_DATASETS.map(d => (
+              <option key={d.id} value={d.id}>
+                {t.datasets[d.i18nKey]}
+              </option>
+            ))}
+          </optgroup>
         </select>
+
+        {/* 上傳檔案 */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv,.xlsx,.xls"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        <button
+          type="button"
+          onClick={handleUploadClick}
+          disabled={uploadStatus.kind === 'parsing'}
+          className={[
+            'h-8 px-3 text-xs font-medium rounded-md border transition',
+            uploadStatus.kind === 'parsing'
+              ? 'bg-duo-cream-50 border-duo-cocoa-100 text-duo-cocoa-400 cursor-wait'
+              : 'bg-white border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-300 cursor-pointer',
+          ].join(' ')}
+          title={t.toolbar.uploadHint}
+        >
+          {uploadStatus.kind === 'parsing' ? t.toolbar.uploadingFile : `↑ ${t.toolbar.uploadData}`}
+        </button>
 
         {/* 變數轉換按鈕 */}
         <button
@@ -223,6 +292,20 @@ function TopToolbar() {
 
       <TransformDialog open={transformOpen} onClose={() => setTransformOpen(false)} />
       <HistoryDialog open={historyOpen} onClose={() => setHistoryOpen(false)} />
+
+      {/* 上傳狀態 toast — 短暫顯示成功或錯誤訊息 */}
+      {uploadStatus.kind !== 'idle' && uploadStatus.msg && (
+        <div
+          className={[
+            'fixed top-20 right-6 z-40 px-4 py-2 rounded-md text-xs shadow-md border max-w-sm',
+            uploadStatus.kind === 'success'
+              ? 'bg-duo-leaf/10 border-duo-leaf text-duo-cocoa-800'
+              : 'bg-duo-tongue/15 border-duo-tongue text-duo-cocoa-800',
+          ].join(' ')}
+        >
+          {uploadStatus.msg}
+        </div>
+      )}
     </header>
   )
 }

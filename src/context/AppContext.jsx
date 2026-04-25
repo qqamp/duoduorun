@@ -43,6 +43,7 @@ export function AppProvider({ children }) {
   const [analysisState, setAnalysisState] = useState({})
   const [transforms, setTransforms] = useState([])
   const [history, setHistory] = useState([])
+  const [uploadedDataset, setUploadedDatasetRaw] = useState(null)
 
   const t = useMemo(() => getStrings(lang), [lang])
 
@@ -52,10 +53,45 @@ export function AppProvider({ children }) {
     setTransforms([])
   }, [])
 
+  /**
+   * 設定上傳資料集；自動 activate（並清空 transforms）。
+   *   data: { name, rows, columns } from parseFile
+   *   傳 null 為「移除上傳資料集」
+   */
+  const setUploadedDataset = useCallback((data) => {
+    if (!data) {
+      setUploadedDatasetRaw(null)
+      // 若目前是上傳資料集，回到「未載入」
+      setActiveDatasetRaw((prev) => (prev === 'uploaded' ? null : prev))
+      return
+    }
+    // 建立 dataset 物件（使用 raw column 名為中英 label）
+    const labels = { zh: {}, en: {} }
+    for (const c of data.columns) {
+      labels.zh[c] = c
+      labels.en[c] = c
+    }
+    const ds = {
+      id: 'uploaded',
+      name: data.name,
+      rows: data.rows,
+      labels,
+    }
+    setUploadedDatasetRaw(ds)
+    // 自動切到此資料集 + 清 transforms
+    setActiveDatasetRaw('uploaded')
+    setTransforms([])
+  }, [])
+
   // 套用 transforms 後的有效 dataset
   const dataset = useMemo(() => {
     if (!activeDataset) return null
-    const raw = getDataset(activeDataset)
+    let raw
+    if (activeDataset === 'uploaded') {
+      raw = uploadedDataset
+    } else {
+      raw = getDataset(activeDataset)
+    }
     if (!raw) return null
     if (transforms.length === 0) return raw
     const effectiveRows = applyTransforms(raw.rows, transforms)
@@ -72,7 +108,7 @@ export function AppProvider({ children }) {
       rows: effectiveRows,
       labels: effectiveLabels,
     }
-  }, [activeDataset, transforms])
+  }, [activeDataset, transforms, uploadedDataset])
 
   const variables = useMemo(() => {
     if (!dataset) return {}
@@ -158,6 +194,7 @@ export function AppProvider({ children }) {
     transforms, addTransform, removeTransform,
     dataset,
     variables,
+    uploadedDataset, setUploadedDataset,
     t,
     getAnalysisState,
     updateAnalysisState,

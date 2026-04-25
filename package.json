@@ -12,8 +12,10 @@
   "dependencies": {
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
+    "papaparse": "^5.4.1",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
