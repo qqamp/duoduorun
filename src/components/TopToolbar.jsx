@@ -3,14 +3,15 @@
  *
  * 左側：brand（縮小版多多照片 + 中英文標題）
  * 右側：教學/報告模式切換、語言切換、示範資料集下拉、匯出按鈕
- *
- * 模式切換與語言切換用 segmented control 風格（暫時 inline，未來可抽成共用元件）
- * 資料集下拉與匯出按鈕為 PR-2a 占位（PR-2b 接 4 個示範資料集，Step 4 接匯出）
  */
+import { useState } from 'react'
 import duoHead from '../assets/duoduo-head.jpg'
 import { useApp } from '../context/AppContext'
-import { SUPPORTED_LANGUAGES } from '../i18n'
-import { DEMO_DATASETS } from '../config/analyses'
+import { SUPPORTED_LANGUAGES, getStrings } from '../i18n'
+import { DEMO_DATASETS, ANALYSIS_GROUPS } from '../config/analyses'
+import { isAnalysisImplemented } from '../analyses/registry'
+import { exportToPdf } from '../lib/pdfExport'
+import TransformDialog from './TransformDialog'
 
 function SegmentedControl({ options, value, onChange }) {
   return (
@@ -37,16 +38,73 @@ function SegmentedControl({ options, value, onChange }) {
   )
 }
 
+/** 從 analysis id 取出 zh / en label（用於 PDF header） */
+function findAnalysisLabels(activeAnalysis) {
+  if (!activeAnalysis) return { zh: '—', en: '—' }
+  for (const group of ANALYSIS_GROUPS) {
+    const item = group.items.find(i => i.id === activeAnalysis)
+    if (item) {
+      return {
+        zh: getStrings('zh-TW').sidebar[item.i18nKey] || activeAnalysis,
+        en: getStrings('en').sidebar[item.i18nKey] || activeAnalysis,
+      }
+    }
+  }
+  return { zh: activeAnalysis, en: activeAnalysis }
+}
+
+function findDatasetLabels(activeDataset) {
+  if (!activeDataset) return { zh: '—', en: '—' }
+  return {
+    zh: getStrings('zh-TW').datasets[activeDataset] || activeDataset,
+    en: getStrings('en').datasets[activeDataset] || activeDataset,
+  }
+}
+
 function TopToolbar() {
   const {
     lang, setLang,
     mode, setMode,
     activeDataset, setActiveDataset,
+    activeAnalysis,
     t,
   } = useApp()
 
+  const [exporting, setExporting] = useState(false)
+  const [transformOpen, setTransformOpen] = useState(false)
+
   // 副標若是英文（DUODUORUN）拉開字距，若是中文（多多快跑）保持正常字距
   const subtitleTracking = lang === 'zh-TW' ? 'tracking-[0.25em]' : 'tracking-normal'
+
+  // 匯出條件：要有資料集 + 有選定的分析 + 該分析已實作
+  const canExport =
+    !!activeDataset && !!activeAnalysis && isAnalysisImplemented(activeAnalysis)
+
+  const handleExport = async () => {
+    if (!canExport || exporting) return
+    const target = document.querySelector('main')
+    if (!target) return
+    setExporting(true)
+    try {
+      const ds = findDatasetLabels(activeDataset)
+      const an = findAnalysisLabels(activeAnalysis)
+      await exportToPdf({
+        targetEl: target,
+        headerData: {
+          datasetZh: ds.zh,
+          datasetEn: ds.en,
+          analysisZh: an.zh,
+          analysisEn: an.en,
+          filename: activeAnalysis,
+        },
+      })
+    } catch (err) {
+      console.error('Export failed:', err)
+      alert(`匯出失敗 / Export failed: ${err.message || err}`)
+    } finally {
+      setExporting(false)
+    }
+  }
 
   return (
     <header className="flex items-center justify-between px-6 h-16 bg-white border-b border-duo-cream-200">
@@ -100,16 +158,52 @@ function TopToolbar() {
           ))}
         </select>
 
-        {/* 匯出按鈕 — PR-2a 暫禁用 */}
+        {/* 變數轉換按鈕 */}
         <button
           type="button"
-          disabled
-          className="h-8 px-3 text-xs font-medium rounded-lg bg-duo-amber-500 text-white opacity-40 cursor-not-allowed"
-          title={t.common.comingSoon}
+          disabled={!activeDataset}
+          onClick={() => setTransformOpen(true)}
+          className={[
+            'h-8 px-3 text-xs font-medium rounded-lg border transition',
+            activeDataset
+              ? 'bg-white border-duo-cream-200 text-duo-cocoa-700 hover:border-duo-amber-300 hover:text-duo-cocoa-800 cursor-pointer'
+              : 'bg-duo-cream-50 border-duo-cream-200 text-duo-cocoa-300 cursor-not-allowed',
+          ].join(' ')}
+          title={
+            activeDataset
+              ? t.transform.title
+              : (lang === 'zh-TW' ? '需先載入資料集' : 'Load a dataset first')
+          }
         >
-          {t.toolbar.export}
+          + {t.variables.addTransform}
+        </button>
+
+        {/* 匯出按鈕 */}
+        <button
+          type="button"
+          disabled={!canExport || exporting}
+          onClick={handleExport}
+          className={[
+            'h-8 px-3 text-xs font-medium rounded-lg bg-duo-amber-500 text-white transition',
+            !canExport || exporting
+              ? 'opacity-40 cursor-not-allowed'
+              : 'hover:bg-duo-amber-600 cursor-pointer',
+          ].join(' ')}
+          title={
+            exporting
+              ? (lang === 'zh-TW' ? '正在匯出 PDF...' : 'Exporting PDF...')
+              : !canExport
+                ? (lang === 'zh-TW' ? '需先選擇資料集與分析方法' : 'Select a dataset and analysis first')
+                : t.toolbar.export
+          }
+        >
+          {exporting
+            ? (lang === 'zh-TW' ? '匯出中…' : 'Exporting…')
+            : t.toolbar.export}
         </button>
       </div>
+
+      <TransformDialog open={transformOpen} onClose={() => setTransformOpen(false)} />
     </header>
   )
 }

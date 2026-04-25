@@ -6,19 +6,20 @@
  *   mode           — 'teaching' | 'report'
  *   activeAnalysis — 目前選中的分析 id；null = 未選
  *   activeDataset  — 目前載入的示範資料集 id；null = 未載入
- *   dataset        — { id, rows, labels, valueLabels?, scaleVars? } 或 null
- *   variables      — { col: { name, type, missing, distinct, n } } 或 {}
- *   t              — 已決定好的 i18n 字串表（依 lang 自動切換）
- *   analysisState  — { [analysisId]: stateObj } 各分析的設定狀態
- *   getAnalysisState(id)             — 讀取特定分析的 state
- *   updateAnalysisState(id, partial) — 合併更新特定分析的 state
- *
- * 不接 localStorage：spec 訴求是純前端隱私不外流，使用者重整即重置。
+ *   transforms     — 變數轉換清單（log / zscore / 反向計分等）
+ *                    [{ name, source, type, params, labels: { zh, en } }]
+ *   dataset        — 套用 transforms 後的有效 dataset（rows 含轉換欄位）
+ *   variables      — { col: { name, type, missing, distinct, n } }
+ *   t              — 已決定好的 i18n 字串表
+ *   analysisState  — 各分析的設定狀態
+ *   addTransform / removeTransform — transforms 操作
+ *   getAnalysisState / updateAnalysisState — analysisState 操作
  */
 import { createContext, useContext, useState, useMemo, useCallback } from 'react'
 import { getStrings } from '../i18n'
 import { getDataset } from '../data'
 import { summarizeAll } from '../lib/variableTypes'
+import { applyTransforms } from '../lib/transforms'
 
 const AppContext = createContext(null)
 
@@ -28,13 +29,37 @@ export function AppProvider({ children }) {
   const [activeAnalysis, setActiveAnalysis] = useState(null)
   const [activeDataset, setActiveDataset] = useState(null)
   const [analysisState, setAnalysisState] = useState({})
+  const [transforms, setTransforms] = useState([])
 
   const t = useMemo(() => getStrings(lang), [lang])
 
+  // 切換資料集時清空轉換（轉換綁特定資料集的欄位）
+  const switchDataset = useCallback((id) => {
+    setActiveDataset(id)
+    setTransforms([])
+  }, [])
+
+  // 套用 transforms 後的有效 dataset
   const dataset = useMemo(() => {
     if (!activeDataset) return null
-    return getDataset(activeDataset)
-  }, [activeDataset])
+    const raw = getDataset(activeDataset)
+    if (!raw) return null
+    if (transforms.length === 0) return raw
+    const effectiveRows = applyTransforms(raw.rows, transforms)
+    const effectiveLabels = {
+      zh: { ...(raw.labels?.zh || {}) },
+      en: { ...(raw.labels?.en || {}) },
+    }
+    for (const tr of transforms) {
+      effectiveLabels.zh[tr.name] = tr.labels?.zh || tr.name
+      effectiveLabels.en[tr.name] = tr.labels?.en || tr.name
+    }
+    return {
+      ...raw,
+      rows: effectiveRows,
+      labels: effectiveLabels,
+    }
+  }, [activeDataset, transforms])
 
   const variables = useMemo(() => {
     if (!dataset) return {}
@@ -45,7 +70,6 @@ export function AppProvider({ children }) {
     (id) => analysisState[id] || {},
     [analysisState]
   )
-
   const updateAnalysisState = useCallback((id, partial) => {
     setAnalysisState((prev) => ({
       ...prev,
@@ -53,11 +77,24 @@ export function AppProvider({ children }) {
     }))
   }, [])
 
+  const addTransform = useCallback((tr) => {
+    setTransforms((prev) => {
+      // 同名覆蓋（避免重複）
+      const filtered = prev.filter((p) => p.name !== tr.name)
+      return [...filtered, tr]
+    })
+  }, [])
+
+  const removeTransform = useCallback((name) => {
+    setTransforms((prev) => prev.filter((p) => p.name !== name))
+  }, [])
+
   const value = {
     lang, setLang,
     mode, setMode,
     activeAnalysis, setActiveAnalysis,
-    activeDataset, setActiveDataset,
+    activeDataset, setActiveDataset: switchDataset,
+    transforms, addTransform, removeTransform,
     dataset,
     variables,
     t,
@@ -74,9 +111,6 @@ export function useApp() {
   return ctx
 }
 
-/**
- * 便利 hook — 直接拿到目前 active analysis 的 state slice 與更新函式
- */
 export function useAnalysisState() {
   const { activeAnalysis, getAnalysisState, updateAnalysisState } = useApp()
   const state = getAnalysisState(activeAnalysis)

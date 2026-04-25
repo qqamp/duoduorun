@@ -1,15 +1,11 @@
 /**
  * 變數列表
  *
- * 顯示目前資料集的所有欄位，每個欄位帶：
- *   - 中／英 label（從 dataset.labels 取對應語言；無對照則退回 raw column 名）
+ * 顯示目前資料集的所有欄位（含轉換後欄位），每個欄位帶：
+ *   - 中／英 label
  *   - 型別徽章（continuous / ordinal / categorical / unknown）
  *   - 遺漏值計數
- *
- * Step 3 之後會加上：
- *   - 點選 / 拖拉到分析設定
- *   - 型別徽章可點擊覆寫
- *   - distinct 值預覽 hover 顯示
+ *   - 若為轉換結果，會多一個「轉換」徽章 + 移除按鈕
  */
 import { useApp } from '../context/AppContext'
 
@@ -34,11 +30,12 @@ function TypeBadge({ type, t }) {
 }
 
 function VariableList() {
-  const { dataset, variables, lang, t } = useApp()
+  const { dataset, variables, lang, t, transforms, removeTransform } = useApp()
   if (!dataset) return null
 
   const labelMap = dataset.labels?.[lang === 'zh-TW' ? 'zh' : 'en'] || {}
   const cols = Object.keys(variables)
+  const transformNames = new Set(transforms.map((tr) => tr.name))
 
   return (
     <div>
@@ -49,13 +46,24 @@ function VariableList() {
         {cols.map(col => {
           const meta = variables[col]
           const label = labelMap[col] || col
+          const isTransformed = transformNames.has(col)
           return (
             <li
               key={col}
-              className="flex items-center gap-2 px-2.5 py-2 rounded-md hover:bg-duo-cream-50 transition group"
+              className={[
+                'flex items-center gap-2 px-2.5 py-2 rounded-md transition group',
+                isTransformed ? 'bg-duo-amber-50/30 hover:bg-duo-amber-50/60' : 'hover:bg-duo-cream-50',
+              ].join(' ')}
             >
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium text-duo-cocoa-800 truncate">{label}</div>
+                <div className="text-sm font-medium text-duo-cocoa-800 truncate flex items-center gap-1.5">
+                  {label}
+                  {isTransformed && (
+                    <span className="shrink-0 px-1 py-0.5 text-[9px] font-medium rounded bg-duo-amber-100 text-duo-amber-800">
+                      {t.variables.transformed}
+                    </span>
+                  )}
+                </div>
                 <div className="text-[10px] text-duo-cocoa-400 mt-0.5 flex items-center gap-2">
                   <span className="font-mono">{col}</span>
                   <span className="text-duo-cocoa-300">·</span>
@@ -67,6 +75,16 @@ function VariableList() {
                 </div>
               </div>
               <TypeBadge type={meta.type} t={t} />
+              {isTransformed && (
+                <button
+                  type="button"
+                  onClick={() => removeTransform(col)}
+                  className="shrink-0 text-duo-tongue hover:text-duo-cocoa-700 px-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title={t.transform.removeBtn}
+                >
+                  ✕
+                </button>
+              )}
             </li>
           )
         })}
