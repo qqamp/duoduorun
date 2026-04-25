@@ -58,7 +58,7 @@ export default {
   },
   varTypes: {
     continuous: '連續',
-    ordinal: '序次',
+    ordinal: '順序',
     categorical: '類別',
     unknown: '未知',
   },
