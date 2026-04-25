@@ -12,7 +12,7 @@
  *                   q4「薪資福利」刻意設計與其他項較弱相關（在α分析中會看到刪題後 α 上升）
  *   performance   — 績效分數，與 tenure_years 與 q5 正相關
  */
-import { mulberry32, pick, randInt, gaussian, clampInt } from './prng'
+import { mulberry32, pick, randInt, gaussian, clampInt } from './prng.js'
 
 function generate() {
   const rng = mulberry32(42)

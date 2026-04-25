@@ -16,7 +16,7 @@
  *
  * 含 2 筆遺漏值（post_score）。
  */
-import { mulberry32, gaussian } from './prng'
+import { mulberry32, gaussian } from './prng.js'
 
 function generate() {
   const rng = mulberry32(123)

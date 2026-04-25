@@ -14,7 +14,7 @@
  *
  * 含 1 筆遺漏值（preferred_format）。
  */
-import { mulberry32 } from './prng'
+import { mulberry32 } from './prng.js'
 
 function generate() {
   const rng = mulberry32(99)
