@@ -265,6 +265,60 @@ function TukeyTable({ tukey, anova, t, valueLabels, lang }) {
   )
 }
 
+function BonferroniTable({ bonferroni, anova, t, valueLabels, lang }) {
+  const c = t.anova.result.cols
+  const labelOf = (name) => {
+    const dict = valueLabels?.[lang === 'zh-TW' ? 'zh' : 'en']
+    return dict?.[name] || name
+  }
+  const omnibusNs = anova.p >= 0.05
+  const hint = fillTemplate(t.anova.result.bonferroniHint, { m: bonferroni.m })
+  return (
+    <div>
+      <Heading>{t.anova.result.bonferroniTitle}</Heading>
+      {omnibusNs && (
+        <p className="text-[11px] text-duo-cocoa-400 mb-2">
+          {lang === 'zh-TW'
+            ? '整體 F 未顯著，事後比較僅供參考。'
+            : 'Omnibus F not significant; post-hoc shown for reference only.'}
+        </p>
+      )}
+      <p className="text-[11px] text-duo-cocoa-400 mb-2 leading-snug">{hint}</p>
+      <div className="overflow-x-auto bg-white border border-duo-cocoa-100 rounded-md">
+        <table className="w-full text-xs">
+          <thead className="bg-duo-cream-50">
+            <tr>
+              <Th align="left">{c.pair}</Th>
+              <Th>{c.meanDiff}</Th>
+              <Th>{c.se}</Th>
+              <Th>{c.t}</Th>
+              <Th>{c.pRaw}</Th>
+              <Th>{c.pAdj}</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {bonferroni.pairs.map((p, idx) => (
+              <tr key={idx}>
+                <Td align="left" mono={false} bold>
+                  {labelOf(p.a)} − {labelOf(p.b)}
+                </Td>
+                <Td>{fmtNum(p.meanDiff, 2)}</Td>
+                <Td>{fmtNum(p.se, 3)}</Td>
+                <Td>{fmtNum(p.t, 3)}</Td>
+                <Td>{fmtP(p.pRaw)}</Td>
+                <Td>{fmtP(p.p)}{fmtSig(p.p)}</Td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[11px] text-duo-cocoa-400 mt-2">
+        * p &lt; .05 &nbsp;·&nbsp; ** p &lt; .01 &nbsp;·&nbsp; *** p &lt; .001
+      </p>
+    </div>
+  )
+}
+
 function Interpretation({ result, t, valueLabels, lang }) {
   const { anova, tukey } = result
   const sig = anova.p < 0.05
@@ -343,6 +397,7 @@ function Result() {
       <AnovaTable anova={result.anova} t={t} />
       <EffectSize anova={result.anova} t={t} />
       <TukeyTable tukey={result.tukey} anova={result.anova} t={t} valueLabels={valueLabels} lang={lang} />
+      <BonferroniTable bonferroni={result.bonferroni} anova={result.anova} t={t} valueLabels={valueLabels} lang={lang} />
       {mode === 'teaching' && (
         <Interpretation result={result} t={t} valueLabels={valueLabels} lang={lang} />
       )}

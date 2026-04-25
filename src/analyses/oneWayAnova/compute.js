@@ -10,7 +10,7 @@
  *   4. 跑前提檢核：每組 Shapiro-Wilk + 全組 Levene's
  */
 import { isMissing } from '../../lib/variableTypes.js'
-import { oneWayANOVA, tukeyHSD } from '../../lib/stats/anova.js'
+import { oneWayANOVA, tukeyHSD, bonferroni } from '../../lib/stats/anova.js'
 import { shapiroWilk } from '../../lib/stats/normality.js'
 import { levene } from '../../lib/stats/levene.js'
 
@@ -45,10 +45,13 @@ export function runOneWayAnova(rows, settings) {
 
   // Tukey HSD（不論顯著與否都計算，UI 端視 F 是否顯著決定是否強調）
   const tukey = tukeyHSD(anova.groupStats, anova.msWithin, anova.dfWithin)
+  // Bonferroni 同樣計算（與 Tukey 並列展示）
+  const bonf = bonferroni(anova.groupStats, anova.msWithin, anova.dfWithin)
 
   return {
     anova,
     tukey,
+    bonferroni: bonf,
     depVar,
     factor,
     assumptions: { normality, homogeneity },

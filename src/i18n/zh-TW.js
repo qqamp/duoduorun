@@ -831,6 +831,8 @@ export default {
       anovaTitle: 'ANOVA 表',
       effectSizeTitle: '效果量',
       tukeyTitle: 'Tukey HSD 事後比較',
+      bonferroniTitle: 'Bonferroni 事後比較',
+      bonferroniHint: 'p_adj = min(1, p_raw × m)，m = {m}（比較組數）；較保守但與 Tukey 結果一致時可雙重佐證',
       assumpTitle: '假設前提檢核',
       groupCol: '組別',
       cols: {
@@ -849,6 +851,9 @@ export default {
         meanDiff: '平均差',
         se: 'SE',
         q: 'q',
+        t: 't',
+        pRaw: 'p（未校正）',
+        pAdj: 'p（Bonferroni）',
       },
       effectInterp: {
         eta2Label: 'η²（樣本內效果量）：',

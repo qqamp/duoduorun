@@ -830,6 +830,8 @@ export default {
       anovaTitle: 'ANOVA table',
       effectSizeTitle: 'Effect size',
       tukeyTitle: 'Tukey HSD post-hoc',
+      bonferroniTitle: 'Bonferroni post-hoc',
+      bonferroniHint: 'p_adj = min(1, p_raw × m), m = {m} (number of comparisons); more conservative but corroborates Tukey when results agree',
       assumpTitle: 'Assumption checks',
       groupCol: 'Group',
       cols: {
@@ -848,6 +850,9 @@ export default {
         meanDiff: 'Mean diff',
         se: 'SE',
         q: 'q',
+        t: 't',
+        pRaw: 'p (raw)',
+        pAdj: 'p (Bonferroni)',
       },
       effectInterp: {
         eta2Label: 'η² (within-sample effect):',

@@ -31,7 +31,7 @@
  *   （本實作不傳 CI，UI 端要時可從 q_critical 反推；q_critical = qtukey 預留）
  */
 import { mean } from './descriptive.js'
-import { pF } from './pvalue.js'
+import { pF, pT } from './pvalue.js'
 import { ptukeyUpper } from './ptukey.js'
 
 export function oneWayANOVA(groups) {
@@ -128,4 +128,51 @@ export function tukeyHSD(groupStats, msWithin, dfWithin) {
     }
   }
   return pairs
+}
+
+/**
+ * Bonferroni 事後比較
+ *
+ * 對每對組別做配對 t 檢定（用 ANOVA 的 pooled MSE），再把 raw p 乘以
+ * 比較組數 m = k(k-1)/2，最後 clamp 到 1。
+ *
+ * 公式：
+ *   t_ij = (M_i − M_j) / √( MS_within · (1/n_i + 1/n_j) )
+ *   p_raw = 2 · (1 − F_t(|t_ij|, df_within))
+ *   p_adj = min(1, p_raw · m)
+ *
+ * 與 Tukey HSD 比較：Bonferroni 較保守（family-wise error control 但會犧牲 power），
+ * Tukey HSD 對於「所有兩兩比較」最佳化，通常更具檢定力。
+ *
+ * @param {Array<{name, n, mean}>} groupStats
+ * @param {number} msWithin
+ * @param {number} dfWithin
+ * @returns {Array<{ a, b, meanDiff, se, t, df, pRaw, p }>}
+ */
+export function bonferroni(groupStats, msWithin, dfWithin) {
+  const k = groupStats.length
+  const m = (k * (k - 1)) / 2 // 比較組數
+  const pairs = []
+  for (let i = 0; i < k; i++) {
+    for (let j = i + 1; j < k; j++) {
+      const gi = groupStats[i]
+      const gj = groupStats[j]
+      const meanDiff = gi.mean - gj.mean
+      const se = Math.sqrt(msWithin * (1 / gi.n + 1 / gj.n))
+      const t = meanDiff / se
+      const pRaw = pT(Math.abs(t), dfWithin)
+      const pAdj = Math.min(1, pRaw * m)
+      pairs.push({
+        a: gi.name,
+        b: gj.name,
+        meanDiff,
+        se,
+        t,
+        df: dfWithin,
+        pRaw,
+        p: pAdj,
+      })
+    }
+  }
+  return { pairs, m }
 }
