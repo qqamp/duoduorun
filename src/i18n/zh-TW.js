@@ -29,6 +29,7 @@ export default {
     regression: '相關與迴歸',
     scale: '量表分析',
     descStats: '基本敘述統計',
+    normality: '常態性檢定',
     tTest: 't 檢定',
     oneWayAnova: '單因子 ANOVA',
     twoWayAnova: '雙因子 ANOVA',
@@ -70,6 +71,59 @@ export default {
     addTransform: '新增轉換',
     transformsTitle: '已建立的轉換',
     noTransforms: '尚未建立任何轉換',
+  },
+  norm: {
+    title: '常態性檢定',
+    selectVarsTitle: '選擇要檢定的變數',
+    selectVarsHint: '勾選下方數值變數（連續或順序），會同時跑 Shapiro-Wilk 與 Kolmogorov-Smirnov',
+    needAtLeastOne: '請至少勾選一個變數',
+    cols: {
+      variable: '變數',
+      n: 'n',
+      sw_w: 'SW W',
+      sw_p: 'SW p',
+      ks_d: 'KS D',
+      ks_p: 'KS p',
+      verdict: '判讀',
+    },
+    verdict: {
+      normal: '近似常態',
+      nonNormal: '違反常態',
+      mixed: '結果不一致',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '檢定樣本是否來自常態分布母體。\n常見用途：在執行 t 檢定／ANOVA／迴歸前，檢核「殘差或變數呈常態」的前提；違反時考慮無母數替代或變數轉換。',
+      assumpTitle: '前提',
+      assumptions:
+        '1. 觀察值獨立\n2. 至少順序測量尺度\n3. 兩種檢定都對極小樣本（n < 20）檢定力不足，建議搭配 Q-Q 圖／直方圖視覺判讀',
+      compareTitle: '兩種檢定的差別',
+      compare:
+        'Shapiro-Wilk（W）：對偏度敏感，n ≤ 50 一般檢定力較強；可至 n = 5000（Royston 1992）。\n' +
+        'Kolmogorov-Smirnov（D，Lilliefors 修正）：對中央偏離敏感，傳統 KS 用樣本平均/SD 當參數須做 Lilliefors 修正才不過於保守，本工具已自動修正。\n\n' +
+        '實務建議：\n' +
+        '- 兩個都跑、都不顯著 → 常態假設站得住\n' +
+        '- 只有 SW 顯著 → 偏度問題；考慮取對數或 Box-Cox\n' +
+        '- 只有 KS 顯著 → 中央偏離（如雙峰）；視覺檢視\n' +
+        '- n 很大 (> 300) → 兩個檢定都會「過於敏感」對輕微偏離也顯著，此時應該以 Q-Q 圖與偏峰度為主要判讀依據',
+      formulasTitle: '核心公式',
+      formulaSW: 'W = (Σa_i · x_(i))² / Σ(x_i − M̄)²',
+      formulaKS: 'D = max |F_emp(x) − Φ((x − M̄) / SD)|',
+      readingTitle: '怎麼讀',
+      reading:
+        'p < .05 → 拒絕「樣本來自常態母體」；p ≥ .05 → 不能拒絕（不等於「證明常態」）。\n\n' +
+        '搭配偏度／峰度與 Q-Q 圖（待視覺化模組上線）一起判讀，比僅看 p 值穩健。',
+    },
+    apa: {
+      sentence:
+        '常態性檢定結果 — {var}：Shapiro-Wilk W = {w}, p = {pSW}；Kolmogorov-Smirnov（Lilliefors 修正）D = {d}, p = {pKS}（n = {n}）。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      line: '{var}：{verdict}（SW: W = {w}, p = {pSW}；KS: D = {d}, p = {pKS}）',
+    },
   },
   np: {
     title: '無母數檢定',

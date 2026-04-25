@@ -22,6 +22,7 @@ export default {
     regression: 'Correlation & regression',
     scale: 'Scale analysis',
     descStats: 'Basic descriptive stats',
+    normality: 'Normality tests',
     tTest: 't-test',
     oneWayAnova: 'One-way ANOVA',
     twoWayAnova: 'Two-way ANOVA',
@@ -63,6 +64,60 @@ export default {
     addTransform: 'Add transform',
     transformsTitle: 'Existing transforms',
     noTransforms: 'No transforms yet',
+  },
+  norm: {
+    title: 'Normality tests',
+    selectVarsTitle: 'Select variables to test',
+    selectVarsHint:
+      'Tick numeric variables (continuous or ordinal); both Shapiro-Wilk and Kolmogorov-Smirnov are run',
+    needAtLeastOne: 'Tick at least one variable',
+    cols: {
+      variable: 'Variable',
+      n: 'n',
+      sw_w: 'SW W',
+      sw_p: 'SW p',
+      ks_d: 'KS D',
+      ks_p: 'KS p',
+      verdict: 'Verdict',
+    },
+    verdict: {
+      normal: 'Approximately normal',
+      nonNormal: 'Non-normal',
+      mixed: 'Mixed verdict',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        "Test whether a sample comes from a normal population.\nTypical use: check the normality assumption before running t-tests, ANOVA, or regression; if violated, consider nonparametric alternatives or variable transformation.",
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Independent observations\n2. At least ordinal scale\n3. Both tests have low power for very small n (< 20); pair with Q-Q plot / histogram',
+      compareTitle: 'Differences between SW and KS',
+      compare:
+        'Shapiro-Wilk (W): more sensitive to skewness; usually more powerful at n ≤ 50; works up to n = 5000 (Royston 1992).\n' +
+        "Kolmogorov-Smirnov (D, Lilliefors-corrected): sensitive to central deviations; classic KS with sample mean/SD as parameters is overly conservative without correction — Lilliefors correction is auto-applied here.\n\n" +
+        'Practical guidance:\n' +
+        '- Both non-significant → normality assumption holds\n' +
+        '- Only SW significant → skewness issue; try log or Box-Cox transform\n' +
+        '- Only KS significant → central deviation (e.g., bimodal); inspect visually\n' +
+        '- Very large n (> 300) → both tests become hyper-sensitive to trivial deviations; rely on Q-Q plot + skew/kurt instead',
+      formulasTitle: 'Core formulas',
+      formulaSW: 'W = (Σa_i · x_(i))² / Σ(x_i − M̄)²',
+      formulaKS: 'D = max |F_emp(x) − Φ((x − M̄) / SD)|',
+      readingTitle: 'How to read it',
+      reading:
+        'p < .05 → reject "sample is from a normal population"; p ≥ .05 → cannot reject (does NOT prove normality).\n\n' +
+        'Pair with skewness/kurtosis and a Q-Q plot (visual module forthcoming) for robust judgement, not p-values alone.',
+    },
+    apa: {
+      sentence:
+        'Normality results — {var}: Shapiro-Wilk W = {w}, p = {pSW}; Kolmogorov-Smirnov (Lilliefors-corrected) D = {d}, p = {pKS} (n = {n}).',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      line: '{var}: {verdict} (SW: W = {w}, p = {pSW}; KS: D = {d}, p = {pKS})',
+    },
   },
   np: {
     title: 'Nonparametric tests',

@@ -9,6 +9,7 @@
  * MainContent 透過 getAnalysisModule(activeAnalysis) 找到對應模組後 render。
  */
 import descriptive from './descriptive'
+import normality from './normality'
 import ttest from './ttest'
 import correlation from './correlation'
 import simpleRegression from './simpleRegression'
@@ -20,6 +21,7 @@ import nonparametric from './nonparametric'
 
 const REGISTRY = {
   'desc-stats':         descriptive,
+  'normality':          normality,
   't-test':             ttest,
   'correlation':        correlation,
   'simple-regression':  simpleRegression,
