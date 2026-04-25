@@ -12,6 +12,7 @@ import { DEMO_DATASETS, ANALYSIS_GROUPS } from '../config/analyses'
 import { isAnalysisImplemented } from '../analyses/registry'
 import { exportToPdf } from '../lib/pdfExport'
 import TransformDialog from './TransformDialog'
+import HistoryDialog from './HistoryDialog'
 
 function SegmentedControl({ options, value, onChange }) {
   return (
@@ -67,11 +68,13 @@ function TopToolbar() {
     mode, setMode,
     activeDataset, setActiveDataset,
     activeAnalysis,
+    history,
     t,
   } = useApp()
 
   const [exporting, setExporting] = useState(false)
   const [transformOpen, setTransformOpen] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
 
   // 副標若是英文（DUODUORUN）拉開字距，若是中文（多多快跑）保持正常字距
   const subtitleTracking = lang === 'zh-TW' ? 'tracking-[0.25em]' : 'tracking-normal'
@@ -178,6 +181,21 @@ function TopToolbar() {
           + {t.variables.addTransform}
         </button>
 
+        {/* 歷史按鈕 */}
+        <button
+          type="button"
+          onClick={() => setHistoryOpen(true)}
+          className="h-8 px-3 text-xs font-medium rounded-lg bg-white border border-duo-cream-200 text-duo-cocoa-700 hover:border-duo-amber-300 hover:text-duo-cocoa-800 cursor-pointer transition"
+          title={t.history.title}
+        >
+          {t.history.title}
+          {history.length > 0 && (
+            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded bg-duo-amber-100 text-duo-amber-800">
+              {history.length}
+            </span>
+          )}
+        </button>
+
         {/* 匯出按鈕 */}
         <button
           type="button"
@@ -204,6 +222,7 @@ function TopToolbar() {
       </div>
 
       <TransformDialog open={transformOpen} onClose={() => setTransformOpen(false)} />
+      <HistoryDialog open={historyOpen} onClose={() => setHistoryOpen(false)} />
     </header>
   )
 }
