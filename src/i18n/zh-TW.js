@@ -71,6 +71,88 @@ export default {
     transformsTitle: '已建立的轉換',
     noTransforms: '尚未建立任何轉換',
   },
+  multReg: {
+    title: '多元線性迴歸',
+    config: {
+      yLabel: '依變項 Y',
+      xLabel: '預測變項（複選）',
+      pickY: '請選依變項',
+      pickXs: '請至少勾選 1 個預測變項',
+      hint: '勾選下方數值變數作為預測變項；不可包含 Y',
+    },
+    result: {
+      modelTitle: '模型摘要',
+      anovaTitle: 'ANOVA 表（整體模型 F 檢定）',
+      coefTitle: '係數表',
+      assumpTitle: '殘差常態性',
+      cols: {
+        r: 'R', r2: 'R²', adjR2: 'Adj. R²', se: 'SE 估計值', n: 'n',
+        source: '變異來源', ss: 'SS', df: 'df', ms: 'MS', f: 'F', p: 'p',
+        regression: '迴歸模型', residual: '殘差', total: '總和',
+        predictor: '預測項', b: 'b', stdErr: 'SE', beta: 'β', t: 't', vif: 'VIF',
+        intercept: '常數項',
+      },
+      vifWarn:
+        '注意：VIF > 5 的預測變項顯示多重共線跡象（VIF > 10 視為嚴重）。考慮：移除高度相關的變項、加總成綜合分數、或改用主成分迴歸。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '用多個連續預測變項聯合預測一個連續依變項。回答的問題：\n（1）整體模型是否能顯著預測 Y？（F 檢定）\n（2）控制其他變項後，每一個預測變項對 Y 的獨立貢獻？（個別係數的 t 檢定）\n（3）模型解釋了 Y 的多少變異？（R² 與 Adj. R²）\n（4）哪個預測變項的相對影響力最大？（標準化係數 β）',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. Y 與 X 之間為線性關係\n' +
+        '2. 觀察值獨立\n' +
+        '3. 殘差呈常態分布（Shapiro-Wilk 自動檢核）\n' +
+        '4. 同質變異\n' +
+        '5. 無嚴重多重共線（VIF 自動計算；> 5 警示）\n' +
+        '6. 適當的樣本量：n ≥ 10–20 × 預測變項數',
+      formulasTitle: '核心公式',
+      formulaBeta: 'β = (X\'X)⁻¹ X\'y',
+      formulaSE: 'SE(β) = √( MSE · diag((X\'X)⁻¹) )',
+      formulaF: 'F = (R² / k) / ((1 − R²) / (n − k − 1))，df₁ = k, df₂ = n − k − 1',
+      formulaAdjR2: 'Adj. R² = 1 − (1 − R²) · (n − 1) / (n − k − 1)',
+      formulaStdBeta: '標準化 β_i = b_i · SD(X_i) / SD(Y)',
+      formulaVIF: 'VIF_i = 1 / (1 − R²_i)，R²_i 為 X_i 對其他預測變項的迴歸 R²',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 看整體 F 檢定 — 模型整體有沒有顯著預測力？\n' +
+        '2. 看 R² 與 Adj. R² — 解釋了多少變異？（多元迴歸建議報告 Adj. R²）\n' +
+        '3. 看個別係數的 p 值 — 哪些 X 在控制其他變項後仍顯著？\n' +
+        '4. 比較標準化 β 的絕對值 — 哪個 X 的相對影響力最大？\n' +
+        '5. 看 VIF — 有沒有多重共線問題？（> 5 警示，> 10 嚴重）\n' +
+        '6. 看殘差常態性 — 推論前提是否符合？\n\n' +
+        '常見陷阱：\n' +
+        '- 個別 t 檢定都不顯著但整體 F 顯著 → 多重共線\n' +
+        '- R² 高但個別係數都不顯著 → 同上\n' +
+        '- 加入更多 X 一定會讓 R² 上升 → 用 Adj. R² 才公平比較',
+    },
+    apa: {
+      sentence:
+        '多元線性迴歸結果顯示，{predictors} 聯合預測 {yLabel} 之模型整體{sigWord}（F({df1}, {df2}) = {f}, p = {pStr}），R² = {r2}，調整後 R² = {adjR2}。{coefList}',
+      sentenceNs:
+        '多元線性迴歸結果顯示，{predictors} 對 {yLabel} 之預測未達顯著（F({df1}, {df2}) = {f}, p = {pStr}），R² = {r2}，調整後 R² = {adjR2}。',
+      coefSig:
+        '{name}（b = {b}, SE = {se}, β = {beta}, t = {t}, p = {pStr}）',
+      coefOpener: '個別係數中，',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      overall:
+        '整體模型 F({df1}, {df2}) = {f}, p = {pStr} → {sigWord}。' +
+        ' R² = {r2}（解釋 {r2Pct}% 變異），調整後 R² = {adjR2}。',
+      coefSection: '個別預測項：',
+      coefLine:
+        '{name}：b = {b}（SE = {se}，β = {beta}，t = {t}，p = {pStr}） → {sigWord}',
+      vifSection: 'VIF 檢視：',
+      vifLine: '{name}: VIF = {vif} {warn}',
+      vifWarnHigh: '⚠ 警示',
+      vifWarnSevere: '⚠ 嚴重',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+    },
+  },
   history: {
     title: '分析歷史',
     saveCurrent: '釘選目前分析到歷史',

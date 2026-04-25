@@ -14,14 +14,16 @@ import correlation from './correlation'
 import simpleRegression from './simpleRegression'
 import oneWayAnova from './oneWayAnova'
 import cronbachAlpha from './cronbachAlpha'
+import multipleRegression from './multipleRegression'
 
 const REGISTRY = {
-  'desc-stats':        descriptive,
-  't-test':            ttest,
-  'correlation':       correlation,
-  'simple-regression': simpleRegression,
-  'one-way-anova':     oneWayAnova,
-  'cronbach-alpha':    cronbachAlpha,
+  'desc-stats':         descriptive,
+  't-test':             ttest,
+  'correlation':        correlation,
+  'simple-regression':  simpleRegression,
+  'multiple-regression': multipleRegression,
+  'one-way-anova':      oneWayAnova,
+  'cronbach-alpha':     cronbachAlpha,
 }
 
 export function getAnalysisModule(id) {

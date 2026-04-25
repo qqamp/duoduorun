@@ -64,6 +64,88 @@ export default {
     transformsTitle: 'Existing transforms',
     noTransforms: 'No transforms yet',
   },
+  multReg: {
+    title: 'Multiple linear regression',
+    config: {
+      yLabel: 'Dependent (Y)',
+      xLabel: 'Predictors (multi-select)',
+      pickY: 'Pick a dependent variable',
+      pickXs: 'Pick at least 1 predictor',
+      hint: 'Tick numeric variables as predictors; cannot include Y',
+    },
+    result: {
+      modelTitle: 'Model summary',
+      anovaTitle: 'ANOVA (omnibus F-test)',
+      coefTitle: 'Coefficients',
+      assumpTitle: 'Residual normality',
+      cols: {
+        r: 'R', r2: 'R²', adjR2: 'Adj. R²', se: 'SE estimate', n: 'n',
+        source: 'Source', ss: 'SS', df: 'df', ms: 'MS', f: 'F', p: 'p',
+        regression: 'Regression', residual: 'Residual', total: 'Total',
+        predictor: 'Predictor', b: 'b', stdErr: 'SE', beta: 'β', t: 't', vif: 'VIF',
+        intercept: 'Intercept',
+      },
+      vifWarn:
+        'Note: predictors with VIF > 5 indicate multicollinearity (VIF > 10 considered severe). Consider: dropping highly correlated variables, summing into a composite, or principal-component regression.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Predict a continuous Y from multiple continuous predictors jointly. Answers:\n(1) Does the overall model significantly predict Y? (F-test)\n(2) After controlling for other variables, does each predictor independently contribute? (per-coefficient t-test)\n(3) How much variance in Y does the model explain? (R² and Adj. R²)\n(4) Which predictor has the largest relative effect? (standardized β)',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Linear relationship between Y and Xs\n' +
+        '2. Independent observations\n' +
+        '3. Normally distributed residuals (Shapiro-Wilk auto-checked)\n' +
+        '4. Homoscedasticity\n' +
+        '5. No severe multicollinearity (VIF auto-computed; warn at > 5)\n' +
+        '6. Adequate sample size: n ≥ 10–20 × number of predictors',
+      formulasTitle: 'Core formulas',
+      formulaBeta: "β = (X'X)⁻¹ X'y",
+      formulaSE: "SE(β) = √( MSE · diag((X'X)⁻¹) )",
+      formulaF: 'F = (R² / k) / ((1 − R²) / (n − k − 1)), df₁ = k, df₂ = n − k − 1',
+      formulaAdjR2: 'Adj. R² = 1 − (1 − R²) · (n − 1) / (n − k − 1)',
+      formulaStdBeta: 'Standardized β_i = b_i · SD(X_i) / SD(Y)',
+      formulaVIF: 'VIF_i = 1 / (1 − R²_i), where R²_i is from regressing X_i on other predictors',
+      readingTitle: 'How to read it',
+      reading:
+        '1. Look at the omnibus F-test — does the model predict significantly overall?\n' +
+        '2. Look at R² and Adj. R² — how much variance is explained? (Report Adj. R² for multiple regression)\n' +
+        '3. Look at individual p-values — which predictors remain significant after controlling for others?\n' +
+        '4. Compare |standardized β| — which predictor has the largest relative effect?\n' +
+        '5. Look at VIF — any multicollinearity? (warn at > 5, severe at > 10)\n' +
+        '6. Check residual normality — inferential assumption met?\n\n' +
+        'Common pitfalls:\n' +
+        '- All individual ts non-significant but overall F significant → multicollinearity\n' +
+        '- High R² but no significant coefficients → same as above\n' +
+        '- Adding more predictors always raises R² → compare with Adj. R² instead',
+    },
+    apa: {
+      sentence:
+        '{predictors} jointly predicted {yLabel} {sigWord} in a multiple linear regression, F({df1}, {df2}) = {f}, p = {pStr}, R² = {r2}, adjusted R² = {adjR2}. {coefList}',
+      sentenceNs:
+        '{predictors} did not significantly predict {yLabel} in a multiple linear regression, F({df1}, {df2}) = {f}, p = {pStr}, R² = {r2}, adjusted R² = {adjR2}.',
+      coefSig:
+        '{name} (b = {b}, SE = {se}, β = {beta}, t = {t}, p = {pStr})',
+      coefOpener: 'Among the predictors, ',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      overall:
+        'Omnibus model F({df1}, {df2}) = {f}, p = {pStr} → {sigWord}.' +
+        ' R² = {r2} (explains {r2Pct}% of variance), Adj. R² = {adjR2}.',
+      coefSection: 'Individual predictors:',
+      coefLine:
+        '{name}: b = {b} (SE = {se}, β = {beta}, t = {t}, p = {pStr}) → {sigWord}',
+      vifSection: 'VIF check:',
+      vifLine: '{name}: VIF = {vif} {warn}',
+      vifWarnHigh: '⚠ warn',
+      vifWarnSevere: '⚠ severe',
+      sigYes: 'significantly',
+      sigNo: 'not significantly',
+    },
+  },
   history: {
     title: 'Analysis history',
     saveCurrent: 'Pin current analysis to history',
