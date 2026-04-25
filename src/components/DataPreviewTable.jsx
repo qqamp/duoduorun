@@ -34,12 +34,12 @@ function DataPreviewTable() {
     .replace('{k}', cols.length)
 
   return (
-    <div className="bg-white border border-duo-cream-200 rounded-lg overflow-hidden">
-      <div className="px-4 py-3 border-b border-duo-cream-200">
-        <h3 className="text-sm font-semibold text-duo-cocoa-800">
+    <div className="bg-white border border-duo-cocoa-100 rounded-md overflow-hidden">
+      <div className="px-4 py-3 border-b border-duo-cocoa-100">
+        <h3 className="font-serif text-base font-semibold text-duo-cocoa-900">
           {t.panels.previewTitle}
         </h3>
-        <p className="text-xs text-duo-cocoa-400 mt-0.5">{subtitle}</p>
+        <p className="font-mono text-[11px] text-duo-cocoa-400 mt-0.5">{subtitle}</p>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
@@ -48,7 +48,7 @@ function DataPreviewTable() {
               {cols.map(col => (
                 <th
                   key={col}
-                  className="px-3 py-2 text-left font-medium text-duo-cocoa-700 whitespace-nowrap border-b border-duo-cream-200"
+                  className="px-3 py-2 text-left font-medium text-duo-cocoa-700 whitespace-nowrap border-b border-duo-cocoa-100"
                 >
                   {labelMap[col] || col}
                 </th>
@@ -61,7 +61,7 @@ function DataPreviewTable() {
                 {cols.map(col => (
                   <td
                     key={col}
-                    className="px-3 py-1.5 text-duo-cocoa-700 whitespace-nowrap border-b border-duo-cream-100"
+                    className="px-3 py-1.5 font-mono text-duo-cocoa-700 whitespace-nowrap border-b border-duo-cream-50"
                   >
                     {formatCell(row[col], col, dataset.valueLabels, lang)}
                   </td>

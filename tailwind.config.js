@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        // body 用 system sans，混 Chinese-friendly fallback
         sans: [
           'system-ui',
           '-apple-system',
@@ -16,6 +17,28 @@ export default {
           'Roboto',
           'sans-serif',
         ],
+        // 標題用 Source Serif 4（CJK fallback：宋體系 → system serif）
+        serif: [
+          'Source Serif 4',
+          'Source Serif Pro',
+          '"Songti TC"',
+          '"Noto Serif CJK TC"',
+          'Georgia',
+          'serif',
+        ],
+        // 等寬：用於數值、p-value、column 名、技術標籤
+        mono: [
+          'JetBrains Mono',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Consolas',
+          'monospace',
+        ],
+      },
+      letterSpacing: {
+        // 用於 small caps section heading：UPPERCASE TRACKING
+        ai: '0.18em',
       },
       colors: {
         // 多多調色盤：取自多多照片的暖色系

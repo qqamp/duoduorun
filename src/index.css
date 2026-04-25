@@ -5,9 +5,27 @@
 @layer base {
   html {
     font-family: theme('fontFamily.sans');
+    /* OpenType features for tabular numerals — keep table columns aligned */
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   body {
-    @apply bg-duo-cream-100 text-duo-cocoa-700 antialiased;
+    @apply bg-duo-cream-100 text-duo-cocoa-800 antialiased;
+  }
+
+  /* 預設讓 mono 數字使用 tabular-nums，避免欄位對齊跑掉 */
+  .font-mono {
+    font-feature-settings: 'tnum';
+  }
+}
+
+@layer utilities {
+  /* small-caps section heading：spaced uppercase + cocoa-400 */
+  .heading-eyebrow {
+    @apply text-[10px] font-medium uppercase tracking-ai text-duo-cocoa-400;
+  }
+  /* hairline 細線：1px duo-cocoa-100 */
+  .hairline {
+    @apply border-duo-cocoa-100;
   }
 }

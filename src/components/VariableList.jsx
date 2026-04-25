@@ -12,15 +12,15 @@ import { useApp } from '../context/AppContext'
 const TYPE_COLORS = {
   continuous:  'bg-duo-amber-50 text-duo-amber-800 border-duo-amber-200',
   ordinal:     'bg-duo-denim-50 text-duo-denim-700 border-duo-denim-200',
-  categorical: 'bg-duo-cocoa-50 text-duo-cocoa-700 border-duo-cocoa-100',
-  unknown:     'bg-duo-cream-50 text-duo-cocoa-400 border-duo-cream-200',
+  categorical: 'bg-duo-cocoa-50 text-duo-cocoa-700 border-duo-cocoa-200',
+  unknown:     'bg-duo-cream-50 text-duo-cocoa-400 border-duo-cocoa-100',
 }
 
 function TypeBadge({ type, t }) {
   return (
     <span
       className={[
-        'shrink-0 px-1.5 py-0.5 text-[10px] font-medium rounded border',
+        'shrink-0 px-1.5 py-0.5 text-[10px] font-mono rounded border',
         TYPE_COLORS[type] || TYPE_COLORS.unknown,
       ].join(' ')}
     >
@@ -39,7 +39,7 @@ function VariableList() {
 
   return (
     <div>
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-duo-cocoa-400 mb-3">
+      <h3 className="heading-eyebrow mb-3">
         {t.panels.variablesTitle}
       </h3>
       <ul className="space-y-1.5">

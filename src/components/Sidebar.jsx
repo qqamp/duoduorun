@@ -1,14 +1,11 @@
 /**
  * 左側垂直導覽列
  *
- * 結構：4 大類別（敘述／推論／相關迴歸／量表），每類可摺疊，
- *       點選二級項目時更新 AppContext 的 activeAnalysis。
- *
- * 視覺：
- *   - 預設四大類都展開（Step 3 開始可考慮預設摺疊）
- *   - 第一優先（priority=1）的項目正常顯示
- *   - 第二、三優先項目用淡化色與小徽章標示「Coming soon」
- *   - 目前選中的項目用 duo-amber 系列高亮
+ * 視覺風格（暖色 AI 質感）：
+ *   - 群組標題：serif、半粗、低調
+ *   - 選中項目：左 2px duo-amber border + duo-amber-700 文字（不用色塊背景）
+ *   - 未選 hover：底色 duo-cream-50
+ *   - Priority 徽章：font-mono、細邊框
  */
 import { useState } from 'react'
 import { useApp } from '../context/AppContext'
@@ -17,13 +14,13 @@ import { ANALYSIS_GROUPS } from '../config/analyses'
 function ChevronIcon({ open }) {
   return (
     <svg
-      width="14"
-      height="14"
+      width="12"
+      height="12"
       viewBox="0 0 16 16"
       className={`transition-transform duration-150 ${open ? 'rotate-90' : ''}`}
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -37,10 +34,10 @@ function PriorityBadge({ priority }) {
   return (
     <span
       className={[
-        'ml-auto px-1.5 py-0.5 text-[9px] font-medium rounded',
+        'ml-auto font-mono px-1.5 py-0.5 text-[9px] font-medium rounded border',
         priority === 2
-          ? 'bg-duo-denim-50 text-duo-denim-500'
-          : 'bg-duo-cream-50 text-duo-cocoa-300',
+          ? 'border-duo-denim-200 text-duo-denim-600'
+          : 'border-duo-cocoa-100 text-duo-cocoa-300',
       ].join(' ')}
     >
       {priority === 2 ? 'P2' : 'P3'}
@@ -59,8 +56,8 @@ function Sidebar() {
   }
 
   return (
-    <aside className="w-60 shrink-0 border-r border-duo-cream-200 bg-white overflow-y-auto">
-      <nav className="py-3">
+    <aside className="w-60 shrink-0 border-r border-duo-cocoa-100 bg-white overflow-y-auto">
+      <nav className="py-4">
         {ANALYSIS_GROUPS.map(group => {
           const open = openGroups[group.id]
           return (
@@ -68,16 +65,16 @@ function Sidebar() {
               <button
                 type="button"
                 onClick={() => toggleGroup(group.id)}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm font-semibold text-duo-cocoa-700 hover:bg-duo-cream-50 transition"
+                className="w-full flex items-center gap-2.5 px-5 py-2 font-serif text-[15px] font-semibold text-duo-cocoa-900 hover:text-duo-amber-700 transition"
               >
-                <span className="text-duo-cocoa-400">
+                <span className="text-duo-cocoa-300">
                   <ChevronIcon open={open} />
                 </span>
                 {t.sidebar[group.i18nKey]}
               </button>
 
               {open && (
-                <ul className="pl-9">
+                <ul className="pl-5">
                   {group.items.map(item => {
                     const isActive = activeAnalysis === item.id
                     return (
@@ -86,10 +83,10 @@ function Sidebar() {
                           type="button"
                           onClick={() => setActiveAnalysis(item.id)}
                           className={[
-                            'w-full flex items-center px-3 py-1.5 text-xs rounded-md text-left transition',
+                            'w-full flex items-center pl-5 pr-3 py-1.5 text-xs text-left transition border-l-2',
                             isActive
-                              ? 'bg-duo-amber-50 text-duo-amber-800 font-medium'
-                              : 'text-duo-cocoa-600 hover:bg-duo-cream-50 hover:text-duo-cocoa-800',
+                              ? 'border-duo-amber-500 text-duo-amber-700 bg-duo-amber-50/40 font-medium'
+                              : 'border-transparent text-duo-cocoa-600 hover:text-duo-cocoa-900 hover:bg-duo-cream-50',
                           ].join(' ')}
                         >
                           <span>{t.sidebar[item.i18nKey]}</span>

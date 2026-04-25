@@ -16,7 +16,7 @@ import HistoryDialog from './HistoryDialog'
 
 function SegmentedControl({ options, value, onChange }) {
   return (
-    <div className="inline-flex rounded-lg bg-duo-cream-50 border border-duo-cream-200 p-0.5">
+    <div className="inline-flex rounded-md bg-duo-cream-50 border border-duo-cocoa-100 p-0.5">
       {options.map(opt => {
         const active = opt.value === value
         return (
@@ -25,10 +25,10 @@ function SegmentedControl({ options, value, onChange }) {
             type="button"
             onClick={() => onChange(opt.value)}
             className={[
-              'px-3 py-1 text-xs font-medium rounded-md transition',
+              'px-3 py-1 text-xs font-medium rounded transition',
               active
-                ? 'bg-white text-duo-cocoa-800 shadow-sm'
-                : 'text-duo-cocoa-500 hover:text-duo-cocoa-700',
+                ? 'bg-white text-duo-cocoa-900 border border-duo-cocoa-100'
+                : 'text-duo-cocoa-500 hover:text-duo-cocoa-800',
             ].join(' ')}
           >
             {opt.label}
@@ -110,19 +110,19 @@ function TopToolbar() {
   }
 
   return (
-    <header className="flex items-center justify-between px-6 h-16 bg-white border-b border-duo-cream-200">
+    <header className="flex items-center justify-between px-6 h-16 bg-white border-b border-duo-cocoa-100">
       {/* 左：brand */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3.5">
         <img
           src={duoHead}
           alt="多多"
-          className="h-12 w-12 rounded-xl object-cover"
+          className="h-11 w-11 rounded-md object-cover ring-1 ring-duo-cocoa-100"
         />
         <div className="text-left">
-          <h1 className="text-lg font-bold tracking-tight text-duo-cocoa-800 leading-none">
+          <h1 className="font-serif text-[20px] font-semibold tracking-tight text-duo-cocoa-900 leading-none">
             {t.app.title}
           </h1>
-          <p className={`text-[10px] font-medium text-duo-amber-500 mt-1 ${subtitleTracking}`}>
+          <p className={`font-mono text-[10px] uppercase text-duo-amber-700 mt-1.5 ${subtitleTracking}`}>
             {t.app.subtitle}
           </p>
         </div>
@@ -151,7 +151,7 @@ function TopToolbar() {
         <select
           value={activeDataset || ''}
           onChange={e => setActiveDataset(e.target.value || null)}
-          className="h-8 px-3 pr-8 text-xs rounded-lg bg-duo-cream-50 border border-duo-cream-200 text-duo-cocoa-700 hover:border-duo-amber-300 focus:outline-none focus:border-duo-amber-500 cursor-pointer"
+          className="h-8 px-3 pr-8 text-xs rounded-md bg-white border border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-200 focus:outline-none focus:border-duo-amber-500 cursor-pointer"
         >
           <option value="">{t.toolbar.selectDataset}</option>
           {DEMO_DATASETS.map(d => (
@@ -167,10 +167,10 @@ function TopToolbar() {
           disabled={!activeDataset}
           onClick={() => setTransformOpen(true)}
           className={[
-            'h-8 px-3 text-xs font-medium rounded-lg border transition',
+            'h-8 px-3 text-xs font-medium rounded-md border transition',
             activeDataset
-              ? 'bg-white border-duo-cream-200 text-duo-cocoa-700 hover:border-duo-amber-300 hover:text-duo-cocoa-800 cursor-pointer'
-              : 'bg-duo-cream-50 border-duo-cream-200 text-duo-cocoa-300 cursor-not-allowed',
+              ? 'bg-white border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-300 cursor-pointer'
+              : 'bg-duo-cream-50 border-duo-cocoa-100 text-duo-cocoa-300 cursor-not-allowed',
           ].join(' ')}
           title={
             activeDataset
@@ -185,12 +185,12 @@ function TopToolbar() {
         <button
           type="button"
           onClick={() => setHistoryOpen(true)}
-          className="h-8 px-3 text-xs font-medium rounded-lg bg-white border border-duo-cream-200 text-duo-cocoa-700 hover:border-duo-amber-300 hover:text-duo-cocoa-800 cursor-pointer transition"
+          className="h-8 px-3 text-xs font-medium rounded-md bg-white border border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-300 cursor-pointer transition"
           title={t.history.title}
         >
           {t.history.title}
           {history.length > 0 && (
-            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded bg-duo-amber-100 text-duo-amber-800">
+            <span className="ml-1.5 font-mono px-1.5 py-0.5 text-[10px] rounded bg-duo-amber-100 text-duo-amber-800">
               {history.length}
             </span>
           )}
@@ -202,10 +202,10 @@ function TopToolbar() {
           disabled={!canExport || exporting}
           onClick={handleExport}
           className={[
-            'h-8 px-3 text-xs font-medium rounded-lg bg-duo-amber-500 text-white transition',
+            'h-8 px-3 text-xs font-medium rounded-md transition',
             !canExport || exporting
-              ? 'opacity-40 cursor-not-allowed'
-              : 'hover:bg-duo-amber-600 cursor-pointer',
+              ? 'bg-duo-cream-100 text-duo-cocoa-300 border border-duo-cocoa-100 cursor-not-allowed'
+              : 'bg-duo-cocoa-900 text-duo-cream-50 hover:bg-duo-cocoa-800 cursor-pointer',
           ].join(' ')}
           title={
             exporting
