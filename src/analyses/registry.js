@@ -13,6 +13,7 @@ import ttest from './ttest'
 import correlation from './correlation'
 import simpleRegression from './simpleRegression'
 import oneWayAnova from './oneWayAnova'
+import cronbachAlpha from './cronbachAlpha'
 
 const REGISTRY = {
   'desc-stats':        descriptive,
@@ -20,7 +21,7 @@ const REGISTRY = {
   'correlation':       correlation,
   'simple-regression': simpleRegression,
   'one-way-anova':     oneWayAnova,
-  // 'cronbach-alpha': cronbachAlpha,  // PR-3e
+  'cronbach-alpha':    cronbachAlpha,
 }
 
 export function getAnalysisModule(id) {

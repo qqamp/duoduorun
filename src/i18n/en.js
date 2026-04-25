@@ -445,4 +445,81 @@ export default {
       sigNo: 'not significant',
     },
   },
+  alpha: {
+    title: "Cronbach's α reliability",
+    selectVarsTitle: 'Select scale items',
+    selectVarsHint:
+      'Tick items that belong to the same scale (≥ 3 items recommended; reverse-coded items should be recoded first in Step 4 variable transformation)',
+    needAtLeast2: 'Pick at least 2 items',
+    summaryTitle: 'Overall reliability',
+    itemTitle: 'Item analysis',
+    cols: {
+      alpha: 'Cronbach α',
+      kItems: 'Items',
+      n: 'Valid n',
+      meanInter: 'Mean inter-item r',
+      item: 'Item',
+      mean: 'M',
+      sd: 'SD',
+      itemTotalCorr: 'Corrected item-total r',
+      alphaIfDeleted: 'α if deleted',
+      interpretation: 'Reading',
+    },
+    interpretation: {
+      excellent: 'Excellent',
+      good: 'Good',
+      acceptable: 'Acceptable',
+      questionable: 'Questionable',
+      poor: 'Poor',
+      unacceptable: 'Unacceptable',
+    },
+    droppedNote: '{n} rows dropped (listwise deletion)',
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Assess internal consistency reliability of a scale.\n' +
+        'Answers: "Do these items measure the same construct? Does it make sense to sum them into a total score?"\n\n' +
+        "Note: α is a measure of homogeneity, not validity. High α means items are internally consistent, not that they really measure what you intend (that's construct validity — needs EFA/CFA/convergent validity).",
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Items measure the same latent construct (unidimensionality) — α is misleading for multidimensional scales\n' +
+        '2. Items are conceptually summable (not ordinal-rank, not nominal)\n' +
+        '3. Reverse-coded items have been recoded to the same direction\n' +
+        '4. Item measurement errors are independent (tau-equivalence; if violated, α is a lower bound)',
+      formulasTitle: 'Core formulas',
+      formulaAlpha: 'α = (k / (k-1)) · (1 - Σσ²_i / σ²_t)',
+      formulaItc:
+        'Corrected item-total r_i = Pearson(X_i, Σ_{j≠i} X_j)',
+      formulaAlphaDel: 'α if deleted (i) = α recomputed using k - 1 items (excluding X_i)',
+      readingTitle: 'How to read it',
+      reading:
+        'α conventions (DeVellis 2017 / Nunnally 1978):\n' +
+        '≥ 0.90 excellent, 0.80-0.89 good, 0.70-0.79 acceptable, 0.60-0.69 questionable, 0.50-0.59 poor, < 0.50 unacceptable.\n\n' +
+        'Read corrected item-total r:\n' +
+        '- ≥ 0.30: item shares reasonable common content with the scale\n' +
+        '- < 0.30: item is weakly related to the rest, consider revision\n' +
+        '- Near 0 or negative: possibly forgot reverse-coding, or item measures a different construct\n\n' +
+        'Read α-if-deleted:\n' +
+        '- α rises noticeably after deletion → that item hurts consistency\n' +
+        '- All α-if-deleted are lower than overall → scale structure is sound\n\n' +
+        'Note: α tends to rise with k (number of items) due to the k/(k-1) factor. Compare α across scales of similar length.',
+    },
+    apa: {
+      sentence:
+        "Internal consistency reliability of the scale was assessed via Cronbach's α. The scale contained {k} items (n = {n}); α = {alpha} ({interp}), mean inter-item correlation = {meanInter}.",
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      summary:
+        'The scale has {k} items with {n} valid respondents. Cronbach α = {alpha} ({interp} reliability). ' +
+        'Mean inter-item correlation = {meanInter}. {recommendation}',
+      recommendExcellent: 'Internal consistency is excellent; the scale can be used as is.',
+      recommendGood: 'Internal consistency is good; the scale can be used.',
+      recommendAcceptable:
+        'Internal consistency is acceptable. Review items with corrected item-total r < 0.30, and consider revising/dropping items where α-if-deleted rises noticeably.',
+      recommendLow:
+        'Internal consistency is low. Steps to consider: (1) verify all reverse-coded items have been recoded; (2) inspect items with low corrected item-total r; (3) if α remains low, reconsider the construct definition and item wording.',
+    },
+  },
 }

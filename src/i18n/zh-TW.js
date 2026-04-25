@@ -450,4 +450,82 @@ export default {
       sigNo: '不顯著',
     },
   },
+  alpha: {
+    title: "Cronbach's α 信度分析",
+    selectVarsTitle: '選擇量表題',
+    selectVarsHint:
+      '勾選同一個量表的題目（建議至少 3 題；若有反向題，請先在 Step 4 變數轉換中重新編碼）',
+    needAtLeast2: '請選至少 2 題',
+    summaryTitle: '總體信度',
+    itemTitle: '項目分析',
+    cols: {
+      alpha: 'Cronbach α',
+      kItems: '題數',
+      n: '有效樣本',
+      meanInter: '平均項間相關',
+      item: '項目',
+      mean: 'M',
+      sd: 'SD',
+      itemTotalCorr: '校正項目-總分相關',
+      alphaIfDeleted: '刪題後 α',
+      interpretation: '解讀',
+    },
+    interpretation: {
+      excellent: '極佳',
+      good: '良好',
+      acceptable: '可接受',
+      questionable: '疑慮',
+      poor: '不佳',
+      unacceptable: '不可接受',
+    },
+    droppedNote: '因遺漏值剔除 {n} 列（listwise deletion）',
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '評估量表內部一致性信度（internal consistency reliability）。\n' +
+        '回答的問題：「這幾道題目是不是在量同一個構念？分數加總有沒有道理？」\n\n' +
+        '注意：α 是「同質性」的指標，不是「效度」。α 高只代表題目互相一致，不代表它們真的測到你想測的東西（那是建構效度的問題，需要 EFA / CFA / 收斂效度等）。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 各題測量同一個潛在構念（單向度）— α 在多向度量表會失準\n' +
+        '2. 各題之間在概念上應為加總有意義（不是排序、不是分類）\n' +
+        '3. 反向題已先重新編碼為同方向\n' +
+        '4. 各題測量誤差互相獨立（tau-equivalent 假設；違反時 α 為下界估計）',
+      formulasTitle: '核心公式',
+      formulaAlpha: 'α = (k / (k-1)) · (1 - Σσ²_i / σ²_t)',
+      formulaItc:
+        '校正項目-總分相關 r_i = Pearson(X_i, Σ_{j≠i} X_j)',
+      formulaAlphaDel:
+        "刪題後 α(i) = α 用 k - 1 題重算（去掉 X_i）",
+      readingTitle: '怎麼讀',
+      reading:
+        'α 解讀慣例（DeVellis 2017 / Nunnally 1978）：\n' +
+        '≥ 0.90 極佳、0.80-0.89 良好、0.70-0.79 可接受、0.60-0.69 疑慮、0.50-0.59 不佳、< 0.50 不可接受。\n\n' +
+        '檢視「校正項目-總分相關」：\n' +
+        '- ≥ 0.30：該題與整份量表共識性合理\n' +
+        '- < 0.30：該題與其他題共識性低，建議檢視題意或考慮刪除\n' +
+        '- 接近 0 或為負：該題可能反向計分未處理，或測量到不同構念\n\n' +
+        '檢視「刪題後 α」：\n' +
+        '- 若刪除某題後 α 顯著上升，該題可能損害一致性，建議檢視\n' +
+        '- 若所有題刪題後 α 都下降，量表內部結構穩健\n\n' +
+        '注意：題數越多，α 通常越高（公式中 k/(k-1) 的影響）。比較不同量表的 α 時要考慮題數差異。',
+    },
+    apa: {
+      sentence:
+        '本研究以 Cronbach\'s α 評估量表的內部一致性信度。{itemList} 共 {k} 題（n = {n}），α = {alpha}（{interp}），平均項間相關 = {meanInter}。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      summary:
+        '本量表共 {k} 題，有效樣本 {n} 筆，Cronbach α = {alpha}（{interp}信度）。' +
+        '平均項間相關 = {meanInter}。{recommendation}',
+      recommendExcellent: '量表內部一致性極佳，可直接使用。',
+      recommendGood: '量表內部一致性良好，可使用。',
+      recommendAcceptable:
+        '量表內部一致性可接受，建議檢視「校正項目-總分相關 < 0.30」的題目；若有「刪題後 α 明顯上升」的題目，考慮修訂或刪除。',
+      recommendLow:
+        '量表內部一致性偏低，建議：（1）檢視反向題是否已重新編碼；（2）檢視校正項目-總分相關過低的題目；（3）若仍偏低，需重新檢視量表的構念與題目設計。',
+    },
+  },
 }
