@@ -397,6 +397,114 @@ export default {
       sigNo: 'not significant',
     },
   },
+  logReg: {
+    title: 'Logistic regression',
+    config: {
+      yLabel: 'Dependent (binary)',
+      xLabel: 'Predictors (multi-select)',
+      pickY: 'Pick a binary dependent variable',
+      pickXs: 'Pick at least 1 predictor',
+      yNeedBinary: 'This variable has {k} levels; logistic regression needs exactly 2 (binary)',
+      positiveClass: 'Positive class (will be coded as 1)',
+      hint: 'Y must be binary; X must be continuous or ordinal',
+    },
+    result: {
+      modelTitle: 'Model summary',
+      omnibusTitle: 'Omnibus model test',
+      coefTitle: 'Coefficients (with OR and 95% CI)',
+      classTitle: 'Classification table (threshold = 0.5)',
+      rocTitle: 'ROC curve',
+      converged: 'Converged ({n} iterations)',
+      notConverged: 'Not converged! Results may be unreliable',
+      cols: {
+        n: 'n', k: 'k predictors',
+        llNull: 'LL₀ (null)',
+        ll: 'LL (full)',
+        lrChi2: 'LR χ²',
+        df: 'df',
+        p: 'p',
+        mcFadden: 'McFadden R²',
+        nagelkerke: 'Nagelkerke R²',
+        predictor: 'Predictor',
+        b: 'b',
+        se: 'SE',
+        z: 'Wald z',
+        or: 'OR',
+        orCI: '95% CI for OR',
+        intercept: 'Intercept',
+        actual: 'Actual',
+        predicted: 'Predicted',
+        positive: 'Positive (1)',
+        negative: 'Negative (0)',
+        correctPercent: 'Correct %',
+        auc: 'AUC',
+        sensitivity: 'Sensitivity',
+        specificity: 'Specificity',
+      },
+      aucInterp: {
+        excellent: 'excellent', good: 'good', fair: 'fair', poor: 'poor',
+      },
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Predict a binary outcome (yes/no, sick/healthy, churn/retain) from a set of predictors. Answers:\n' +
+        '(1) Does the overall model predict significantly? (LR test)\n' +
+        '(2) Does each predictor contribute independently after controlling for others? (Wald z)\n' +
+        '(3) Odds ratio OR: by how many times do the odds change for a 1-unit increase in X?\n' +
+        '(4) Classification performance: accuracy, ROC AUC',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Binary dependent variable (exactly 2 categories)\n' +
+        '2. Independent observations\n' +
+        '3. logit(p) is linear in the predictors\n' +
+        '4. No severe multicollinearity\n' +
+        '5. Sample: at least 10 positive and 10 negative events per predictor (rule of 10)',
+      formulasTitle: 'Core formulas',
+      formulaLogit: 'logit(p) = ln(p / (1 − p)) = β₀ + β₁X₁ + ... + βₖXₖ',
+      formulaSigmoid: 'p = sigmoid(η) = 1 / (1 + exp(−η))',
+      formulaOR: 'OR_i = exp(β_i) (multiplicative change in odds for unit increase in X_i)',
+      formulaWald: 'Wald z = β / SE(β), p = 2(1 − Φ(|z|))',
+      formulaLR: 'LR χ² = −2(LL_null − LL_full), df = k; p from right tail of χ²(df)',
+      formulaNagelkerke:
+        'Cox-Snell R² = 1 − exp(2/n · (LL_null − LL_full))\n' +
+        'Nagelkerke R² = Cox-Snell / (1 − exp(2/n · LL_null)) (rescaled to [0, 1])',
+      readingTitle: 'How to read it',
+      reading:
+        '1. Look at LR test p — is the overall model significant?\n' +
+        '2. Look at Nagelkerke R² — model explanatory power (0.2 reasonable, 0.4 good, > 0.5 strong)\n' +
+        '3. Look at each OR with 95% CI — if CI does not span 1, that predictor is significant\n' +
+        '4. Look at AUC — < 0.6 poor, 0.6-0.7 fair, 0.7-0.8 good, ≥ 0.8 excellent\n' +
+        '5. Look at the classification table — accuracy, plus sensitivity/specificity if classes are imbalanced\n\n' +
+        'OR interpretation:\n' +
+        '- OR = 2 → odds double for a 1-unit increase in X\n' +
+        '- OR = 0.5 → odds halve for a 1-unit increase\n' +
+        '- OR = 1 → no effect',
+    },
+    apa: {
+      sentence:
+        'A logistic regression with {predictors} as predictors of {yLabel} (positive class = {posClass}) was {sigWord} overall, χ²({df}, N = {n}) = {chi2}, p = {pStr}, Nagelkerke R² = {nagelkerke}. {coefList}Model AUC = {auc}; classification accuracy = {correctPct}%.',
+      sentenceNs:
+        'A logistic regression with {predictors} did not significantly predict {yLabel}, χ²({df}, N = {n}) = {chi2}, p = {pStr}, Nagelkerke R² = {nagelkerke}.',
+      coefSig:
+        '{name} (OR = {or}, 95% CI = [{ciLow}, {ciHigh}], z = {z}, p = {pStr})',
+      coefOpener: 'Among the predictors, ',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      overall:
+        'Overall LR χ²({df}) = {chi2}, p = {pStr} → {sigWord}.' +
+        '\nNagelkerke R² = {nagelkerke} ({strengthWord} fit), AUC = {auc} ({aucWord}), accuracy = {correctPct}%.',
+      coefSection: 'Predictor odds ratios:',
+      coefLine: '{name}: OR = {or} (CI = [{ciLow}, {ciHigh}]), p = {pStr} → {sigWord}',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      strengthWeak: 'weak',
+      strengthFair: 'moderate',
+      strengthStrong: 'strong',
+    },
+  },
   multReg: {
     title: 'Multiple linear regression',
     config: {

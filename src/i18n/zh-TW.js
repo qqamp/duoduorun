@@ -401,6 +401,119 @@ export default {
       sigNo: '不顯著',
     },
   },
+  logReg: {
+    title: '邏輯斯迴歸',
+    config: {
+      yLabel: '依變項 Y（二元類別）',
+      xLabel: '預測變項（可複選）',
+      pickY: '請選二元依變項',
+      pickXs: '請至少勾選 1 個預測變項',
+      yNeedBinary: '此變項有 {k} 個值，邏輯斯迴歸需要剛好 2 個（二元）',
+      positiveClass: '正類別（將被編碼為 1）',
+      hint: 'Y 必須是二元；X 必須是連續或順序變項',
+    },
+    result: {
+      modelTitle: '模型摘要',
+      omnibusTitle: '整體模型檢定',
+      coefTitle: '係數表（含 OR 與 95% CI）',
+      classTitle: '分類表（閾值 = 0.5）',
+      rocTitle: 'ROC 曲線',
+      converged: '已收斂（{n} 次迭代）',
+      notConverged: '未收斂！結果可能不可靠',
+      cols: {
+        n: 'n', k: 'k 預測項',
+        llNull: 'LL₀（null model）',
+        ll: 'LL（full model）',
+        lrChi2: 'LR χ²',
+        df: 'df',
+        p: 'p',
+        mcFadden: 'McFadden R²',
+        nagelkerke: 'Nagelkerke R²',
+        predictor: '預測項',
+        b: 'b',
+        se: 'SE',
+        z: 'Wald z',
+        or: 'OR',
+        orCI: '95% CI for OR',
+        intercept: '常數項',
+        actual: '實際',
+        predicted: '預測',
+        positive: '陽性 (1)',
+        negative: '陰性 (0)',
+        correctPercent: '正確分類率',
+        auc: 'AUC',
+        sensitivity: '敏感度',
+        specificity: '特異度',
+      },
+      aucInterp: {
+        excellent: '極佳',
+        good: '良好',
+        fair: '尚可',
+        poor: '不佳',
+      },
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '用一組預測變項預測二元類別結果（是/否、患病/健康、離職/留任）。\n' +
+        '回答的問題：\n' +
+        '（1）整體模型有顯著預測力嗎？（LR 檢定）\n' +
+        '（2）每個預測變項在控制其他變項後，獨立貢獻是否顯著？（Wald z）\n' +
+        '（3）勝算比 OR：X 增加 1 單位，Y 為陽性的勝算（odds）變多少倍？\n' +
+        '（4）模型分類表現如何？（正確分類率、ROC AUC）',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 依變項為二元（恰好 2 類）\n' +
+        '2. 觀察值獨立\n' +
+        '3. logit(p) 與預測變項呈線性關係\n' +
+        '4. 無嚴重多重共線\n' +
+        '5. 樣本量：每個預測變項至少 10 筆陽性與 10 筆陰性事件（rule of 10）',
+      formulasTitle: '核心公式',
+      formulaLogit: 'logit(p) = ln(p / (1 − p)) = β₀ + β₁X₁ + ... + βₖXₖ',
+      formulaSigmoid: 'p = sigmoid(η) = 1 / (1 + exp(−η))',
+      formulaOR: 'OR_i = exp(β_i)（X_i 增加 1 單位的勝算比變化）',
+      formulaWald: 'Wald z = β / SE(β)，p = 2(1 − Φ(|z|))',
+      formulaLR: 'LR χ² = −2(LL_null − LL_full)，df = k；p 從 χ²(df) 右尾',
+      formulaNagelkerke:
+        'Cox-Snell R² = 1 − exp(2/n · (LL_null − LL_full))\n' +
+        'Nagelkerke R² = Cox-Snell / (1 − exp(2/n · LL_null))（縮放到 [0, 1]）',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 看 LR 檢定 p — 整體模型是否顯著？\n' +
+        '2. 看 Nagelkerke R² — 模型解釋力（0.2 算合理、0.4 不錯、> 0.5 強）\n' +
+        '3. 看每個係數 OR 與 95% CI — CI 不跨 1 即代表該預測項顯著\n' +
+        '4. 看 AUC — < 0.6 不佳、0.6-0.7 尚可、0.7-0.8 良好、≥ 0.8 極佳\n' +
+        '5. 看分類表 — 正確分類率與類別不平衡時的敏感度／特異度\n\n' +
+        'OR 解讀：\n' +
+        '- OR = 2 → X 增加 1 單位，陽性勝算翻倍\n' +
+        '- OR = 0.5 → X 增加 1 單位，陽性勝算減半\n' +
+        '- OR = 1 → X 對勝算無影響',
+    },
+    apa: {
+      sentence:
+        '邏輯斯迴歸結果顯示，{predictors} 聯合預測 {yLabel}（正類別 = {posClass}）之模型整體{sigWord}（χ²({df}, N = {n}) = {chi2}, p = {pStr}），Nagelkerke R² = {nagelkerke}。{coefList}模型 AUC = {auc}，正確分類率 = {correctPct}%。',
+      sentenceNs:
+        '邏輯斯迴歸結果顯示，{predictors} 對 {yLabel} 之預測未達顯著（χ²({df}, N = {n}) = {chi2}, p = {pStr}），Nagelkerke R² = {nagelkerke}。',
+      coefSig:
+        '{name}（OR = {or}, 95% CI = [{ciLow}, {ciHigh}], z = {z}, p = {pStr}）',
+      coefOpener: '個別係數中，',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      overall:
+        '整體模型 LR χ²({df}) = {chi2}, p = {pStr} → {sigWord}。' +
+        '\nNagelkerke R² = {nagelkerke}（解釋力{strengthWord}），' +
+        'AUC = {auc}（{aucWord}），正確分類率 = {correctPct}%。',
+      coefSection: '預測變項勝算比：',
+      coefLine: '{name}：OR = {or}（CI = [{ciLow}, {ciHigh}]），p = {pStr} → {sigWord}',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      strengthWeak: '較弱',
+      strengthFair: '中等',
+      strengthStrong: '較強',
+    },
+  },
   multReg: {
     title: '多元線性迴歸',
     config: {

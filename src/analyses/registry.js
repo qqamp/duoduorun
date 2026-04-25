@@ -18,6 +18,7 @@ import oneWayAnova from './oneWayAnova'
 import twoWayAnova from './twoWayAnova'
 import cronbachAlpha from './cronbachAlpha'
 import multipleRegression from './multipleRegression'
+import logisticRegression from './logisticRegression'
 import chiSquare from './chiSquare'
 import nonparametric from './nonparametric'
 
@@ -29,6 +30,7 @@ const REGISTRY = {
   'correlation':        correlation,
   'simple-regression':  simpleRegression,
   'multiple-regression': multipleRegression,
+  'logistic-regression': logisticRegression,
   'one-way-anova':      oneWayAnova,
   'two-way-anova':      twoWayAnova,
   'cronbach-alpha':     cronbachAlpha,
