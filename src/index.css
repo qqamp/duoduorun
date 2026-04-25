@@ -8,6 +8,6 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-duo-cream-100 text-duo-cocoa-700 antialiased;
   }
 }

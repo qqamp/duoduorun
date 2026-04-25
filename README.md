@@ -1,13 +1,15 @@
-# StatLite
+# 多多快跑 DuoDuoRun
 
 純前端統計分析工具。所有運算在瀏覽器本地執行，資料不上傳，免安裝、免費，部署於 GitHub Pages。
 
+> 名字來自一隻叫多多的狗。中文習慣講「跑統計」，多多快跑就是請多多快點去跑統計分析。
+>
 > 目標：讓學生不需購買 SPSS 即可完成常見統計分析，並確保計算結果與商用統計軟體（SPSS、R）一致。
 
 ## 技術堆疊
 
 - **框架**：React 19 + Vite 8
-- **樣式**：Tailwind CSS v3
+- **樣式**：Tailwind CSS v3，配色取自多多照片的暖色系（`duo-cream` / `duo-amber` / `duo-cocoa` / `duo-denim`，定義在 `tailwind.config.js`）
 - **統計計算**：純 JavaScript 自行實作（不依賴外部統計函式庫，p-value 使用 regularized incomplete beta function，方法參照 *Numerical Recipes*）
 - **檔案解析**：Papa Parse（CSV）、SheetJS（XLSX）— *待第三步接入*
 - **圖表**：Recharts — *待第三步接入*
@@ -31,47 +33,7 @@ npm run dev
 2. 執行 `vite build`（產出至 `dist/`）
 3. 上傳 artifact 至 GitHub Pages
 
-部署網址：`https://<github-username>.github.io/duoduorun/`
-
-### 首次部署需要的 GitHub 設定
-
-依序執行：
-
-1. **在本機先跑一次 `npm install`** —— 這會產生 `package-lock.json`。GitHub Actions 的 workflow 用 `npm ci` 部署，需要 lockfile 存在於 repo 裡，否則 CI 會失敗
-2. 在 GitHub 建立名為 **duoduorun** 的 public repo（必須叫這個名字，因為 `vite.config.js` 的 `base` 是 `/duoduorun/`；若改名，記得同步改 `vite.config.js` 的 base 與 README 對應位置）
-3. 設定 git remote 並 push（指令在下一節）
-4. 進入 repo 的 **Settings → Pages**
-5. **Source** 選擇 **GitHub Actions**（不要選 Deploy from a branch）
-6. Actions 跑完後，Pages 會自動上線
-
-### 第一次推上 GitHub 的完整指令
-
-請在 **Windows PowerShell** 開啟此資料夾後依序執行（不要在 Cowork sandbox 跑，會被 OneDrive 鎖權限）：
-
-```powershell
-# 1. 先清掉 sandbox 殘留的損壞 .git 目錄與空的 _scaffold 目錄
-Remove-Item -Recurse -Force .git
-Remove-Item -Recurse -Force _scaffold
-
-# 2. 安裝相依套件（產生 package-lock.json，是 CI 的必要檔）
-npm install
-
-# 3. 本地驗證一下（可選）
-npm run dev
-# 訪問 http://localhost:5173/duoduorun/ 看到 StatLite 占位畫面就 OK
-# 按 Ctrl+C 結束
-
-# 4. git init 與第一個 commit
-git init -b main
-git add -A
-git commit -m "feat: scaffold Vite+React+Tailwind with GitHub Pages deploy workflow"
-
-# 5. 設定 remote 並推送（將 <your-username> 換成 GitHub 帳號）
-git remote add origin https://github.com/<your-username>/duoduorun.git
-git push -u origin main
-```
-
-push 完成後到 repo 的 **Settings → Pages**，Source 選 **GitHub Actions**，第一次 build 結束後 Pages 就會上線。
+部署網址：https://qqamp.github.io/duoduorun/
 
 ## 專案結構
 
@@ -81,18 +43,49 @@ duoduorun/
 ├── public/                        # 靜態資源（favicon 等）
 ├── reference/                     # 既有原型 statlite.jsx，計算層之後會抽出至 src/lib/stats/
 ├── src/
-│   ├── App.jsx                    # 主元件（目前是 Step 1 占位畫面）
+│   ├── App.jsx                    # 主元件
 │   ├── main.jsx
-│   └── index.css                  # Tailwind directives
+│   ├── index.css                  # Tailwind directives
+│   └── components/
+│       └── DuoMascot.jsx          # 多多吉祥物占位元件（idle/running/thinking/celebrating 四種 state）
 ├── index.html
-├── tailwind.config.js
+├── tailwind.config.js             # 內含 duo 命名空間調色盤
 ├── postcss.config.js
 └── vite.config.js
 ```
 
+## 視覺識別
+
+調色盤取自多多的照片：
+
+| Token | 用途 | 取色來源 |
+| --- | --- | --- |
+| `duo-cream-100` (#fbeed8) | 預設背景 | — |
+| `duo-amber-500` (#d97e2a) | 主品牌色 | 多多的主毛色 |
+| `duo-cocoa-700` (#3f2d1f) | 主文字色 | 多多的耳朵與鼻吻 |
+| `duo-denim-400` (#5e7a91) | 副色／邊框 | 多多的牛仔背心 |
+| `duo-tongue` (#f4a8a8) | 警示／前提違反 | 多多的舌頭 |
+| `duo-leaf` (#6a9a5a) | 結果通過／成功 | 照片背景植被 |
+
+完整 ramp（50–900）見 `tailwind.config.js`。
+
+## 吉祥物使用方式
+
+```jsx
+import DuoMascot from './components/DuoMascot'
+
+<DuoMascot state="idle" size={48} />
+<DuoMascot state="running" size={64} />     // 計算中
+<DuoMascot state="thinking" size={48} />    // 假設前提檢核
+<DuoMascot state="celebrating" size={64} /> // 結果通過
+```
+
+目前是純 SVG 幾何圖形的占位實作。將來換成插畫師的真插畫時，只要替換 `DuoMascot.jsx` 內部的 SVG 路徑，所有用到此元件的地方都不必改。
+
 ## 開發里程碑
 
 - [x] **Step 1**：scaffold + GitHub Pages 部署流程
+- [x] **Step 1.5**：rebrand 為多多快跑、調色盤落地、吉祥物占位元件
 - [ ] **Step 2**：完整 UI 架構（左側導覽列、三欄主內容區、教學/報告模式切換、語言切換、示範資料集載入）
 - [ ] **Step 3**：第一優先統計功能（敘述統計、t 檢定、Pearson 相關、單因子 ANOVA、簡單迴歸、Cronbach's α），以及對應的 APA 中英文敘述模板與假設前提檢核
 - [ ] **Step 4**：實用功能（一鍵複製、PDF 匯出、資料預覽、分析歷史）
