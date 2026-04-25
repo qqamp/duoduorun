@@ -37,12 +37,28 @@ export default {
   panels: {
     configTitle: 'Analysis settings',
     configEmpty: 'Pick an analysis from the sidebar',
+    configNoDataset: 'Load a dataset first (top right)',
+    variablesTitle: 'Variables',
     resultTitle: 'Statistical results',
     resultEmpty: 'This analysis ships in Step 3',
+    resultNoDataset: 'Load a demo dataset from the top right',
     explainTitle: 'Method notes',
     explainEmpty: 'Pick an analysis to see purpose, assumptions, and formula',
     explainTeaching: 'Will show method purpose, assumptions, and core formula (teaching mode)',
     explainReport: 'Will show APA-formatted result narrative (Chinese + English)',
+    previewTitle: 'Data preview',
+    previewSubtitle: 'Showing first 20 of {n} rows × {k} variables',
+  },
+  varTypes: {
+    continuous: 'Continuous',
+    ordinal: 'Ordinal',
+    categorical: 'Categorical',
+    unknown: 'Unknown',
+  },
+  variables: {
+    missing: '{n} missing',
+    distinct: '{n} distinct',
+    noMissing: 'no missing',
   },
   modes: {
     teaching: 'Teaching mode',

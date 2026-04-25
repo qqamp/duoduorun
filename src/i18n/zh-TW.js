@@ -44,12 +44,28 @@ export default {
   panels: {
     configTitle: '分析設定',
     configEmpty: '請從左側選擇分析方法',
+    configNoDataset: '先在右上角載入資料集',
+    variablesTitle: '變數列表',
     resultTitle: '統計結果',
     resultEmpty: '此分析將於 Step 3 上線',
+    resultNoDataset: '請先在右上角載入示範資料集',
     explainTitle: '方法說明',
     explainEmpty: '選擇分析方法後，此處顯示用途、前提假設、核心公式',
     explainTeaching: '此處將顯示分析方法的用途說明、前提假設、核心公式（教學模式）',
     explainReport: '此處將顯示 APA 格式的結果敘述（中文版 + 英文版）',
+    previewTitle: '資料預覽',
+    previewSubtitle: '顯示前 20 筆 — 共 {n} 筆 × {k} 個變數',
+  },
+  varTypes: {
+    continuous: '連續',
+    ordinal: '序次',
+    categorical: '類別',
+    unknown: '未知',
+  },
+  variables: {
+    missing: '遺漏 {n}',
+    distinct: '{n} 個不同值',
+    noMissing: '無遺漏',
   },
   modes: {
     teaching: '教學模式',
