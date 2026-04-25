@@ -252,4 +252,107 @@ export default {
       practicalNs: '尚不能拒絕「兩者沒有差異」的虛無假設；可能是真的沒差，或樣本太小檢定力不足。',
     },
   },
+  corr: {
+    title: '相關矩陣',
+    selectVarsTitle: '選擇要分析的變數',
+    selectVarsHint: '至少勾選 2 個數值變數（連續或順序）；會計算所有兩兩配對的 Pearson r',
+    needAtLeastTwo: '請勾選至少 2 個變數',
+    cellHint: '上三角顯示 r，下三角顯示 p。* p < .05、** p < .01、*** p < .001',
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '描述兩個連續／順序變數之間「線性關聯的方向與強度」。\n正相關（r > 0）：兩變數同向變動。\n負相關（r < 0）：兩變數反向變動。\nr ≈ 0：無線性關聯（可能仍有非線性關係）。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 兩變數均為連續變項（順序量表 ≥ 5 階亦可使用）\n2. 兩變數呈雙變量常態分布（n ≥ 30 時可由中央極限定理放寬）\n3. 兩變數呈線性關係 — 散佈圖明顯曲線時不應使用 Pearson r\n4. 觀察值之間獨立\n5. 同質變異（homoscedasticity）— 殘差散佈不應隨 X 改變',
+      formulasTitle: '核心公式',
+      formulaR: 'r = Σ((Xi - Mx)(Yi - My)) / √(Σ(Xi - Mx)² · Σ(Yi - My)²)',
+      formulaT: 't = r √(n - 2) / √(1 - r²)，df = n - 2',
+      readingTitle: '怎麼讀',
+      reading:
+        '|r| 強度建議（Cohen, 1988）：< 0.1 微弱、0.1-0.3 弱、0.3-0.5 中等、> 0.5 強。\n\n' +
+        'r² 表示 X 與 Y 共享變異的比例（決定係數）。例：r = 0.5 → r² = 0.25 → X 解釋 Y 的 25% 變異。\n\n' +
+        '相關 ≠ 因果。即使達顯著，也不能推論方向與因果。',
+    },
+    apa: {
+      // 顯著的配對列出，無顯著時用 noSig 段落
+      pairLine: '{labelA} 與 {labelB} 之間呈{strengthWord}{directionWord}相關（r = {r}, p = {pStr}, n = {n}）。',
+      noSig: '本資料中無達顯著的相關配對（α = .05）。',
+      copyHint: '一鍵複製 APA 敘述',
+      strengthWord: { weak: '弱', moderate: '中等', strong: '強' },
+      directionWord: { positive: '正', negative: '負' },
+    },
+    interp: {
+      header: '解讀',
+      // 教學模式：列出每個達顯著的配對
+      pairLine: '{labelA} ↔ {labelB}：r = {r} → {strengthWord}{directionWord}相關，p = {pStr} → {sigWord}',
+      noSig: '所有變數兩兩之間在 α = .05 下都未達顯著。可能是真的無關，或樣本太小檢定力不足。',
+      sigYes: '顯著',
+      sigNo: '不顯著',
+    },
+  },
+  simpleReg: {
+    title: '簡單線性迴歸',
+    config: {
+      yLabel: '依變項 Y',
+      xLabel: '預測變項 X',
+      pickY: '請選依變項',
+      pickX: '請選預測變項',
+      sameVar: 'X 與 Y 不可為同一變項',
+    },
+    result: {
+      modelTitle: '模型摘要',
+      anovaTitle: 'ANOVA 表',
+      coefTitle: '係數表',
+      cols: {
+        r: 'r', r2: 'R²', adjR2: 'Adj. R²', se: 'SE 估計值',
+        source: '變異來源', ss: 'SS', df: 'df', ms: 'MS', f: 'F', p: 'p',
+        regression: '迴歸模型', residual: '殘差', total: '總和',
+        predictor: '預測項', b: 'b', stdErr: 'SE', beta: 'β', t: 't',
+        intercept: '常數項', slope: '斜率',
+      },
+      assumpTitle: '殘差常態性',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '用一個連續預測變項 X 預測連續依變項 Y。回答的問題是：\n（1）X 是否能顯著預測 Y？（F 檢定 / b₁ 的 t 檢定）\n（2）X 解釋了 Y 的多少變異？（R²）\n（3）X 每增加 1 單位，Y 平均改變多少？（斜率 b₁）',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 線性關係：X 與 Y 之間為線性關係（散佈圖檢視）\n2. 觀察值獨立\n3. 殘差呈常態分布（Shapiro-Wilk 自動檢核）\n4. 同質變異：殘差變異不隨 X 改變（待 PR-3c.5 加 Breusch-Pagan）',
+      formulasTitle: '核心公式',
+      formulaB1: 'b₁ = Σ((Xi - Mx)(Yi - My)) / Σ(Xi - Mx)²',
+      formulaB0: 'b₀ = My - b₁ · Mx',
+      formulaR2: 'R² = SS_迴歸 / SS_總和 = 1 - SS_殘差 / SS_總和',
+      formulaAdjR2: 'Adj. R² = 1 - (1 - R²)(n - 1)/(n - k - 1)（k 為預測變項數，此處 k = 1）',
+      formulaF: 'F = MS_迴歸 / MS_殘差，df₁ = 1, df₂ = n - 2',
+      formulaBeta: '標準化 β = b₁ · SD(X) / SD(Y)（簡單迴歸下 = r）',
+      readingTitle: '怎麼讀',
+      reading:
+        '迴歸方程式：Ŷ = b₀ + b₁ · X\n\n' +
+        '解讀步驟：\n' +
+        '1. 看 F 與其 p — 是否整體模型顯著？\n' +
+        '2. 看 R² — 模型解釋了 Y 的多少變異？（簡單迴歸下 R² = r²）\n' +
+        '3. 看 b₁ 的方向與大小 — X 增加 1 單位，Y 平均如何變動？\n' +
+        '4. 看標準化 β — 與其他模型比較預測強度時用。',
+    },
+    apa: {
+      sentence:
+        '簡單線性迴歸結果顯示，{xLabel} 顯著預測 {yLabel}（F({df1}, {df2}) = {f}, p = {pStr}），R² = {r2}，調整後 R² = {adjR2}。迴歸方程式為 {yLabel} = {b0} + {b1} × {xLabel}（β = {beta}, t({df2}) = {t}, p = {pStrSlope}）。',
+      sentenceNs:
+        '簡單線性迴歸結果顯示，{xLabel} 對 {yLabel} 之預測未達顯著（F({df1}, {df2}) = {f}, p = {pStr}），R² = {r2}，調整後 R² = {adjR2}。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      sentence:
+        '結論：{xLabel} 對 {yLabel} 的預測{sigWord}（F = {f}, p = {pStr}）。模型解釋了 {r2Pct}% 的變異（R² = {r2}）。' +
+        '預測方程式為 Ŷ = {b0} + {b1} × X — X 每增加 1 單位，Y 平均改變 {b1} 單位。' +
+        ' 標準化係數 β = {beta}，效果量{strengthWord}。',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      strengthWeak: '較弱',
+      strengthModerate: '中等',
+      strengthStrong: '較強',
+    },
+  },
 }

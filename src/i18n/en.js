@@ -246,4 +246,109 @@ export default {
         'Cannot reject the null hypothesis of no difference; this could be a true null, or insufficient power due to small sample.',
     },
   },
+  corr: {
+    title: 'Correlation matrix',
+    selectVarsTitle: 'Select variables for analysis',
+    selectVarsHint:
+      'Tick at least 2 numeric variables (continuous or ordinal); Pearson r is computed for all pairs',
+    needAtLeastTwo: 'Tick at least 2 variables',
+    cellHint:
+      'Upper triangle: r. Lower triangle: p. * p < .05, ** p < .01, *** p < .001.',
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Describe the direction and strength of linear association between two continuous/ordinal variables.\nPositive r: variables move together.\nNegative r: variables move in opposite directions.\nr ≈ 0: no linear association (non-linear relationship may still exist).',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Both variables are continuous (5+ point ordinal scales acceptable)\n2. Bivariate normality (relaxed by CLT for n ≥ 30)\n3. Linear relationship — do not use Pearson r for clearly curved scatterplots\n4. Independent observations\n5. Homoscedasticity — residuals should not vary systematically with X',
+      formulasTitle: 'Core formulas',
+      formulaR: 'r = Σ((Xi - Mx)(Yi - My)) / √(Σ(Xi - Mx)² · Σ(Yi - My)²)',
+      formulaT: 't = r √(n - 2) / √(1 - r²), df = n - 2',
+      readingTitle: 'How to read it',
+      reading:
+        '|r| strength (Cohen, 1988): < 0.1 trivial, 0.1-0.3 weak, 0.3-0.5 moderate, > 0.5 strong.\n\n' +
+        'r² is the proportion of shared variance (coefficient of determination). E.g., r = 0.5 → r² = 0.25 → X explains 25% of Y\'s variance.\n\n' +
+        'Correlation ≠ causation. Even if significant, you cannot infer direction or causality.',
+    },
+    apa: {
+      pairLine:
+        '{labelA} and {labelB} showed a {strengthWord} {directionWord} correlation (r = {r}, p = {pStr}, n = {n}).',
+      noSig: 'No significant correlations were found in this dataset (α = .05).',
+      copyHint: 'Copy APA narrative',
+      strengthWord: { weak: 'weak', moderate: 'moderate', strong: 'strong' },
+      directionWord: { positive: 'positive', negative: 'negative' },
+    },
+    interp: {
+      header: 'Reading',
+      pairLine:
+        '{labelA} ↔ {labelB}: r = {r} → {strengthWord} {directionWord} correlation, p = {pStr} → {sigWord}',
+      noSig: 'No pair was significant at α = .05. Could be a true null, or insufficient power.',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+    },
+  },
+  simpleReg: {
+    title: 'Simple linear regression',
+    config: {
+      yLabel: 'Dependent (Y)',
+      xLabel: 'Predictor (X)',
+      pickY: 'Pick a dependent variable',
+      pickX: 'Pick a predictor',
+      sameVar: 'X and Y cannot be the same variable',
+    },
+    result: {
+      modelTitle: 'Model summary',
+      anovaTitle: 'ANOVA',
+      coefTitle: 'Coefficients',
+      cols: {
+        r: 'r', r2: 'R²', adjR2: 'Adj. R²', se: 'SE estimate',
+        source: 'Source', ss: 'SS', df: 'df', ms: 'MS', f: 'F', p: 'p',
+        regression: 'Regression', residual: 'Residual', total: 'Total',
+        predictor: 'Predictor', b: 'b', stdErr: 'SE', beta: 'β', t: 't',
+        intercept: 'Intercept', slope: 'Slope',
+      },
+      assumpTitle: 'Residual normality',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Predict a continuous Y from a single continuous X. Answers:\n(1) Does X significantly predict Y? (F-test / t on b₁)\n(2) How much variance in Y does X explain? (R²)\n(3) For each unit increase in X, how does Y change? (slope b₁)',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Linearity: X and Y have a linear relationship (check scatterplot)\n2. Independence of observations\n3. Normally distributed residuals (Shapiro-Wilk auto-checked)\n4. Homoscedasticity: residual variance constant across X (Breusch-Pagan to be added in PR-3c.5)',
+      formulasTitle: 'Core formulas',
+      formulaB1: 'b₁ = Σ((Xi - Mx)(Yi - My)) / Σ(Xi - Mx)²',
+      formulaB0: 'b₀ = My - b₁ · Mx',
+      formulaR2: 'R² = SS_regression / SS_total = 1 - SS_residual / SS_total',
+      formulaAdjR2: 'Adj. R² = 1 - (1 - R²)(n - 1)/(n - k - 1) (k = number of predictors, here k = 1)',
+      formulaF: 'F = MS_regression / MS_residual, df₁ = 1, df₂ = n - 2',
+      formulaBeta: 'Standardized β = b₁ · SD(X) / SD(Y) (= r in simple regression)',
+      readingTitle: 'How to read it',
+      reading:
+        'Regression equation: Ŷ = b₀ + b₁ · X\n\n' +
+        'Reading order:\n' +
+        '1. F and its p — is the overall model significant?\n' +
+        '2. R² — how much variance in Y is explained? (= r² in simple regression)\n' +
+        '3. b₁ direction and magnitude — how does Y change per unit increase in X?\n' +
+        '4. Standardized β — for comparing predictor strength across models.',
+    },
+    apa: {
+      sentence:
+        '{xLabel} significantly predicted {yLabel} in a simple linear regression, F({df1}, {df2}) = {f}, p = {pStr}, R² = {r2}, adjusted R² = {adjR2}. The regression equation was {yLabel} = {b0} + {b1} × {xLabel} (β = {beta}, t({df2}) = {t}, p = {pStrSlope}).',
+      sentenceNs:
+        '{xLabel} did not significantly predict {yLabel} in a simple linear regression, F({df1}, {df2}) = {f}, p = {pStr}, R² = {r2}, adjusted R² = {adjR2}.',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      sentence:
+        'Conclusion: {xLabel} {sigWord} predicts {yLabel} (F = {f}, p = {pStr}). The model explains {r2Pct}% of the variance (R² = {r2}). ' +
+        'Equation: Ŷ = {b0} + {b1} × X — Y changes by {b1} per unit increase in X on average.' +
+        ' Standardized coefficient β = {beta}, indicating a {strengthWord} effect.',
+      sigYes: 'significantly',
+      sigNo: 'does not significantly',
+      strengthWeak: 'weak',
+      strengthModerate: 'moderate',
+      strengthStrong: 'strong',
+    },
+  },
 }

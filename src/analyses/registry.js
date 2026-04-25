@@ -10,14 +10,16 @@
  */
 import descriptive from './descriptive'
 import ttest from './ttest'
+import correlation from './correlation'
+import simpleRegression from './simpleRegression'
 
 const REGISTRY = {
-  'desc-stats': descriptive,
-  't-test': ttest,
-  // 'one-way-anova': oneWayAnova,    // PR-3d
-  // 'correlation': correlation,      // PR-3c
-  // 'simple-regression': simpleReg,  // PR-3c
-  // 'cronbach-alpha': cronbachAlpha, // PR-3e
+  'desc-stats':       descriptive,
+  't-test':           ttest,
+  'correlation':      correlation,
+  'simple-regression': simpleRegression,
+  // 'one-way-anova':  oneWayAnova,    // PR-3d
+  // 'cronbach-alpha': cronbachAlpha,  // PR-3e
 }
 
 export function getAnalysisModule(id) {
