@@ -15,6 +15,7 @@ import simpleRegression from './simpleRegression'
 import oneWayAnova from './oneWayAnova'
 import cronbachAlpha from './cronbachAlpha'
 import multipleRegression from './multipleRegression'
+import chiSquare from './chiSquare'
 
 const REGISTRY = {
   'desc-stats':         descriptive,
@@ -24,6 +25,7 @@ const REGISTRY = {
   'multiple-regression': multipleRegression,
   'one-way-anova':      oneWayAnova,
   'cronbach-alpha':     cronbachAlpha,
+  'chi-square':         chiSquare,
 }
 
 export function getAnalysisModule(id) {

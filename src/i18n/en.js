@@ -64,6 +64,109 @@ export default {
     transformsTitle: 'Existing transforms',
     noTransforms: 'No transforms yet',
   },
+  chiSq: {
+    title: 'Chi-square test',
+    types: {
+      independence: 'Test of independence',
+      gof: 'Goodness-of-fit',
+    },
+    typeHint: {
+      independence: 'Are two categorical variables independent? (contingency-table analysis)',
+      gof: 'Do observed counts of a categorical variable match a theoretical distribution?',
+    },
+    config: {
+      typeLabel: 'Test type',
+      rowVar: 'Row variable',
+      colVar: 'Column variable',
+      gofVar: 'Categorical variable',
+      pickRow: 'Pick a row variable',
+      pickCol: 'Pick a column variable',
+      pickGof: 'Pick a categorical variable',
+      bothCategorical: 'Both variables must be categorical',
+      varNeedCategorical: 'Must be a categorical variable',
+      sameVar: 'Row and column cannot be the same variable',
+      expectedProps: 'Expected proportions',
+      expectedHint:
+        'Default uniform (1/k); enter probabilities that sum to 1 (will be auto-normalized otherwise)',
+    },
+    result: {
+      contingencyTitle: 'Contingency table (observed)',
+      expectedTitle: 'Expected counts',
+      stdResidualsTitle: 'Standardized residuals',
+      statsTitle: 'Test statistics',
+      assumpTitle: 'Assumptions',
+      assumpExpected: 'Expected counts ≥ 5 ({ok}/{total} cells)',
+      assumpExpectedDetail:
+        "Cochran's rule: ≥ 80% cells should have expected count ≥ 5; minimum expected = {min}",
+      assumpViolatedHint:
+        'If violated, consider merging adjacent categories, switching to Fisher exact (2×2 mostly), or larger sample.',
+      cols: {
+        chi2: 'χ²', df: 'df', p: 'p', n: 'n', cramerV: "Cramer's V",
+        category: 'Category', observed: 'Observed O', expected: 'Expected E', residual: 'Std. residual z',
+      },
+      total: 'Total',
+      cramerHint: '|z| ≥ 1.96 corresponds to cell-level two-tailed p < .05',
+      effectInterp: {
+        trivial: 'trivial',
+        small: 'small',
+        medium: 'medium',
+        large: 'large',
+      },
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purposeIndep:
+        'Test whether two categorical variables are independent (unrelated).\nExample: Is gender related to preferred class format?\nH₀: independent / H₁: associated',
+      purposeGof:
+        'Test whether observed counts of a categorical variable match a theoretical distribution.\nExample: After 600 dice rolls, do face counts match a uniform 1/6?\nH₀: observed = expected / H₁: deviates',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Independent observations\n' +
+        '2. Simple random sample\n' +
+        "3. Expected counts ≥ 5 in at least 80% of cells (Cochran's rule)\n" +
+        '4. Variables are categorical (not continuous)',
+      formulasTitle: 'Core formulas',
+      formulaChi2: 'χ² = Σ ((O − E)² / E)',
+      formulaIndepE:
+        'Independence: E_ij = (row_i total × col_j total) / N, df = (r − 1)(c − 1)',
+      formulaGofE: 'Goodness-of-fit: E_i = N · p_i, df = k − 1',
+      formulaCramer: "Cramer's V = √(χ² / (N · min(r − 1, c − 1)))",
+      formulaResid: 'Standardized residual z_ij = (O_ij − E_ij) / √E_ij',
+      readingTitle: 'How to read it',
+      reading:
+        '1. Look at the overall χ² p-value — are the variables related?\n' +
+        "2. Look at Cramer's V — strength of association (< 0.1 trivial, < 0.3 weak, < 0.5 moderate, ≥ 0.5 strong)\n" +
+        '3. Look at standardized residuals — which cells deviate most? |z| ≥ 1.96 → cell p < .05\n' +
+        '4. Too many cells with expected < 5 (> 20%) → results unreliable; consider merging categories or using Fisher exact (mostly 2×2).',
+    },
+    apa: {
+      indepSig:
+        "A chi-square test of independence revealed a significant association between {rowVar} and {colVar}, χ²({df}, N = {n}) = {chi2}, p = {pStr}, Cramer's V = {v} ({effect} effect).",
+      indepNs:
+        '{rowVar} and {colVar} were not significantly associated in a chi-square test of independence, χ²({df}, N = {n}) = {chi2}, p = {pStr}.',
+      gofSig:
+        'A chi-square goodness-of-fit test revealed that the observed distribution of {var} differed {sig} from the expected distribution, χ²({df}, N = {n}) = {chi2}, p = {pStr}.',
+      gofNs:
+        'The observed distribution of {var} did not differ significantly from the expected distribution, χ²({df}, N = {n}) = {chi2}, p = {pStr}.',
+      sigYes: 'significantly',
+      sigNo: 'not significantly',
+      sigYesDiff: 'significantly',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      indepOverall:
+        'Overall χ²({df}, N = {n}) = {chi2}, p = {pStr} → {sigWord}.' +
+        "\nCramer's V = {v}, indicating a {effect} effect.",
+      gofOverall:
+        'Overall χ²({df}, N = {n}) = {chi2}, p = {pStr} → {sigWord}.',
+      residSection: 'Cells with |z| ≥ 1.96 (notable deviation):',
+      residLine: '{cellLabel}: z = {z}{flag}',
+      flagHigh: ' notable',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+    },
+  },
   multReg: {
     title: 'Multiple linear regression',
     config: {

@@ -71,6 +71,105 @@ export default {
     transformsTitle: '已建立的轉換',
     noTransforms: '尚未建立任何轉換',
   },
+  chiSq: {
+    title: '卡方檢定',
+    types: {
+      independence: '獨立性檢定',
+      gof: '適合度檢定',
+    },
+    typeHint: {
+      independence: '兩個類別變數之間是否獨立（列聯表分析）',
+      gof: '一個類別變數的觀察次數是否符合給定的理論分布',
+    },
+    config: {
+      typeLabel: '檢定型別',
+      rowVar: '列變數',
+      colVar: '欄變數',
+      gofVar: '類別變數',
+      pickRow: '請選列變數',
+      pickCol: '請選欄變數',
+      pickGof: '請選類別變數',
+      bothCategorical: '兩個變數均需為類別型',
+      varNeedCategorical: '需為類別型變數',
+      sameVar: '列與欄不可為同一變數',
+      expectedProps: '理論機率',
+      expectedHint: '預設為均勻（1/k）；可手動填入總和為 1 的機率（不為 1 會自動正規化）',
+    },
+    result: {
+      contingencyTitle: '列聯表（觀察次數）',
+      expectedTitle: '期望次數',
+      stdResidualsTitle: '標準化殘差',
+      statsTitle: '檢定統計量',
+      assumpTitle: '假設前提',
+      assumpExpected: '期望次數 ≥ 5（{ok}/{total} cells）',
+      assumpExpectedDetail: 'Cochran 規則：≥ 80% cells 期望次數 ≥ 5；最小期望次數 = {min}',
+      assumpViolatedHint: '若違反，考慮合併相近類別、改用 Fisher exact、或樣本量擴大',
+      cols: {
+        chi2: 'χ²', df: 'df', p: 'p', n: 'n', cramerV: "Cramer's V",
+        category: '類別', observed: '觀察 O', expected: '期望 E', residual: '標準化殘差 z',
+      },
+      total: '總和',
+      cramerHint: '|z| ≥ 1.96 對應該 cell p < .05（雙尾）',
+      effectInterp: {
+        trivial: '微弱',
+        small: '小',
+        medium: '中',
+        large: '大',
+      },
+    },
+    notes: {
+      purposeTitle: '用途',
+      purposeIndep:
+        '檢定兩個類別變數是否獨立（無相關）。\n例：性別與偏好上課形式之間有沒有關聯？\nH₀：兩變數獨立 / H₁：兩變數相關',
+      purposeGof:
+        '檢定一個類別變數的觀察次數是否符合給定的理論分布。\n例：擲骰子 600 次，各點數出現次數與「均勻 1/6」是否相符？\nH₀：觀察分布符合理論分布 / H₁：不符合',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 觀察值之間獨立\n' +
+        '2. 樣本來自簡單隨機抽樣\n' +
+        '3. 期望次數 ≥ 5 在至少 80% 的 cell（Cochran 規則）\n' +
+        '4. 變數為類別型（非連續）',
+      formulasTitle: '核心公式',
+      formulaChi2: 'χ² = Σ ((O − E)² / E)',
+      formulaIndepE: '獨立性檢定 E_ij = (row_i 總和 × col_j 總和) / N，df = (r − 1)(c − 1)',
+      formulaGofE: '適合度檢定 E_i = N · p_i，df = k − 1',
+      formulaCramer: "Cramer's V = √(χ² / (N · min(r − 1, c − 1)))",
+      formulaResid: '標準化殘差 z_ij = (O_ij − E_ij) / √E_ij',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 看整體 χ² 的 p 值 — 兩變數是否相關？\n' +
+        "2. 看 Cramer's V — 相關強度（< 0.1 微弱、< 0.3 弱、< 0.5 中、≥ 0.5 強）\n" +
+        '3. 看標準化殘差 — 哪個 cell 的偏離特別大？|z| ≥ 1.96 對應該 cell p < .05\n' +
+        '4. 期望次數 < 5 的 cell 太多（> 20%）→ 結果失準，考慮合併類別或改用 Fisher exact 檢定（精確檢定，2×2 為主）',
+    },
+    apa: {
+      indepSig:
+        '卡方獨立性檢定結果顯示，{rowVar} 與 {colVar} 兩變數呈顯著關聯，χ²({df}, N = {n}) = {chi2}, p = {pStr}，Cramer\'s V = {v}（{effect}效果量）。',
+      indepNs:
+        '卡方獨立性檢定結果顯示，{rowVar} 與 {colVar} 兩變數之間無顯著關聯，χ²({df}, N = {n}) = {chi2}, p = {pStr}。',
+      gofSig:
+        '卡方適合度檢定結果顯示，{var} 的觀察分布與理論分布{sig}差異，χ²({df}, N = {n}) = {chi2}, p = {pStr}。',
+      gofNs:
+        '卡方適合度檢定結果顯示，{var} 的觀察分布與理論分布無顯著差異，χ²({df}, N = {n}) = {chi2}, p = {pStr}。',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      sigYesDiff: '存在顯著',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      indepOverall:
+        '整體檢定 χ²({df}, N = {n}) = {chi2}, p = {pStr} → {sigWord}。' +
+        '\nCramer\'s V = {v}，屬於{effect}效果量。',
+      gofOverall:
+        '整體檢定 χ²({df}, N = {n}) = {chi2}, p = {pStr} → {sigWord}。',
+      residSection: '標準化殘差檢視（|z| ≥ 1.96 為主要偏離 cell）：',
+      residLine: '{cellLabel}：z = {z}{flag}',
+      flagHigh: ' 顯著偏離',
+      sigYes: '顯著',
+      sigNo: '不顯著',
+    },
+  },
   multReg: {
     title: '多元線性迴歸',
     config: {

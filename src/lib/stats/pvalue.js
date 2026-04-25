@@ -112,6 +112,78 @@ export function normalCdf(z) {
   return 0.5 * (1 + erf(z / Math.SQRT2))
 }
 
+/* ─────────────────────────  卡方分布相關  ───────────────────────── */
+
+/**
+ * 規則化下方不完全 Gamma 函數 P(a, x) = γ(a, x) / Γ(a)
+ *
+ * Numerical Recipes 實作：x < a+1 用級數展開、x ≥ a+1 用連分數展開
+ */
+export function gammp(a, x) {
+  if (x < 0 || a <= 0) return NaN
+  if (x === 0) return 0
+  if (x < a + 1) return gser(a, x)
+  return 1 - gcf(a, x)
+}
+
+/** 規則化上方不完全 Gamma 函數 Q(a, x) = 1 - P(a, x) */
+export function gammq(a, x) {
+  if (x < 0 || a <= 0) return NaN
+  if (x === 0) return 1
+  if (x < a + 1) return 1 - gser(a, x)
+  return gcf(a, x)
+}
+
+function gser(a, x) {
+  const ITMAX = 200
+  const EPS = 3e-14
+  const gln = lgamma(a)
+  if (x === 0) return 0
+  let ap = a
+  let sum = 1 / a
+  let del = sum
+  for (let n = 1; n <= ITMAX; n++) {
+    ap += 1
+    del *= x / ap
+    sum += del
+    if (Math.abs(del) < Math.abs(sum) * EPS) break
+  }
+  return sum * Math.exp(-x + a * Math.log(x) - gln)
+}
+
+function gcf(a, x) {
+  const ITMAX = 200
+  const EPS = 3e-14
+  const FPMIN = 1e-30
+  const gln = lgamma(a)
+  let b = x + 1 - a
+  let c = 1 / FPMIN
+  let d = 1 / b
+  let h = d
+  for (let i = 1; i <= ITMAX; i++) {
+    const an = -i * (i - a)
+    b += 2
+    d = an * d + b
+    if (Math.abs(d) < FPMIN) d = FPMIN
+    c = b + an / c
+    if (Math.abs(c) < FPMIN) c = FPMIN
+    d = 1 / d
+    const del = d * c
+    h *= del
+    if (Math.abs(del - 1) < EPS) break
+  }
+  return Math.exp(-x + a * Math.log(x) - gln) * h
+}
+
+/** 卡方分布右尾 p-value：Pr[X² > x | df] = Q(df/2, x/2) */
+export function pChiSq(x, df) {
+  if (x <= 0) return 1
+  if (df <= 0) return NaN
+  return gammq(df / 2, x / 2)
+}
+
+/* ─────────────────────────  常態分布逆 CDF  ───────────────────────── */
+
 /**
  * qnorm(p) — 標準常態分布逆 CDF（Φ⁻¹）
  *
