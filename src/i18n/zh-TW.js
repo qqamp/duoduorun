@@ -85,5 +85,63 @@ export default {
   common: {
     comingSoon: '陸續上線中',
     placeholder: '占位內容',
+    copy: '複製',
+    copied: '已複製',
+  },
+  desc: {
+    selectVarsTitle: '選擇要分析的變數',
+    selectVarsHint: '勾選下方數值變數（連續或順序），可複選',
+    noVarsSelected: '請先勾選至少一個變數',
+    cols: {
+      variable: '變數',
+      n: 'N',
+      mean: 'M',
+      sd: 'SD',
+      se: 'SE',
+      min: 'Min',
+      max: 'Max',
+      median: 'Median',
+      skew: 'Skew',
+      kurt: 'Kurt',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '描述每個變數的集中趨勢（M、Median）、離散程度（SD、SE、Min、Max），以及分布形狀（Skew、Kurt）。是任何後續分析前必做的「先認識資料」工作。',
+      assumptionsTitle: '前提假設',
+      assumptions: '無——敘述統計不涉及推論，沒有假設前提需要檢核。',
+      formulasTitle: '核心公式',
+      formulaM: 'M = ΣX / n',
+      formulaSD: 'SD = √( Σ(X - M)² / (n - 1) )',
+      formulaSE: 'SE = SD / √n',
+      formulaSkew:
+        'Skew = n / [(n-1)(n-2)] · Σ((X - M) / SD)³（Fisher–Pearson type 2，與 SPSS 一致）',
+      formulaKurt:
+        'Kurt = n(n+1) / [(n-1)(n-2)(n-3)] · Σ((X - M) / SD)⁴ - 3(n-1)² / [(n-2)(n-3)]（excess kurtosis）',
+      readingTitle: '怎麼讀',
+      reading:
+        '偏度（Skew）：>0 右偏（長尾在右）、<0 左偏（長尾在左）、≈0 對稱。' +
+        '經驗法則 |Skew| < 1 視為近似對稱。' +
+        '\n\n峰度（Kurt）：>0 高瘦（leptokurtic）、<0 平緩（platykurtic）、≈0 接近常態。' +
+        '經驗法則 |Kurt| < 1 視為接近常態。',
+    },
+    apa: {
+      // 占位符：{label} 變數標籤 / {n} / {m} / {sd} / {min} / {max} / {median} / {skew} / {kurt}
+      sentence:
+        '{label}（M = {m}, SD = {sd}, N = {n}, 全距 {min}–{max}, Median = {median}），偏度 = {skew}，峰度 = {kurt}。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      // 教學模式的白話解讀（每個變數一段）
+      // {label} {m} {sd} {n} {minMaxRange} {skewWord} {kurtWord}
+      sentence:
+        '{label} 共有 {n} 筆有效值，平均為 {m}，標準差 {sd}，範圍 {minMaxRange}。分布形狀為「{skewWord}」、「{kurtWord}」。',
+      skewLeft: '左偏',
+      skewRight: '右偏',
+      skewSymmetric: '近似對稱',
+      kurtHigh: '高瘦於常態',
+      kurtLow: '平緩於常態',
+      kurtNormal: '接近常態',
+    },
   },
 }

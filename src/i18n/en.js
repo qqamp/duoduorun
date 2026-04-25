@@ -78,5 +78,60 @@ export default {
   common: {
     comingSoon: 'Coming soon',
     placeholder: 'Placeholder content',
+    copy: 'Copy',
+    copied: 'Copied',
+  },
+  desc: {
+    selectVarsTitle: 'Select variables for analysis',
+    selectVarsHint: 'Tick numeric variables below (continuous or ordinal); multiple allowed',
+    noVarsSelected: 'Tick at least one variable to start',
+    cols: {
+      variable: 'Variable',
+      n: 'N',
+      mean: 'M',
+      sd: 'SD',
+      se: 'SE',
+      min: 'Min',
+      max: 'Max',
+      median: 'Median',
+      skew: 'Skew',
+      kurt: 'Kurt',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        "Summarize each variable's central tendency (M, Median), spread (SD, SE, Min, Max), and shape (Skew, Kurt). Always run this first to get to know your data before any inferential analysis.",
+      assumptionsTitle: 'Assumptions',
+      assumptions: 'None — descriptive statistics involves no inference, so no assumptions to check.',
+      formulasTitle: 'Core formulas',
+      formulaM: 'M = ΣX / n',
+      formulaSD: 'SD = √( Σ(X - M)² / (n - 1) )',
+      formulaSE: 'SE = SD / √n',
+      formulaSkew:
+        'Skew = n / [(n-1)(n-2)] · Σ((X - M) / SD)³ (Fisher–Pearson type 2, matches SPSS)',
+      formulaKurt:
+        'Kurt = n(n+1) / [(n-1)(n-2)(n-3)] · Σ((X - M) / SD)⁴ - 3(n-1)² / [(n-2)(n-3)] (excess kurtosis)',
+      readingTitle: 'How to read it',
+      reading:
+        'Skewness: >0 right-skewed (tail on right), <0 left-skewed (tail on left), ≈0 symmetric.' +
+        ' Rule of thumb: |Skew| < 1 is approximately symmetric.' +
+        '\n\nKurtosis: >0 leptokurtic (peaked, heavy-tailed), <0 platykurtic (flat), ≈0 near normal.' +
+        ' Rule of thumb: |Kurt| < 1 is close to normal.',
+    },
+    apa: {
+      sentence:
+        '{label} (M = {m}, SD = {sd}, N = {n}, range {min}–{max}, Median = {median}), skewness = {skew}, kurtosis = {kurt}.',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      sentence:
+        '{label} has {n} valid observations, mean = {m}, SD = {sd}, range {minMaxRange}. Distribution shape: {skewWord}, {kurtWord}.',
+      skewLeft: 'left-skewed',
+      skewRight: 'right-skewed',
+      skewSymmetric: 'approximately symmetric',
+      kurtHigh: 'more peaked than normal',
+      kurtLow: 'flatter than normal',
+      kurtNormal: 'close to normal',
+    },
   },
 }
