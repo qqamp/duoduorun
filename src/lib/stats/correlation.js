@@ -15,6 +15,7 @@
 import { mean } from './descriptive.js'
 import { pT } from './pvalue.js'
 import { isMissing } from '../variableTypes.js'
+import { ranks } from './ranks.js'
 
 /**
  * 計算 Pearson r 與其顯著性檢定
@@ -44,6 +45,57 @@ export function pearsonCorr(x, y) {
   const t = (r * Math.sqrt(df)) / Math.sqrt(1 - r * r)
   const p = pT(Math.abs(t), df)
   return { r, t, df, p, n }
+}
+
+/**
+ * Spearman ρ（rank-based correlation）
+ *
+ * 演算法：對 x 與 y 各自取平均秩後，套用 Pearson 公式。
+ * 處理並列：用平均秩，所以這版適用「有並列」的資料。
+ *
+ * 顯著性檢定（與 Pearson 相同）：
+ *   t = ρ √(n-2) / √(1-ρ²)，df = n-2
+ *
+ * 注意：嚴格的 Spearman 對小樣本（n < 30）應該用精確分布或 permutation；
+ *       這裡用 t 近似，n ≥ 20 時偏差通常可接受。
+ */
+export function spearmanRho(x, y) {
+  const n = x.length
+  if (n !== y.length) return { rho: NaN, t: NaN, df: NaN, p: NaN, n }
+  if (n < 3) return { rho: NaN, t: NaN, df: NaN, p: NaN, n }
+  const rx = ranks(x).ranks
+  const ry = ranks(y).ranks
+  const out = pearsonCorr(rx, ry)
+  return { rho: out.r, t: out.t, df: out.df, p: out.p, n }
+}
+
+/** Spearman ρ 矩陣（同 correlationMatrix 但用 rank-based） */
+export function spearmanMatrix(rows, columns) {
+  const matrix = {}
+  for (const a of columns) {
+    matrix[a] = {}
+    for (const b of columns) {
+      if (a === b) {
+        const nA = rows.filter((row) => !isMissing(row[a])).length
+        matrix[a][b] = { rho: 1, p: 0, n: nA, t: Infinity, df: Math.max(0, nA - 2) }
+        continue
+      }
+      const xs = []
+      const ys = []
+      for (const row of rows) {
+        const va = row[a]
+        const vb = row[b]
+        if (isMissing(va) || isMissing(vb)) continue
+        const na = Number(va)
+        const nb = Number(vb)
+        if (!Number.isFinite(na) || !Number.isFinite(nb)) continue
+        xs.push(na)
+        ys.push(nb)
+      }
+      matrix[a][b] = spearmanRho(xs, ys)
+    }
+  }
+  return { columns, matrix }
 }
 
 /**

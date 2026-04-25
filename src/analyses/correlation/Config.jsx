@@ -9,6 +9,7 @@ function Config() {
   const { dataset, variables, lang, t } = useApp()
   const [state, update] = useAnalysisState()
   const selectedVars = state.selectedVars || []
+  const method = state.method || 'pearson'
 
   if (!dataset) return null
 
@@ -28,6 +29,36 @@ function Config() {
 
   return (
     <div>
+      {/* method 切換 — Pearson / Spearman */}
+      <div className="mb-5">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-duo-cocoa-400 mb-2">
+          {t.corr.methodLabel}
+        </h3>
+        <div className="inline-flex rounded-md bg-duo-cream-50 border border-duo-cocoa-100 p-0.5 w-full">
+          {['pearson', 'spearman'].map((m) => {
+            const active = method === m
+            return (
+              <button
+                key={m}
+                type="button"
+                onClick={() => update({ method: m })}
+                className={[
+                  'flex-1 px-2 py-1.5 text-xs font-medium rounded transition',
+                  active
+                    ? 'bg-white text-duo-cocoa-900 border border-duo-cocoa-100'
+                    : 'text-duo-cocoa-500 hover:text-duo-cocoa-800',
+                ].join(' ')}
+              >
+                {t.corr.methods[m]}
+              </button>
+            )
+          })}
+        </div>
+        <p className="text-[11px] text-duo-cocoa-400 mt-1.5 leading-snug">
+          {t.corr.methodHint[method]}
+        </p>
+      </div>
+
       <h3 className="text-xs font-semibold uppercase tracking-wider text-duo-cocoa-400 mb-2">
         {t.corr.selectVarsTitle}
       </h3>

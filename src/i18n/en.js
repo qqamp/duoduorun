@@ -64,6 +64,116 @@ export default {
     transformsTitle: 'Existing transforms',
     noTransforms: 'No transforms yet',
   },
+  np: {
+    title: 'Nonparametric tests',
+    types: {
+      mw: 'Mann-Whitney U (independent 2 groups)',
+      wilcoxon: 'Wilcoxon Signed-Rank (paired)',
+      kw: 'Kruskal-Wallis (3+ groups)',
+    },
+    typeHint: {
+      mw: 'Two-group rank-sum test; nonparametric counterpart of independent t-test',
+      wilcoxon: 'Paired-rank test; nonparametric counterpart of paired t-test',
+      kw: 'Three-or-more-group rank ANOVA; nonparametric counterpart of one-way ANOVA',
+    },
+    config: {
+      typeLabel: 'Test type',
+      depVar: 'Dependent (continuous or ordinal)',
+      groupVar: 'Grouping variable (exactly 2 groups)',
+      groupVarKW: 'Grouping variable (≥ 3 groups)',
+      var1: 'Variable 1',
+      var2: 'Variable 2',
+      pickDep: 'Pick a dependent variable',
+      pickGroup: 'Pick a grouping variable',
+      pickVar1: 'Pick variable 1',
+      pickVar2: 'Pick variable 2',
+      groupVarBadGroups: 'This variable has {k} groups; needs exactly 2',
+      factorBadGroups: 'This factor has {k} groups; needs at least 3',
+    },
+    result: {
+      statsTitle: 'Test statistics',
+      groupRanksTitle: 'Group rank sums',
+      groupCol: 'Group',
+      cols: {
+        u: 'U', u1: 'U₁', u2: 'U₂', wpos: 'W⁺', wneg: 'W⁻', t: 'T',
+        h: 'H', df: 'df', z: 'z', p: 'p', n: 'n', meanRank: 'Mean rank', sumRank: 'Rank sum',
+        eps2: 'ε²', r: 'r (effect size)',
+      },
+      tieNote: 'Result includes tie correction',
+      droppedNote: '{n} pairs with D = 0 dropped',
+      effect: { small: 'small', medium: 'medium', large: 'large' },
+      kwSigPosthoc:
+        "After significant H, run Dunn's test for pairwise comparisons (not yet built; use R::dunn.test or JASP).",
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purposeMW:
+        'Mann-Whitney U (a.k.a. Wilcoxon rank-sum) tests whether two independent groups differ in median location. Use when:\n' +
+        '- Samples not normally distributed\n' +
+        '- Ordinal data (Likert)\n' +
+        '- Small n (< 30) with questionable normality',
+      purposeWil:
+        'Wilcoxon Signed-Rank tests whether the median paired difference equals zero. Use when:\n' +
+        '- Paired t-test differences not normal\n' +
+        '- Ordinal pre/post comparisons',
+      purposeKW:
+        'Kruskal-Wallis H tests whether three or more independent groups differ in location. Use when:\n' +
+        '- Groups not normally distributed\n' +
+        '- Variances clearly unequal\n' +
+        '- Ordinal multi-group comparison',
+      assumpTitle: 'Assumptions',
+      assumptionsMW:
+        '1. Independent groups\n2. Similar shape across groups (for median-shift inference)\n3. At least ordinal scale',
+      assumptionsWil: '1. Pairs are independent\n2. Differences are symmetric around the median',
+      assumptionsKW:
+        '1. Independent groups\n2. Similar shape across groups\n3. At least ordinal scale',
+      formulasTitle: 'Core formulas',
+      formulaMWU: 'U₁ = R₁ − n₁(n₁+1)/2, U₂ = n₁n₂ − U₁, U = min(U₁, U₂)',
+      formulaMWZ: 'z = (U₁ − μ) / σ with tie correction; p = 2(1 − Φ(|z|))',
+      formulaWil: 'W⁺ = Σ rank(|D|) where D > 0; T = min(W⁺, W⁻)',
+      formulaWilZ:
+        'z = (W⁺ − n(n+1)/4) / √((n(n+1)(2n+1) − Σ(t³−t)/2)/24)',
+      formulaKW:
+        'H = (12/(N(N+1))) Σ(R_i² / n_i) − 3(N+1), tie-corrected by dividing 1 − Σ(t³−t)/(N³−N)',
+      formulaKWdf: 'df = k − 1; p from χ²(df) right tail',
+      formulaEffMW: 'Effect size r = |z| / √N',
+      formulaEffKW: 'Effect size ε² = (H − k + 1) / (N − k)',
+      readingTitle: 'How to read it',
+      reading:
+        '1. p < .05 → reject H₀ (groups differ in location)\n' +
+        '2. Effect size r: < 0.1 trivial, < 0.3 small, < 0.5 medium, ≥ 0.5 large\n' +
+        "3. After significant KW, run Dunn's pairwise post-hoc\n\n" +
+        'When to choose nonparametric over t / ANOVA:\n' +
+        '- Small n, suspect normality, outliers, or ordinal scale → nonparametric\n' +
+        '- Large n with normality OK → t / ANOVA usually more powerful',
+    },
+    apa: {
+      mw:
+        'A Mann-Whitney U test indicated a {sigWord} difference in {depLabel} between {g1Name} and {g2Name}, U = {u}, z = {z}, p = {pStr}, effect size r = {r} ({effect}).',
+      wilcoxon:
+        'A Wilcoxon signed-rank test indicated a {sigWord} difference between {var1Name} and {var2Name}, T = {t}, z = {z}, p = {pStr}, n = {n} ({nDropped} zero-difference pairs dropped), effect size r = {r} ({effect}).',
+      kw:
+        'A Kruskal-Wallis H test indicated a {sigWord} effect of {factor} on {depLabel}, H({df}, N = {n}) = {h}, p = {pStr}, ε² = {eps2}.',
+      sigYes: 'significant',
+      sigNo: 'non-significant',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      mw:
+        'Conclusion: {depLabel} differed {sigWord} between {g1Name} (mean rank = {mr1}) and {g2Name} (mean rank = {mr2}); U = {u}, z = {z}, p = {pStr}.' +
+        '\nEffect size r = {r} ({effect}).',
+      wilcoxon:
+        'Conclusion: the difference between {var1Name} and {var2Name} was {sigWord} (W⁺ = {wpos}, W⁻ = {wneg}, T = {t}, z = {z}, p = {pStr}, n = {n}).' +
+        '\nEffect size r = {r} ({effect}).',
+      kw:
+        'Conclusion: the effect of {factor} on {depLabel} was {sigWord} (H({df}, N = {n}) = {h}, p = {pStr}).' +
+        '\nε² = {eps2}.',
+      kwPosthoc: "Note: after significant H, run Dunn's pairwise post-hoc.",
+      sigYes: 'significant',
+      sigNo: 'not significant',
+    },
+  },
   chiSq: {
     title: 'Chi-square test',
     types: {
@@ -481,9 +591,18 @@ export default {
   },
   corr: {
     title: 'Correlation matrix',
+    methodLabel: 'Correlation method',
+    methods: {
+      pearson: 'Pearson r',
+      spearman: 'Spearman ρ',
+    },
+    methodHint: {
+      pearson: 'Linear correlation; assumes bivariate normality with continuous variables',
+      spearman: 'Rank-based monotonic correlation; no normality assumption, ordinal scales OK',
+    },
     selectVarsTitle: 'Select variables for analysis',
     selectVarsHint:
-      'Tick at least 2 numeric variables (continuous or ordinal); Pearson r is computed for all pairs',
+      'Tick at least 2 numeric variables (continuous or ordinal); all pairs computed',
     needAtLeastTwo: 'Tick at least 2 variables',
     cellHint:
       'Upper triangle: r. Lower triangle: p. * p < .05, ** p < .01, *** p < .001.',

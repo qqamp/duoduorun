@@ -71,6 +71,118 @@ export default {
     transformsTitle: '已建立的轉換',
     noTransforms: '尚未建立任何轉換',
   },
+  np: {
+    title: '無母數檢定',
+    types: {
+      mw: 'Mann-Whitney U（獨立兩組）',
+      wilcoxon: 'Wilcoxon Signed-Rank（配對）',
+      kw: 'Kruskal-Wallis（三組以上）',
+    },
+    typeHint: {
+      mw: '兩組獨立樣本秩和檢定；對應 t 檢定，但不要求常態',
+      wilcoxon: '配對樣本秩和檢定；對應配對 t 檢定，但不要求差值常態',
+      kw: '三組以上獨立樣本秩和 ANOVA；對應單因子 ANOVA，但不要求常態',
+    },
+    config: {
+      typeLabel: '檢定型別',
+      depVar: '依變項（連續或順序）',
+      groupVar: '分組變項（剛好 2 組）',
+      groupVarKW: '分組變項（≥ 3 組）',
+      var1: '變項 1',
+      var2: '變項 2',
+      pickDep: '請選依變項',
+      pickGroup: '請選分組變項',
+      pickVar1: '請選變項 1',
+      pickVar2: '請選變項 2',
+      groupVarBadGroups: '此變項有 {k} 組，需要剛好 2 組',
+      factorBadGroups: '此變項有 {k} 組，需要至少 3 組',
+    },
+    result: {
+      statsTitle: '檢定統計量',
+      groupRanksTitle: '各組秩和',
+      groupCol: '組別',
+      cols: {
+        u: 'U', u1: 'U₁', u2: 'U₂', wpos: 'W⁺', wneg: 'W⁻', t: 'T',
+        h: 'H', df: 'df', z: 'z', p: 'p', n: 'n', meanRank: '平均秩', sumRank: '秩和',
+        eps2: 'ε²', r: 'r（效果量）',
+      },
+      tieNote: '結果含並列校正',
+      droppedNote: '已剔除 {n} 對 D = 0',
+      effect: {
+        small: '小', medium: '中', large: '大',
+      },
+      kwSigPosthoc:
+        '整體 H 顯著時，建議用 Dunn 檢定做事後兩兩比較（本工具未內建，可在 R::dunn.test 或 JASP 跑）',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purposeMW:
+        'Mann-Whitney U（亦稱 Wilcoxon rank-sum）檢定兩組獨立樣本的中位數位置是否不同。\n適用情境：' +
+        '\n- 樣本不呈常態分布' +
+        '\n- 順序量表資料（Likert）' +
+        '\n- 樣本量小（n < 30）且常態性可疑',
+      purposeWil:
+        'Wilcoxon Signed-Rank 檢定兩個配對樣本的差值中位數是否為零。\n適用情境：' +
+        '\n- 配對 t 檢定的差值不呈常態' +
+        '\n- 順序量表的前後測比較',
+      purposeKW:
+        'Kruskal-Wallis H 檢定三組以上獨立樣本的位置參數是否不同。\n適用情境：' +
+        '\n- 各組不呈常態分布' +
+        '\n- 各組變異數明顯不等' +
+        '\n- 順序量表的多組比較',
+      assumpTitle: '前提假設',
+      assumptionsMW:
+        '1. 兩組獨立\n2. 兩組分布形狀類似（檢定中位數差異需此）\n3. 至少順序測量尺度',
+      assumptionsWil: '1. 配對之間獨立\n2. 差值的分布對稱（檢定中位數差異需此）',
+      assumptionsKW:
+        '1. 各組獨立\n2. 各組分布形狀類似（檢定中位數差異需此）\n3. 至少順序測量尺度',
+      formulasTitle: '核心公式',
+      formulaMWU: 'U₁ = R₁ − n₁(n₁+1)/2，U₂ = n₁n₂ − U₁，U = min(U₁, U₂)',
+      formulaMWZ: 'z = (U₁ − μ) / σ，含並列校正；p = 2(1 − Φ(|z|))',
+      formulaWil: 'W⁺ = Σ rank(|D|) where D > 0；T = min(W⁺, W⁻)',
+      formulaWilZ:
+        'z = (W⁺ − n(n+1)/4) / √((n(n+1)(2n+1) − Σ(t³−t)/2)/24)',
+      formulaKW:
+        'H = (12/(N(N+1))) Σ(R_i² / n_i) − 3(N+1)，並列校正後 / (1 − Σ(t³−t)/(N³−N))',
+      formulaKWdf: 'df = k − 1；p 從 χ²(df) 右尾',
+      formulaEffMW: '效果量 r = |z| / √N',
+      formulaEffKW: '效果量 ε² = (H − k + 1) / (N − k)',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. p < .05 → 拒絕 H₀（兩組／多組分布位置相同）\n' +
+        '2. 效果量 r：< 0.1 微弱、< 0.3 小、< 0.5 中、≥ 0.5 大\n' +
+        '3. KW 顯著後建議跑 Dunn 兩兩事後比較\n\n' +
+        '與 t / ANOVA 的選用：\n' +
+        '- 樣本量小、常態性可疑、有極端值或順序量表 → 無母數\n' +
+        '- 樣本量大且常態性 OK → t / ANOVA 通常更具檢定力',
+    },
+    apa: {
+      mw:
+        'Mann-Whitney U 檢定結果顯示，{g1Name} 與 {g2Name} 之間的{depLabel}{sigWord}差異，U = {u}, z = {z}, p = {pStr}，效果量 r = {r}（{effect}）。',
+      wilcoxon:
+        'Wilcoxon Signed-Rank 檢定結果顯示，{var1Name} 與 {var2Name} 之間{sigWord}差異，T = {t}, z = {z}, p = {pStr}, n = {n}（剔除 {nDropped} 對 D = 0），效果量 r = {r}（{effect}）。',
+      kw:
+        'Kruskal-Wallis H 檢定結果顯示，{factor} 對 {depLabel} 的影響{sigWord}，H({df}, N = {n}) = {h}, p = {pStr}，ε² = {eps2}。',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      mw:
+        '結論：{g1Name}（平均秩 = {mr1}）與 {g2Name}（平均秩 = {mr2}）的{depLabel}{sigWord}差異（U = {u}, z = {z}, p = {pStr}）。' +
+        '\n效果量 r = {r}，屬於{effect}效果量。',
+      wilcoxon:
+        '結論：{var1Name} 與 {var2Name} 之間的差異{sigWord}（W⁺ = {wpos}, W⁻ = {wneg}, T = {t}, z = {z}, p = {pStr}, n = {n}）。' +
+        '\n效果量 r = {r}，屬於{effect}效果量。',
+      kw:
+        '結論：{factor} 對 {depLabel} 的影響{sigWord}（H({df}, N = {n}) = {h}, p = {pStr}）。' +
+        '\nε² = {eps2}。',
+      kwPosthoc: '注意：H 顯著後，建議跑 Dunn 兩兩事後比較。',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+    },
+  },
   chiSq: {
     title: '卡方檢定',
     types: {
@@ -483,8 +595,17 @@ export default {
   },
   corr: {
     title: '相關矩陣',
+    methodLabel: '相關方法',
+    methods: {
+      pearson: 'Pearson r',
+      spearman: 'Spearman ρ',
+    },
+    methodHint: {
+      pearson: '線性相關；要求兩變數為連續且呈雙變量常態',
+      spearman: '基於秩的單調相關；不要求常態，順序量表也適用',
+    },
     selectVarsTitle: '選擇要分析的變數',
-    selectVarsHint: '至少勾選 2 個數值變數（連續或順序）；會計算所有兩兩配對的 Pearson r',
+    selectVarsHint: '至少勾選 2 個數值變數（連續或順序）；會計算所有兩兩配對',
     needAtLeastTwo: '請勾選至少 2 個變數',
     cellHint: '上三角顯示 r，下三角顯示 p。* p < .05、** p < .01、*** p < .001',
     notes: {

@@ -1,0 +1,149 @@
+/**
+ * 無母數檢定 — Config（左欄）
+ */
+import { useApp, useAnalysisState } from '../../context/AppContext'
+
+const DEFAULT = { type: 'mw', depVar: null, groupVar: null, var1: null, var2: null }
+
+function TypeSelector({ value, onChange, t }) {
+  const types = ['mw', 'wilcoxon', 'kw']
+  return (
+    <div className="space-y-2 mb-5">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-duo-cocoa-400">
+        {t.np.config.typeLabel}
+      </h3>
+      <div className="inline-flex flex-col rounded-md bg-duo-cream-50 border border-duo-cocoa-100 p-0.5 w-full">
+        {types.map((tp) => {
+          const active = value === tp
+          return (
+            <button
+              key={tp}
+              type="button"
+              onClick={() => onChange(tp)}
+              className={[
+                'w-full text-left px-3 py-1.5 text-xs font-medium rounded transition',
+                active
+                  ? 'bg-white text-duo-cocoa-900 border border-duo-cocoa-100'
+                  : 'text-duo-cocoa-500 hover:text-duo-cocoa-800',
+              ].join(' ')}
+            >
+              {t.np.types[tp]}
+            </button>
+          )
+        })}
+      </div>
+      <p className="text-[11px] text-duo-cocoa-400 leading-snug">
+        {t.np.typeHint[value]}
+      </p>
+    </div>
+  )
+}
+
+function VarSelect({ label, value, onChange, options, hint, placeholder }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-duo-cocoa-700 mb-1">{label}</label>
+      <select
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value || null)}
+        className="w-full h-9 px-3 pr-8 text-sm rounded-md bg-white border border-duo-cocoa-100 text-duo-cocoa-800 hover:border-duo-cocoa-200 focus:outline-none focus:border-duo-amber-500 cursor-pointer"
+      >
+        <option value="">{placeholder}</option>
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+      {hint && <p className="text-[10px] text-duo-cocoa-400 mt-1 leading-snug">{hint}</p>}
+    </div>
+  )
+}
+
+function Config() {
+  const { dataset, variables, lang, t } = useApp()
+  const [rawState, update] = useAnalysisState()
+  const state = { ...DEFAULT, ...rawState }
+
+  if (!dataset) return null
+  const labelMap = dataset.labels?.[lang === 'zh-TW' ? 'zh' : 'en'] || {}
+
+  const numericCols = Object.keys(variables).filter(
+    (c) => variables[c].type === 'continuous' || variables[c].type === 'ordinal'
+  )
+  const categoricalCols = Object.keys(variables).filter((c) => variables[c].type === 'categorical')
+  const numOpts = numericCols.map((c) => ({ value: c, label: labelMap[c] || c }))
+  const groupOpts = categoricalCols.map((c) => {
+    const distinct = variables[c].distinct
+    const tag = distinct === 2 ? '' : ` (${distinct} ${lang === 'zh-TW' ? '組' : 'groups'})`
+    return { value: c, label: (labelMap[c] || c) + tag }
+  })
+  const factorOpts = categoricalCols.map((c) => {
+    const distinct = variables[c].distinct
+    const tag = distinct >= 3 ? '' : ` (${distinct} ${lang === 'zh-TW' ? '組' : 'groups'})`
+    return { value: c, label: (labelMap[c] || c) + tag }
+  })
+
+  return (
+    <div>
+      <TypeSelector value={state.type} onChange={(tp) => update({ type: tp })} t={t} />
+
+      {state.type === 'mw' && (
+        <div className="space-y-3">
+          <VarSelect
+            label={t.np.config.depVar}
+            value={state.depVar}
+            onChange={(v) => update({ depVar: v })}
+            options={numOpts}
+            placeholder={t.np.config.pickDep}
+          />
+          <VarSelect
+            label={t.np.config.groupVar}
+            value={state.groupVar}
+            onChange={(v) => update({ groupVar: v })}
+            options={groupOpts}
+            placeholder={t.np.config.pickGroup}
+          />
+        </div>
+      )}
+
+      {state.type === 'wilcoxon' && (
+        <div className="space-y-3">
+          <VarSelect
+            label={t.np.config.var1}
+            value={state.var1}
+            onChange={(v) => update({ var1: v })}
+            options={numOpts}
+            placeholder={t.np.config.pickVar1}
+          />
+          <VarSelect
+            label={t.np.config.var2}
+            value={state.var2}
+            onChange={(v) => update({ var2: v })}
+            options={numOpts.filter((o) => o.value !== state.var1)}
+            placeholder={t.np.config.pickVar2}
+          />
+        </div>
+      )}
+
+      {state.type === 'kw' && (
+        <div className="space-y-3">
+          <VarSelect
+            label={t.np.config.depVar}
+            value={state.depVar}
+            onChange={(v) => update({ depVar: v })}
+            options={numOpts}
+            placeholder={t.np.config.pickDep}
+          />
+          <VarSelect
+            label={t.np.config.groupVarKW}
+            value={state.groupVar}
+            onChange={(v) => update({ groupVar: v })}
+            options={factorOpts}
+            placeholder={t.np.config.pickGroup}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Config
