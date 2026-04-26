@@ -14,7 +14,7 @@ export default {
   app: {
     title: '多多快跑',
     subtitle: 'DUODUORUN',
-    tagline: '純前端統計分析工具，瀏覽器即可使用，免安裝、免費、隱私不外流',
+    tagline: '純前端統計分析工具，瀏覽器即可使用，免安裝、隱私不外流',
   },
   home: {
     heroTagline: '純前端統計分析工具｜免安裝｜資料不外流',
@@ -43,17 +43,27 @@ export default {
           '上傳的檔案永遠不會離開您的電腦。',
       },
       citation: {
-        title: '學術引用(尚未開放)',
-        body:
-          '若本工具對您的論文有所助益，引用格式建議如下：\n' +
-          '李洛維（2026）。多多快跑：純前端統計分析工具。\n' +
-          '網址：https://qqamp.github.io/duoduorun/\n' +
-          '版本：v1.0',
+        title: '學術引用',
+        intro: '若本工具對您的論文有所助益，請以下列格式引用：',
+        apaLabel: 'APA',
+        bibtexLabel: 'BibTeX',
+        apa:
+          '李洛維（2026）。多多快跑：純前端統計分析工具（版本 1.0）[電腦軟體]。' +
+          'https://qqamp.github.io/duoduorun/',
+        bibtex:
+          '@software{lee2026duoduorun,\n' +
+          '  author  = {Lee, Lo-Wei},\n' +
+          '  title   = {{DuoDuoRun}: A pure-frontend statistical analysis tool},\n' +
+          '  year    = {2026},\n' +
+          '  version = {1.0},\n' +
+          '  url     = {https://qqamp.github.io/duoduorun/}\n' +
+          '}',
+        copy: '複製',
+        copied: '已複製',
       },
     },
-    footer:
-      '本專案目前為測試版，尚未正式開放，問題回報與功能建議請至 ：' +
-      'serpent910@gmail.com',
+    footerPrefix: '本專案目前為測試版，尚未正式開放，問題回報與功能建議請至：',
+    footerEmail: 'serpent910@gmail.com',
   },
   toolbar: {
     selectDataset: '選擇示範資料集',
@@ -127,6 +137,9 @@ export default {
     configTitle: '分析設定',
     configEmpty: '請從左側選擇分析方法',
     configNoDataset: '先在右上角載入資料集',
+    loadDemo: '載入示範設定',
+    loadDemoHint: '一鍵載入適合此分析的示範資料與變數設定',
+    demoLoaded: '已載入示範',
     variablesTitle: '變數列表',
     resultTitle: '統計結果',
     resultEmpty: '此分析將於 Step 3 上線',

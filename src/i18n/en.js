@@ -7,7 +7,7 @@ export default {
   app: {
     title: 'DuoDuoRun',
     subtitle: '多多快跑',
-    tagline: 'A pure-frontend statistical tool — no install, no fees, no data leaves your browser.',
+    tagline: 'A pure-frontend statistical tool — no install, no data leaves your browser.',
   },
   home: {
     heroTagline: 'Pure-frontend statistical tool · no install · privacy-first',
@@ -37,17 +37,27 @@ export default {
           'and uploaded files never leave your computer.',
       },
       citation: {
-        title: 'Citation (Unreleased)',
-        body:
-          'If this tool helps your work, please cite as:\n' +
-          'L. W. Lee (2026). DuoDuoRun: A pure-frontend statistical analysis tool.\n' +
-          'URL: https://qqamp.github.io/duoduorun/\n' +
-          'Version: v1.0',
+        title: 'Citation',
+        intro: 'If this tool helps your work, please cite as:',
+        apaLabel: 'APA',
+        bibtexLabel: 'BibTeX',
+        apa:
+          'Lee, L.-W. (2026). DuoDuoRun: A pure-frontend statistical analysis tool ' +
+          '(Version 1.0) [Computer software]. https://qqamp.github.io/duoduorun/',
+        bibtex:
+          '@software{lee2026duoduorun,\n' +
+          '  author  = {Lee, Lo-Wei},\n' +
+          '  title   = {{DuoDuoRun}: A pure-frontend statistical analysis tool},\n' +
+          '  year    = {2026},\n' +
+          '  version = {1.0},\n' +
+          '  url     = {https://qqamp.github.io/duoduorun/}\n' +
+          '}',
+        copy: 'Copy',
+        copied: 'Copied',
       },
     },
-    footer:
-      'This project is currently in beta and is unreleased. For bug reports or feature suggestions, please contact: ' +
-      'serpent910@gmail.com',
+    footerPrefix: 'This project is currently in beta and is unreleased. For bug reports or feature suggestions, please contact: ',
+    footerEmail: 'serpent910@gmail.com',
   },
   toolbar: {
     selectDataset: 'Select demo dataset',
@@ -121,6 +131,9 @@ export default {
     configTitle: 'Analysis settings',
     configEmpty: 'Pick an analysis from the sidebar',
     configNoDataset: 'Load a dataset first (top right)',
+    loadDemo: 'Load demo settings',
+    loadDemoHint: 'One-click load: a representative dataset and variable selection for this analysis',
+    demoLoaded: 'Demo loaded',
     variablesTitle: 'Variables',
     resultTitle: 'Statistical results',
     resultEmpty: 'This analysis ships in Step 3',

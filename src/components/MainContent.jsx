@@ -8,9 +8,11 @@
  * 三欄寬度：左 25% / 中 45% / 右 30%（Config 收起時，Result 自動補位）
  * 視覺：1px hairline 邊框（border-duo-cocoa-100）、small caps eyebrow heading
  */
+import { useState } from 'react'
 import { useApp } from '../context/AppContext'
 import { ANALYSIS_GROUPS } from '../config/analyses'
 import { getAnalysisModule } from '../analyses/registry'
+import { getDemo } from '../config/demos'
 import DuoMascot from './DuoMascot'
 import VariableList from './VariableList'
 import DataPreviewTable from './DataPreviewTable'
@@ -55,6 +57,43 @@ function PanelChevronRight() {
   )
 }
 
+/* 載入示範設定按鈕 — 一鍵填好資料集與變數選擇 */
+function LoadDemoButton({ analysisId }) {
+  const { setActiveDataset, updateAnalysisState, t } = useApp()
+  const [loaded, setLoaded] = useState(false)
+  const demo = getDemo(analysisId)
+  if (!demo) return null
+
+  const handle = () => {
+    setActiveDataset(demo.dataset)
+    updateAnalysisState(analysisId, demo.settings)
+    setLoaded(true)
+    setTimeout(() => setLoaded(false), 1500)
+  }
+
+  return (
+    <div className="mb-4">
+      <button
+        type="button"
+        onClick={handle}
+        title={t.panels.loadDemoHint}
+        className={[
+          'w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border transition',
+          loaded
+            ? 'bg-duo-leaf/15 border-duo-leaf text-duo-leaf'
+            : 'bg-duo-amber-50 border-duo-amber-200 text-duo-amber-800 hover:bg-duo-amber-100 hover:border-duo-amber-400',
+        ].join(' ')}
+      >
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+             strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 2v8M4 6l4 4 4-4M3 13h10" />
+        </svg>
+        {loaded ? t.panels.demoLoaded : t.panels.loadDemo}
+      </button>
+    </div>
+  )
+}
+
 /* ─────────────────────────  左欄  ───────────────────────── */
 
 function ConfigPanel() {
@@ -94,6 +133,7 @@ function ConfigPanel() {
       <section className={`flex-[25] min-w-0 p-5 border-r ${PANEL_BORDER} bg-white overflow-y-auto relative`}>
         {collapseBtn}
         <PanelHeading>{t.panels.configTitle}</PanelHeading>
+        {activeAnalysis && <LoadDemoButton analysisId={activeAnalysis} />}
         <EmptyHint>{t.panels.configNoDataset}</EmptyHint>
       </section>
     )
@@ -103,6 +143,7 @@ function ConfigPanel() {
     return (
       <section className={`flex-[25] min-w-0 p-5 border-r ${PANEL_BORDER} bg-white overflow-y-auto relative`}>
         {collapseBtn}
+        <LoadDemoButton analysisId={activeAnalysis} />
         <analysisModule.Config />
       </section>
     )

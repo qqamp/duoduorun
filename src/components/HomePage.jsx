@@ -5,9 +5,10 @@
  *
  * 結構（Google 首頁式三段）：
  *   - 上：多多照片（圓形）
- *   - 中：中英文標題 + tagline
- *   - 下：4 張資訊卡（用途、開發、隱私、引用）+ footer
+ *   - 中：中英文標題 + by 作者連結 + tagline
+ *   - 下：4 張資訊卡（用途、開發、隱私、引用）+ footer 測試版聲明 + email
  */
+import { useState } from 'react'
 import { useApp } from '../context/AppContext'
 import duoduoHead from '../assets/duoduo-head.jpg'
 
@@ -24,6 +25,84 @@ function InfoCard({ title, body }) {
   )
 }
 
+function CopyButton({ text, copyLabel, copiedLabel }) {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch (e) {
+      // fallback：選取以便手動複製
+      console.error('Copy failed', e)
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className={[
+        'shrink-0 px-2 py-0.5 text-[11px] font-medium rounded border transition',
+        copied
+          ? 'bg-duo-leaf/15 border-duo-leaf text-duo-leaf'
+          : 'bg-white border-duo-cocoa-100 text-duo-cocoa-600 hover:border-duo-amber-400 hover:text-duo-amber-700',
+      ].join(' ')}
+    >
+      {copied ? copiedLabel : copyLabel}
+    </button>
+  )
+}
+
+function CitationCard({ citation }) {
+  if (!citation) return null
+  return (
+    <div className="bg-white rounded-lg border border-duo-cocoa-100 p-5 shadow-sm hover:shadow-md transition-shadow">
+      <h3 className="font-serif text-base font-semibold text-duo-cocoa-900 mb-2">
+        {citation.title}
+      </h3>
+      {citation.intro && (
+        <p className="text-sm text-duo-cocoa-700 leading-relaxed mb-3">
+          {citation.intro}
+        </p>
+      )}
+
+      {/* APA */}
+      <div className="mb-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-duo-cocoa-400">
+            {citation.apaLabel}
+          </span>
+          <CopyButton
+            text={citation.apa}
+            copyLabel={citation.copy}
+            copiedLabel={citation.copied}
+          />
+        </div>
+        <div className="text-xs text-duo-cocoa-700 leading-relaxed bg-duo-cream-50 border border-duo-cocoa-100 rounded px-3 py-2">
+          {citation.apa}
+        </div>
+      </div>
+
+      {/* BibTeX */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-duo-cocoa-400">
+            {citation.bibtexLabel}
+          </span>
+          <CopyButton
+            text={citation.bibtex}
+            copyLabel={citation.copy}
+            copiedLabel={citation.copied}
+          />
+        </div>
+        <pre className="text-[11px] text-duo-cocoa-700 leading-snug bg-duo-cream-50 border border-duo-cocoa-100 rounded px-3 py-2 font-mono whitespace-pre overflow-x-auto">
+{citation.bibtex}
+        </pre>
+      </div>
+    </div>
+  )
+}
+
 function HomePage() {
   const { t } = useApp()
   const cards = t.home?.cards || {}
@@ -33,8 +112,10 @@ function HomePage() {
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* 上：多多照片 */}
         <div className="flex justify-center">
-          <div className="rounded-full overflow-hidden border-4 border-white shadow-lg ring-1 ring-duo-cocoa-100"
-               style={{ width: 168, height: 168 }}>
+          <div
+            className="rounded-full overflow-hidden border-4 border-white shadow-lg ring-1 ring-duo-cocoa-100"
+            style={{ width: 168, height: 168 }}
+          >
             <img
               src={duoduoHead}
               alt="多多"
@@ -79,15 +160,21 @@ function HomePage() {
           {cards.privacy && (
             <InfoCard title={cards.privacy.title} body={cards.privacy.body} />
           )}
-          {cards.citation && (
-            <InfoCard title={cards.citation.title} body={cards.citation.body} />
-          )}
+          {cards.citation && <CitationCard citation={cards.citation} />}
         </div>
 
-        {/* Footer */}
-        {t.home?.footer && (
+        {/* Footer：測試版聲明 + email mailto */}
+        {(t.home?.footerPrefix || t.home?.footerEmail) && (
           <div className="mt-10 pb-4 text-center text-xs text-duo-cocoa-400 leading-relaxed">
-            {t.home.footer}
+            {t.home.footerPrefix}
+            {t.home.footerEmail && (
+              <a
+                href={`mailto:${t.home.footerEmail}`}
+                className="text-duo-amber-700 hover:underline underline-offset-2"
+              >
+                {t.home.footerEmail}
+              </a>
+            )}
           </div>
         )}
       </div>
