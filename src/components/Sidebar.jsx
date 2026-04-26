@@ -50,20 +50,9 @@ function PanelChevronRight() {
   )
 }
 
-function PriorityBadge({ priority }) {
-  if (priority === 1) return null
-  return (
-    <span
-      className={[
-        'ml-auto font-mono px-1.5 py-0.5 text-[9px] font-medium rounded border',
-        priority === 2
-          ? 'border-duo-denim-200 text-duo-denim-600'
-          : 'border-duo-cocoa-100 text-duo-cocoa-300',
-      ].join(' ')}
-    >
-      {priority === 2 ? 'P2' : 'P3'}
-    </span>
-  )
+// P2/P3 徽章已停用（Tier 1+2 全部上線後不再有意義）
+function PriorityBadge() {
+  return null
 }
 
 function Sidebar() {

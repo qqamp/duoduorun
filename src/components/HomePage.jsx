@@ -51,6 +51,18 @@ function HomePage() {
           <div className="font-mono text-sm tracking-[0.3em] text-duo-amber-700 mt-3 uppercase">
             {t.app.subtitle}
           </div>
+          {t.home?.byAuthor && (
+            <div className="mt-4 text-sm text-duo-cocoa-600">
+              <a
+                href={t.home.authorUrl || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-serif italic hover:text-duo-amber-700 underline-offset-4 hover:underline transition"
+              >
+                {t.home.byAuthor}
+              </a>
+            </div>
+          )}
           <p className="mt-5 text-base text-duo-cocoa-600 max-w-2xl mx-auto leading-relaxed">
             {t.home?.heroTagline || t.app.tagline}
           </p>

@@ -10,7 +10,9 @@ export default {
     tagline: 'A pure-frontend statistical tool — no install, no fees, no data leaves your browser.',
   },
   home: {
-    heroTagline: 'Pure-frontend statistical tool · no install · free · privacy-first',
+    heroTagline: 'Pure-frontend statistical tool · no install · privacy-first',
+    byAuthor: 'by Lo-Wei Lee',
+    authorUrl: 'https://qqamp.github.io/homepage/',
     cards: {
       purpose: {
         title: 'Purpose',

@@ -17,7 +17,9 @@ export default {
     tagline: '純前端統計分析工具，瀏覽器即可使用，免安裝、免費、隱私不外流',
   },
   home: {
-    heroTagline: '純前端統計分析工具｜免安裝｜免費｜資料不外流',
+    heroTagline: '純前端統計分析工具｜免安裝｜資料不外流',
+    byAuthor: 'by 李洛維',
+    authorUrl: 'https://qqamp.github.io/homepage/',
     cards: {
       purpose: {
         title: '用途',

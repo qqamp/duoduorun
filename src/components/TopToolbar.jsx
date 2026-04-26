@@ -69,11 +69,17 @@ function TopToolbar() {
     lang, setLang,
     mode, setMode,
     activeDataset, setActiveDataset,
-    activeAnalysis,
+    activeAnalysis, setActiveAnalysis,
     uploadedDataset, setUploadedDataset,
     history,
     t,
   } = useApp()
+
+  /** 點 brand → 回首頁：清空資料集與分析（保留上傳資料以避免使用者重傳） */
+  const goHome = () => {
+    setActiveAnalysis(null)
+    setActiveDataset(null)
+  }
 
   const [exporting, setExporting] = useState(false)
   const [transformOpen, setTransformOpen] = useState(false)
@@ -148,22 +154,27 @@ function TopToolbar() {
 
   return (
     <header className="flex items-center justify-between px-6 h-16 bg-white border-b border-duo-cocoa-100">
-      {/* 左：brand */}
-      <div className="flex items-center gap-3.5">
+      {/* 左：brand（可點擊回首頁） */}
+      <button
+        type="button"
+        onClick={goHome}
+        title={lang === 'zh-TW' ? '回首頁' : 'Back to home'}
+        className="flex items-center gap-3.5 group cursor-pointer hover:opacity-90 transition-opacity"
+      >
         <img
           src={duoHead}
           alt="多多"
-          className="h-11 w-11 rounded-md object-cover ring-1 ring-duo-cocoa-100"
+          className="h-11 w-11 rounded-md object-cover ring-1 ring-duo-cocoa-100 group-hover:ring-duo-amber-400 transition"
         />
         <div className="text-left">
-          <h1 className="font-serif text-[20px] font-semibold tracking-tight text-duo-cocoa-900 leading-none">
+          <h1 className="font-serif text-[20px] font-semibold tracking-tight text-duo-cocoa-900 leading-none group-hover:text-duo-amber-700 transition">
             {t.app.title}
           </h1>
           <p className={`font-mono text-[10px] uppercase text-duo-amber-700 mt-1.5 ${subtitleTracking}`}>
             {t.app.subtitle}
           </p>
         </div>
-      </div>
+      </button>
 
       {/* 右：控制群 */}
       <div className="flex items-center gap-3">
