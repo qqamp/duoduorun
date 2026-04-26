@@ -8,15 +8,18 @@
  * 三欄寬度：左 25% / 中 45% / 右 30%（Config 收起時，Result 自動補位）
  * 視覺：1px hairline 邊框（border-duo-cocoa-100）、small caps eyebrow heading
  */
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useApp } from '../context/AppContext'
 import { ANALYSIS_GROUPS } from '../config/analyses'
 import { getAnalysisModule } from '../analyses/registry'
 import { getDemo } from '../config/demos'
+import { copyAllTablesIn, copyToClipboard } from '../lib/clipboard'
+import { fillTemplate } from '../lib/format'
 import DuoMascot from './DuoMascot'
 import VariableList from './VariableList'
 import DataPreviewTable from './DataPreviewTable'
 import HomePage from './HomePage'
+import AssumptionChecker from './AssumptionChecker'
 
 function findAnalysisLabel(activeAnalysis, t) {
   if (!activeAnalysis) return null
@@ -177,9 +180,54 @@ function ConfigPanel() {
 
 /* ─────────────────────────  中欄  ───────────────────────── */
 
+/** 複製整頁所有結果表格為 TSV 的小按鈕 */
+function CopyTablesButton({ contentRef }) {
+  const { t } = useApp()
+  const [status, setStatus] = useState({ kind: 'idle', count: 0 })
+  const handle = async () => {
+    if (!contentRef.current) return
+    const { count, text } = copyAllTablesIn(contentRef.current)
+    if (count === 0) {
+      setStatus({ kind: 'empty', count: 0 })
+      setTimeout(() => setStatus({ kind: 'idle', count: 0 }), 1500)
+      return
+    }
+    const ok = await copyToClipboard(text)
+    if (ok) {
+      setStatus({ kind: 'copied', count })
+      setTimeout(() => setStatus({ kind: 'idle', count: 0 }), 1800)
+    }
+  }
+  let label = t.panels.copyTablesBtn
+  let cls = 'bg-white border-duo-cocoa-100 text-duo-cocoa-600 hover:border-duo-amber-400 hover:text-duo-amber-700'
+  if (status.kind === 'copied') {
+    label = fillTemplate(t.panels.copiedTables, { n: status.count })
+    cls = 'bg-duo-leaf/15 border-duo-leaf text-duo-leaf'
+  } else if (status.kind === 'empty') {
+    label = t.panels.copyEmpty
+    cls = 'bg-duo-cream-50 border-duo-cocoa-200 text-duo-cocoa-400'
+  }
+  return (
+    <button
+      type="button"
+      onClick={handle}
+      title={t.panels.copyTablesHint}
+      className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded border transition ${cls}`}
+    >
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+           strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="4" y="4" width="9" height="10" rx="1.5" />
+        <path d="M4 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" />
+      </svg>
+      {label}
+    </button>
+  )
+}
+
 function ResultPanel() {
   const { dataset, activeAnalysis, t } = useApp()
   const analysisModule = activeAnalysis ? getAnalysisModule(activeAnalysis) : null
+  const contentRef = useRef(null)
 
   if (!dataset) {
     return (
@@ -199,8 +247,14 @@ function ResultPanel() {
   if (analysisModule?.Result) {
     return (
       <section className={`flex-[45] min-w-0 p-6 border-r ${PANEL_BORDER} bg-duo-cream-50 overflow-y-auto`}>
-        <PanelHeading>{t.panels.resultTitle}</PanelHeading>
-        <analysisModule.Result />
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <h2 className="heading-eyebrow">{t.panels.resultTitle}</h2>
+          <CopyTablesButton contentRef={contentRef} />
+        </div>
+        <AssumptionChecker />
+        <div ref={contentRef}>
+          <analysisModule.Result />
+        </div>
       </section>
     )
   }
@@ -219,8 +273,13 @@ function ResultPanel() {
 
   return (
     <section className={`flex-[45] min-w-0 p-6 border-r ${PANEL_BORDER} bg-duo-cream-50 overflow-y-auto`}>
-      <PanelHeading>{t.panels.resultTitle}</PanelHeading>
-      <DataPreviewTable />
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <h2 className="heading-eyebrow">{t.panels.resultTitle}</h2>
+        <CopyTablesButton contentRef={contentRef} />
+      </div>
+      <div ref={contentRef}>
+        <DataPreviewTable />
+      </div>
     </section>
   )
 }
