@@ -9,6 +9,44 @@ export default {
     subtitle: '多多快跑',
     tagline: 'A pure-frontend statistical tool — no install, no fees, no data leaves your browser.',
   },
+  home: {
+    heroTagline: 'Pure-frontend statistical tool · no install · free · privacy-first',
+    cards: {
+      purpose: {
+        title: 'Purpose',
+        body:
+          "A statistical analysis tool built for Taiwan's social-science teachers and students. " +
+          "Covers 14 commonly used methods including descriptive stats, t-tests, ANOVA, correlation/regression, " +
+          "chi-square, nonparametric tests, Cronbach's α, and EFA. " +
+          "Results align with SPSS / JASP and bilingual APA narratives are provided in Traditional Chinese and English.",
+      },
+      author: {
+        title: 'Author',
+        body:
+          'Developer: Lo-Wei Lee, Assistant Professor\n' +
+          'Affiliation: Department of Maritime Potrol, Taiwan Police College\n' +
+          'Research areas: GAI and Smart Government, Digital Governance, Data Governance, Algorithmic Bias and Accountability, Technology Law and Digital Human Rights',
+      },
+      privacy: {
+        title: 'Privacy',
+        body:
+          'All data parsing, statistical computation, and result rendering run locally in your browser. ' +
+          'No APIs are called, no user data is collected, ' +
+          'and uploaded files never leave your computer.',
+      },
+      citation: {
+        title: 'Citation (Unreleased)',
+        body:
+          'If this tool helps your work, please cite as:\n' +
+          'L. W. Lee (2026). DuoDuoRun: A pure-frontend statistical analysis tool.\n' +
+          'URL: https://qqamp.github.io/duoduorun/\n' +
+          'Version: v1.0',
+      },
+    },
+    footer:
+      'This project is currently in beta and is unreleased. For bug reports or feature suggestions, please contact: ' +
+      'serpent910@gmail.com',
+  },
   toolbar: {
     selectDataset: 'Select demo dataset',
     uploadData: 'Upload data',
@@ -29,6 +67,26 @@ export default {
     inferential: 'Inferential statistics',
     regression: 'Correlation & regression',
     scale: 'Scale analysis',
+    comingSoon: 'Coming soon',
+    comingSoonHint: 'Planned, not yet available',
+    cbSem: 'CB-SEM (covariance-based)',
+    plsSem: 'PLS-SEM',
+    hlm: 'HLM (multilevel)',
+    mcnemar: "McNemar's test",
+    friedman: 'Friedman test',
+    multinomialLogit: 'Multinomial logistic',
+    ordinalLogit: 'Ordinal logistic',
+    probit: 'Probit regression',
+    poisson: 'Poisson regression',
+    polynomialReg: 'Polynomial regression',
+    cox: 'Cox proportional hazards',
+    cca: 'Canonical correlation',
+    bayesT: 'Bayesian t-test',
+    bayesAnova: 'Bayesian ANOVA',
+    bayesCorr: 'Bayesian correlation',
+    irt: 'Item response theory',
+    meta: 'Meta-analysis',
+    arima: 'ARIMA time series',
     descStats: 'Basic descriptive stats',
     normality: 'Normality tests',
     visualization: 'Visualization',
@@ -43,6 +101,13 @@ export default {
     logisticRegression: 'Logistic regression',
     cronbachAlpha: "Cronbach's α",
     efa: 'Exploratory factor analysis',
+    zProp: 'z-test (proportions)',
+    fisherExact: "Fisher's exact test",
+    kappa: "Cohen's Kappa (inter-rater agreement)",
+    hierReg: 'Hierarchical regression',
+    ancova: 'ANCOVA',
+    icc: 'ICC (intraclass correlation)',
+    repAnova: 'Repeated measures ANOVA',
   },
   panels: {
     configTitle: 'Analysis settings',
@@ -209,6 +274,8 @@ export default {
       pickVar2: 'Pick variable 2',
       groupVarBadGroups: 'This variable has {k} groups; needs exactly 2',
       factorBadGroups: 'This factor has {k} groups; needs at least 3',
+      showDunn: "Show post-hoc (Dunn's test)",
+      dunnHint: "When KW is significant, use Dunn's pairwise test with Bonferroni adjustment for family-wise error",
     },
     result: {
       statsTitle: 'Test statistics',
@@ -218,12 +285,16 @@ export default {
         u: 'U', u1: 'U₁', u2: 'U₂', wpos: 'W⁺', wneg: 'W⁻', t: 'T',
         h: 'H', df: 'df', z: 'z', p: 'p', n: 'n', meanRank: 'Mean rank', sumRank: 'Rank sum',
         eps2: 'ε²', r: 'r (effect size)',
+        pair: 'Pair', meanRankA: 'Mean rank A', meanRankB: 'Mean rank B',
+        diffRank: '|Δmean rank|', zDunn: 'z', pRaw: 'Raw p', pAdj: 'Adj. p (Bonferroni)',
       },
       tieNote: 'Result includes tie correction',
       droppedNote: '{n} pairs with D = 0 dropped',
       effect: { small: 'small', medium: 'medium', large: 'large' },
       kwSigPosthoc:
-        "After significant H, run Dunn's test for pairwise comparisons (not yet built; use R::dunn.test or JASP).",
+        "After significant H, run Dunn's pairwise test (toggle \"Show post-hoc (Dunn's test)\" on the left to enable).",
+      dunnTitle: "Dunn's post-hoc (Bonferroni-adjusted)",
+      dunnEmpty: 'No pairs to compare',
     },
     notes: {
       purposeTitle: 'Purpose',
@@ -266,6 +337,13 @@ export default {
         'When to choose nonparametric over t / ANOVA:\n' +
         '- Small n, suspect normality, outliers, or ordinal scale → nonparametric\n' +
         '- Large n with normality OK → t / ANOVA usually more powerful',
+      dunnNote:
+        "Dunn's post-hoc: when the overall KW test is significant, Dunn's pairwise comparisons identify *which* groups differ.\n" +
+        'Statistic: for each pair, z = (R̄_i − R̄_j) / SE, where SE uses the pooled-rank variance with tie correction; ' +
+        'the raw p-value comes from the standard normal distribution.\n' +
+        'Multiple-comparison adjustment: Bonferroni across m = k(k−1)/2 pairs (p_adj = min(1, p × m)); ' +
+        'this is conservative but tightly controls family-wise error.\n' +
+        'Reading: rely on the adjusted p — pairs with adj. p < .05 are flagged as significantly different.',
     },
     apa: {
       mw:
@@ -277,6 +355,11 @@ export default {
       sigYes: 'significant',
       sigNo: 'non-significant',
       copyHint: 'Copy APA narrative',
+    },
+    narrative: {
+      dunnLine:
+        "Pairwise comparisons were conducted using Dunn's test with Bonferroni adjustment for family-wise error (m = {m}). Pairs with adjusted p < .05 were: {sigPairs}.",
+      dunnNoSig: 'none',
     },
     interp: {
       header: 'Reading',
@@ -292,6 +375,674 @@ export default {
       kwPosthoc: "Note: after significant H, run Dunn's pairwise post-hoc.",
       sigYes: 'significant',
       sigNo: 'not significant',
+    },
+  },
+  fisherExact: {
+    title: "Fisher's exact test",
+    config: {
+      rowVar: 'Row variable',
+      pickRow: 'Pick the row variable',
+      rowHint: 'Must be categorical (ideally 2 levels)',
+      colVar: 'Column variable',
+      pickCol: 'Pick the column variable',
+      colHint: 'Must be categorical (ideally 2 levels), different from the row variable',
+      successRow: 'Success level of the row variable',
+      pickSuccessRow: 'Pick the level treated as success on the row variable',
+      successCol: 'Success level of the column variable',
+      pickSuccessCol: 'Pick the level treated as success on the column variable',
+    },
+    result: {
+      tableTitle: '2×2 contingency table',
+      statsTitle: 'Test statistics',
+      cols: {
+        rowTotal: 'Row total',
+        colTotal: 'Col total',
+        p: 'p (exact)',
+        or: 'Odds ratio',
+        orCi95: 'OR 95% CI',
+        lnOr: 'ln OR',
+        effect: 'Effect',
+      },
+      effectInterp: {
+        trivial: 'trivial', small: 'small', medium: 'medium', large: 'large',
+      },
+    },
+    warnings: {
+      tooManyRowLevels: 'Note: row variable "{varLabel}" has {count} levels. Fisher\'s exact test is designed for 2×2 tables; the success level and the first non-success level were used to form the 2×2 table.',
+      tooManyColLevels: 'Note: column variable "{varLabel}" has {count} levels. Fisher\'s exact test is designed for 2×2 tables; the success level and the first non-success level were used to form the 2×2 table.',
+      haldane: 'Note: at least one cell is 0. Haldane correction (+0.5 to all cells) was applied for the OR and its 95% CI; exact p is still computed from the raw counts.',
+    },
+    errors: {
+      pickRowVar: 'Pick a row variable',
+      pickColVar: 'Pick a column variable',
+      sameVar: 'Row and column variables must differ',
+      pickSuccessRow: 'Pick a success level for the row variable',
+      pickSuccessCol: 'Pick a success level for the column variable',
+      needTwoRowLevels: 'The row variable needs at least 2 valid levels',
+      needTwoColLevels: 'The column variable needs at least 2 valid levels',
+      noData: 'No analyzable rows',
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      overall:
+        'In N = {n} observations, the 2×2 table is (a={a}, b={b}, c={c}, d={d}).\n' +
+        "Fisher's two-sided exact p = {pStr} → {sigWord}.\n" +
+        'Odds ratio OR = {or} (95% CI [{orCiLow}, {orCiHigh}]); ln OR indicates a {effect} effect.',
+    },
+    notes: {
+      q1: 'When to use?',
+      a1:
+        'To test independence between two binary categorical variables in a 2×2 table.\n' +
+        "When the sample is small or any cell's expected count is < 5 (so chi-square is unreliable), Fisher's exact test is the standard choice — it uses the hypergeometric distribution and gives an exact p-value without large-sample approximation.",
+      q2: 'Assumptions',
+      a2:
+        '1. Independent observations\n' +
+        '2. Margins (row totals, column totals) treated as fixed (conditional inference)\n' +
+        '3. Both variables are binary; for >2 levels, use chi-square or collapse categories\n' +
+        "Note: Fisher's test is slightly conservative in small samples but remains the standard for small 2×2 tables.",
+      q3: 'Formulas',
+      a3:
+        'Probability of one table (hypergeometric):\n' +
+        '  P(a) = C(a+b, a) · C(c+d, c) / C(N, a+c)\n' +
+        "Two-sided p = sum of P(a') for all tables with P(a') ≤ P(observed).\n" +
+        'Odds ratio OR = (a·d) / (b·c); if any cell is 0, apply the Haldane correction (+0.5).\n' +
+        '95% CI (Woolf, log-scale): exp(ln OR ± 1.96·√(1/a + 1/b + 1/c + 1/d))',
+      q4: 'How to read',
+      a4:
+        '1. Compare exact p with .05 to decide on independence\n' +
+        '2. OR > 1: row-success and col-success are positively associated; OR < 1: negatively; OR = 1: independent\n' +
+        '3. If the OR 95% CI excludes 1, this is equivalent (asymptotically) to p < .05\n' +
+        '4. |ln OR|: < 0.5 trivial, < 1.0 small, < 2.0 medium, ≥ 2.0 large',
+    },
+    narrative: {
+      main:
+        "Fisher's exact test was conducted to assess the association between \"{rowVar}\" and \"{colVar}\". " +
+        'Of N = {n} valid observations, the 2×2 cells were "{rSucc}/{cSucc}" = {a}, "{rSucc}/{cFail}" = {b}, ' +
+        '"{rFail}/{cSucc}" = {c}, "{rFail}/{cFail}" = {d}. ' +
+        'The two-sided exact p = {pStr}; odds ratio OR = {or} (95% CI [{orCiLow}, {orCiHigh}]).',
+    },
+  },
+  ancova: {
+    title: 'ANCOVA (Analysis of Covariance)',
+    config: {
+      yLabel: 'Dependent variable Y (continuous)',
+      pickY: 'Pick the DV',
+      factorLabel: 'Factor (categorical)',
+      pickFactor: 'Pick the factor',
+      factorHint: 'Must be categorical with at least 2 levels',
+      covLabel: 'Covariate(s) (>= 1, continuous)',
+      covHint: 'Tick numeric variables to include as covariates; cannot be the DV',
+    },
+    errors: {
+      pickDep: 'Please pick the dependent variable',
+      pickFactor: 'Please pick the factor',
+      pickCov: 'Please tick at least one covariate',
+      covIsY: 'The DV cannot also be a covariate',
+      covIsFactor: 'The factor cannot also be a covariate',
+      factorBadGroups: 'The factor has only {k} group(s); at least 2 are required',
+      tooFewN: 'Not enough valid cases (N must exceed k + p + 1)',
+      'singular-matrix': "Design matrix is collinear; cannot be solved (X'X is singular)",
+      'length-mismatch': 'Data length mismatch',
+    },
+    result: {
+      homoTitle: 'Homogeneity-of-regression-slopes test',
+      homoLabel: 'Factor x Covariate interaction',
+      homoOk: 'OK',
+      homoViolated: 'violated',
+      homoNotComputable: 'Not enough degrees of freedom to test (e.g., N - k - p - interactions <= 0).',
+      homoViolationWarn:
+        'Warning: the homogeneity-of-slopes assumption is violated (interaction p < .05). The covariate-DV relationship differs across factor levels, so ANCOVA-adjusted means may mislead; consider a moderation model or stratified analysis.',
+      tableTitle: 'ANCOVA table (Type-III adjusted SS)',
+      rawMeansTitle: 'Raw (unadjusted) means',
+      adjMeansTitle: 'Adjusted (LS) means',
+      adjMeansHint: 'Adjusted means: predicted Y at the grand mean of all covariates; 95% CI uses +/-1.96 * SE (large-sample approximation).',
+      cols: {
+        source: 'Source', ss: 'SS', df: 'df', ms: 'MS', f: 'F', p: 'p',
+        partialEta2: 'partial eta-sq', error: 'Error', total: 'Total',
+        level: 'Level', mean: 'Mean', adjMean: 'Adj. mean', se: 'SE', ci95: '95% CI',
+      },
+      effectInterp: { small: 'small', medium: 'medium', large: 'large' },
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      overall:
+        'After adjusting for the covariate(s), the main effect of {factor} on {yLabel} was F({df1}, {df2}) = {f}, p = {pStr} -> {sigWord}; partial eta-sq = {eta2} ({etaInterp}).',
+      covSection: 'Covariate-specific adjusted tests:',
+      covLine: '{name}: F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2} -> {sigWord}',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'ANCOVA combines ANOVA (group-mean comparisons) and regression (continuous predictors).\nTypical uses:\n1. Compare experimental vs. control groups while removing the influence of pre-test scores, age, IQ, etc.\n2. Ask: do group differences remain after controlling for X?\n3. Boost statistical power - the covariate absorbs within-group variance, shrinking MS_error.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. DV is continuous, covariates are continuous, factor is categorical\n' +
+        '2. Independent observations\n' +
+        '3. Residuals are normal with constant variance\n' +
+        '4. Linear relationship between covariates and DV\n' +
+        '5. Covariates are independent of the factor (covariates should not be affected by the manipulation)\n' +
+        '6. * Homogeneity of regression slopes - the covariate-DV slope is the same across factor levels; if violated, ANCOVA adjustment is misleading.',
+      formulasTitle: 'Core formulas',
+      formulaModel: 'Y = b0 + sum b_g * Dummy_g + sum b_j * Cov_j + e',
+      formulaSSfactor: 'SS_factor = SS_res(reduced: covariates only) - SS_res(full)',
+      formulaSScov: 'SS_cov_j = SS_res(model w/o cov_j) - SS_res(full)',
+      formulaF: 'F = MS_effect / MS_error; df_factor = k - 1, df_error = N - k - p',
+      formulaPartialEta2: 'partial eta-sq = SS_effect / (SS_effect + SS_error)',
+      formulaAdjMean:
+        'Adjusted mean_g = b0_hat + b_g_hat + sum b_j_hat * Cbar_j (Cbar_j = grand mean of cov_j)',
+      formulaHomo:
+        'Homogeneity F = ((SS_res_full - SS_res_homo) / # interactions) / (SS_res_homo / df_homo)',
+      readingTitle: 'How to read',
+      reading:
+        '1. * First check the homogeneity-of-slopes test: if violated (p < .05), every ANCOVA conclusion should be discounted.\n' +
+        '2. Read the F and p of the factor: are group differences significant after adjusting for the covariates?\n' +
+        '3. Read each covariate F and p: which covariates significantly relate to the DV?\n' +
+        '4. Read partial eta-sq for each effect (< .06 small, < .14 medium, >= .14 large).\n' +
+        '5. Read the adjusted (LS) means - these, not the raw means, are what ANCOVA actually compares.\n\n' +
+        'Common pitfalls:\n' +
+        '- The covariate is itself affected by the treatment -> assumption violated\n' +
+        '- Using ANCOVA to substitute for randomization\n' +
+        '- Ignoring the homogeneity-of-slopes test',
+    },
+    apa: {
+      sentence:
+        'An ANCOVA was conducted to examine differences in {yLabel} across {factor} after controlling for {covList} (N = {n}). The main effect of {factor} was significant, F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2}. {covSection}{homoSection}',
+      sentenceNs:
+        'An ANCOVA was conducted to examine differences in {yLabel} across {factor} after controlling for {covList} (N = {n}). The main effect of {factor} was not significant, F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2}. {covSection}{homoSection}',
+      covOpener: 'For the covariates, ',
+      covLine: '{name} (F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2})',
+      homoOk: ' The homogeneity-of-slopes test, F({df1}, {df2}) = {f}, p = {pStr}, did not violate the assumption.',
+      homoBad: ' The homogeneity-of-slopes test, F({df1}, {df2}) = {f}, p = {pStr}, violated the assumption; results should be interpreted with caution.',
+      copyHint: 'Copy APA narrative to clipboard',
+    },
+  },
+  icc: {
+    title: 'ICC (intraclass correlation)',
+    config: {
+      selectRatersTitle: 'Select rater columns',
+      selectRatersHint: 'Tick the numeric column for each rater (rows = subjects, columns = raters). At least 2 raters; 3+ is more stable.',
+    },
+    result: {
+      summaryTitle: 'Summary',
+      anovaTitle: 'ANOVA mean-square breakdown',
+      variantTitle: 'Six ICC variants (Shrout & Fleiss, 1979)',
+      designNote: 'Two-way ANOVA (subjects x raters, no interaction term)',
+      droppedNote: '{n} rows dropped (listwise deletion)',
+      interpRange: 'Interpretation (Koo & Li, 2016): < .50 poor, .50-.75 moderate, .75-.90 good, >= .90 excellent',
+      cols: {
+        n: 'Valid n', k: 'Raters', design: 'Design',
+        source: 'Source', df_short: 'df', ms: 'MS',
+        variant: 'Variant', description: 'Description', icc: 'ICC', ci95: '95% CI',
+        f: 'F', df: 'df1, df2', p: 'p', interp: 'Reading',
+      },
+      rows: {
+        between: 'Between-subject (MS_R)',
+        raterCol: 'Between-rater (MS_C)',
+        residual: 'Residual (MS_E)',
+        within: 'Within-subject (MS_W)',
+      },
+      variantLabel: {
+        icc1_1: 'ICC(1,1)', icc1_k: 'ICC(1,k)',
+        icc2_1: 'ICC(2,1)', icc2_k: 'ICC(2,k)',
+        icc3_1: 'ICC(3,1)', icc3_k: 'ICC(3,k)',
+      },
+      variantDesc: {
+        icc1_1: 'One-way random, single rater',
+        icc1_k: 'One-way random, average of k',
+        icc2_1: 'Two-way random, single rater, absolute agreement',
+        icc2_k: 'Two-way random, average of k, absolute agreement',
+        icc3_1: 'Two-way mixed, single rater, consistency',
+        icc3_k: 'Two-way mixed, average of k, consistency',
+      },
+    },
+    errors: {
+      needAtLeast2Raters: 'Pick at least 2 rater columns',
+      needAtLeast3Subjects: 'Not enough valid subjects (need at least 3 with all rater columns observed)',
+    },
+    interp: { poor: 'poor', moderate: 'moderate', good: 'good', excellent: 'excellent' },
+    decisionTree: {
+      header: 'Which ICC should I report? (decision tree)',
+      body:
+        'Step 1 | Same raters for all subjects, or different (random) raters per subject?\n  - Different/random raters per subject -> ICC(1, *)\n  - Same raters across all subjects, raters as random sample of a larger pool -> ICC(2, *)\n  - Same raters across all subjects, fixed (no generalization) -> ICC(3, *)\n\nStep 2 | Single rater or average of k raters in practice?\n  - Single -> ICC(*, 1)\n  - Average of k -> ICC(*, k)\n\nStep 3 (only ICC(2, *) vs ICC(3, *)) | Absolute agreement or consistency?\n  - Care about absolute score values -> absolute (ICC(2, *))\n  - Care only about rank order -> consistency (ICC(3, *))\n\nCommon situations:\n  - Inter-rater reliability with raters drawn from a larger pool -> ICC(2,1) or ICC(2,k)\n  - Same fixed raters, no generalization -> ICC(3,1) or ICC(3,k)\n  - Reporting: report point estimate AND 95% CI; interpret per Koo & Li (2016).',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Quantify the consistency of scores when each subject is rated by multiple raters (or measured repeatedly).\nCommon uses:\n1. Inter-rater reliability\n2. Test-retest reliability\n3. Item homogeneity in some scale contexts (Cronbach\'s alpha is more common for that)\n\nKey: ICC is a family of 6 variants (Shrout & Fleiss, 1979). Choose based on study design.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Subjects are a random sample\n' +
+        '2. Two-way model: subject x rater interaction is assumed negligible\n' +
+        '3. Residuals approximately normal with constant variance\n' +
+        '4. ICC(1, *): each subject is rated by a different set of raters\n' +
+        '5. ICC(2, *): same raters score everyone; raters are random sample of a population\n' +
+        '6. ICC(3, *): same raters score everyone; raters are fixed\n' +
+        '7. Listwise deletion: subject with any missing rater column is dropped',
+      formulasTitle: 'Core formulas',
+      formulaAnova:
+        'MS_R = SS_R/(n-1); MS_C = SS_C/(k-1); MS_E = SS_E/((n-1)(k-1)); MS_W = (SS_C+SS_E)/(n(k-1))',
+      formulaIcc1_1: '(MS_R - MS_W) / (MS_R + (k-1)*MS_W)',
+      formulaIcc1_k: '(MS_R - MS_W) / MS_R',
+      formulaIcc2_1: '(MS_R - MS_E) / (MS_R + (k-1)*MS_E + k*(MS_C - MS_E)/n)',
+      formulaIcc2_k: '(MS_R - MS_E) / (MS_R + (MS_C - MS_E)/n)',
+      formulaIcc3_1: '(MS_R - MS_E) / (MS_R + (k-1)*MS_E)',
+      formulaIcc3_k: '(MS_R - MS_E) / MS_R',
+      readingTitle: 'How to read',
+      reading:
+        '1. Confirm study design first; pick the right variant.\n' +
+        '2. Koo & Li (2016): < .50 poor, .50-.75 moderate, .75-.90 good, >= .90 excellent\n' +
+        '3. Always report 95% CI alongside point estimate.\n' +
+        '4. F test against H0: ICC = 0 means reliability is significantly above zero, NOT that reliability is "good enough".\n' +
+        '5. Average-rating ICCs (*, k) tend to be higher than (*, 1) due to Spearman-Brown effect; do not directly compare.\n' +
+        '6. ICC is sensitive to outliers; consider sensitivity check.',
+    },
+    narrative: {
+      copyHint: 'Copy APA narrative',
+      sentence:
+        'Inter-rater reliability across {itemList} ({k} raters, n = {n} subjects) was assessed via the intraclass correlation coefficient. ' +
+        'Following Shrout & Fleiss (1979), ICC(2,1) (two-way random, absolute agreement, single rater) was reported: ' +
+        'ICC = {icc}, 95% CI {ci}, F({df1}, {df2}) = {f}, p = {pStr} ({interp} reliability).',
+    },
+  },
+  repAnova: {
+    title: 'Repeated measures ANOVA',
+    config: {
+      selectConditionsTitle: 'Select repeated-measures conditions',
+      selectConditionsHint: 'Pick the columns measured at different time points / conditions on the same subjects (>= 2 columns required; each row = one subject, each column = one repeated condition).',
+    },
+    result: {
+      summaryTitle: 'Overall summary',
+      descTitle: 'Descriptives by condition',
+      mauchlyTitle: "Mauchly's test of sphericity",
+      mauchlyLabel: 'Sphericity assumption',
+      mauchlyOk: 'Sphericity satisfied',
+      mauchlyViolated: 'Sphericity violated',
+      mauchlyNotApplicable: "With only 2 conditions, sphericity is automatically satisfied; Mauchly's test is not applicable.",
+      anovaTitle: 'RM-ANOVA table (with sphericity corrections)',
+      recOk: "Mauchly's test is not significant; report the Sphericity-Assumed row.",
+      recViolated: "Mauchly's test is significant (p < .05); the sphericity assumption is violated. Report the Greenhouse-Geisser-corrected row (conservative, most common); if eps_GG > 0.75, the Huynh-Feldt correction can also be reported for slightly higher power.",
+      recK2: 'With k = 2 the sphericity assumption is automatically satisfied; report the Sphericity-Assumed row directly.',
+      cols: {
+        n: 'n (subjects)', kCond: 'k (conditions)',
+        condition: 'Condition', mean: 'M', sd: 'SD',
+        source: 'Source', eps: 'eps', ss: 'SS', df: 'df',
+        dfTreat: 'df (treatment)', dfError: 'df (error)',
+        ms: 'MS', f: 'F', p: 'p',
+        partialEta2: 'partial eta-sq', etaG2: 'generalised eta-sq_G',
+      },
+      sources: {
+        sa: 'Sphericity assumed',
+        gg: 'Greenhouse-Geisser',
+        hf: 'Huynh-Feldt',
+        lb: 'Lower-bound',
+        error: 'Error (subj x cond)',
+        bs: 'Between-subjects',
+        total: 'Total',
+      },
+      effectInterp: { small: 'small', medium: 'medium', large: 'large' },
+    },
+    errors: {
+      needAtLeast2: 'Please select at least 2 condition columns.',
+      tooFewN: 'Effective sample is too small (n = {n} after listwise deletion).',
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      overall:
+        'Repeated-measures ANOVA was conducted on N = {n} subjects across k = {k} conditions. ' +
+        'Based on the {sourceName} row, F({df1}, {df2}) = {f}, p = {pStr}, which is {sigWord}.' +
+        '\nEffect size: partial eta-sq = {eta2} ({etaInterp}); generalised eta-sq_G = {etaG2}.',
+      useSA: "Note: Mauchly's test was not significant; the Sphericity-Assumed row is used for reporting.",
+      useGG: "Note: Mauchly's test indicated a sphericity violation; the Greenhouse-Geisser-corrected df and p have been used for interpretation.",
+      k2Note: 'Note: with k = 2, sphericity is automatically satisfied; no correction is needed.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Compares the means of the same subjects measured under >= 2 repeated conditions.\n' +
+        'Typical uses: pretest / posttest / follow-up; same subjects under different experimental conditions.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Independence of subjects\n' +
+        '2. Approximately normal DV per condition\n' +
+        '3. Sphericity: variances of all pairwise differences equal\n' +
+        '4. Wide-format data: each row = one subject, each column = one condition.',
+      formulasTitle: 'Core formulae',
+      formulaSStotal: 'SS_total; df_total = nk - 1',
+      formulaSSbs: 'SS_between-subjects; df = n - 1',
+      formulaSStreat: 'SS_treatment; df = k - 1',
+      formulaSSerror: 'SS_error; df = (n-1)(k-1)',
+      formulaF: 'F = MS_treatment / MS_error',
+      formulaPartialEta2: 'partial eta-sq = SS_treat / (SS_treat + SS_error)',
+      formulaEtaG2: 'generalised eta-sq_G = SS_treat / (SS_treat + SS_BS + SS_error)',
+      formulaMauchly: "Mauchly W = det(S) / (tr(S)/(k-1))^(k-1)",
+      formulaGG: 'eps_GG = (tr S)^2 / [(k-1) * tr(S^2)]',
+      formulaHF: 'eps_HF formula (see code)',
+      formulaLB: 'eps_LB = 1 / (k-1)',
+      readingTitle: 'How to read',
+      reading:
+        "1. Look at Mauchly first (k >= 3): p < .05 -> sphericity violated.\n" +
+        '2. If satisfied -> report Sphericity-Assumed row.\n' +
+        '3. If violated -> Greenhouse-Geisser row (most common); if eps_GG > 0.75 also Huynh-Feldt is acceptable.\n' +
+        '4. F is identical across all four rows; only df (and p) shrink with eps.\n' +
+        '5. Report both partial eta-sq and generalised eta-sq_G.',
+    },
+    apa: {
+      sentence:
+        'A repeated-measures ANOVA was conducted on N = {n} subjects across {k} conditions ({condList}). ' +
+        '{sphericitySection} ' +
+        'Under {correction}, the main effect was significant, F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2}, eta-sq_G = {etaG2}.',
+      sentenceNs:
+        'A repeated-measures ANOVA was conducted on N = {n} subjects across {k} conditions ({condList}). ' +
+        '{sphericitySection} ' +
+        'Under {correction}, the main effect was not significant, F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2}, eta-sq_G = {etaG2}.',
+      sphericityOk:
+        "Mauchly's test did not indicate a violation of sphericity (W = {w}, chi-sq({df}) = {chi2}, p = {pStr}).",
+      sphericityViolated:
+        "Mauchly's test indicated a violation of sphericity (W = {w}, chi-sq({df}) = {chi2}, p = {pStr}); therefore the Greenhouse-Geisser correction (eps = {epsGG}) was applied.",
+      k2Note: "With only 2 conditions, sphericity is automatically satisfied and Mauchly's test was not performed.",
+      saLabel: 'sphericity assumed',
+      ggLabel: 'the Greenhouse-Geisser correction',
+      copyHint: 'Copy APA narrative',
+    },
+  },
+  kappa: {
+    title: "Cohen's Kappa (inter-rater agreement)",
+    weightings: {
+      none: 'Unweighted',
+      linear: 'Linear',
+      quadratic: 'Quadratic',
+    },
+    weightingHint: {
+      none: "Only exact matches count; categories treated as unordered (standard Cohen's κ)",
+      linear: 'Penalty grows linearly with |i − j|/(k − 1); use for ordered categories',
+      quadratic: 'Penalty grows with ((i − j)/(k − 1))²; close to ICC, use for ordered categories',
+    },
+    config: {
+      rater1Var: 'Rater 1 (variable)',
+      rater2Var: 'Rater 2 (variable)',
+      pickRater1: 'Pick the categorical variable for rater 1',
+      pickRater2: 'Pick the categorical variable for rater 2',
+      raterHint: 'Must be categorical; only the intersection of levels is used',
+      weightingLabel: 'Weighting',
+    },
+    result: {
+      tableTitle: 'k×k Agreement table',
+      tableHint: 'Diagonal (highlighted) = matching judgements; k = {k}',
+      statsTitle: 'κ test statistics',
+      variantsTitle: 'Three weighting variants',
+      variantsHint: '★ marks the current selection; linear / quadratic only apply when categories are ordered',
+      cols: {
+        rater1Backslash2: 'Rater 1 \\ 2',
+        total: 'Total',
+        po: 'Po',
+        pe: 'Pe',
+        kappa: 'κ',
+        se: 'SE',
+        ci95: '95% CI',
+        z: 'z',
+        p: 'p',
+        weighting: 'Weighting',
+        interp: 'Interpretation',
+      },
+    },
+    errors: {
+      pickRater1: 'Pick a categorical variable for rater 1',
+      pickRater2: 'Pick a categorical variable for rater 2',
+      sameVar: 'Rater 1 and rater 2 must be different variables',
+      needTwoLevels: 'Fewer than 2 common levels — κ cannot be computed',
+      noData: 'No paired observations available',
+      undefinedKappa: 'Marginal distribution is fully skewed (1 − Pe = 0); κ is mathematically undefined. Inspect the data distribution.',
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      levels: {
+        poor: 'poor (< 0)',
+        slight: 'slight (0.0–0.2)',
+        fair: 'fair (0.2–0.4)',
+        moderate: 'moderate (0.4–0.6)',
+        substantial: 'substantial (0.6–0.8)',
+        almostPerfect: 'almost perfect (0.8–1.0)',
+        undefined: 'undefined',
+      },
+      overall:
+        'Across N = {n} paired ratings on k = {k} common categories, ' +
+        'observed agreement Po = {po}, chance agreement Pe = {pe}; ' +
+        '{weighting} κ = {kappa} (95% CI [{ciLow}, {ciHigh}]).\n' +
+        'z = {z}, p = {pStr} → {sigWord}.\n' +
+        'Per Landis & Koch (1977), this is {level}.',
+    },
+    notes: {
+      q1: 'When to use?',
+      a1:
+        "Use Cohen's κ when two raters classify the same set of cases into the same category system, and you want to know how much they agree.\n" +
+        'Typical settings: qualitative coding reliability, diagnostic agreement, human-annotation quality checks, double-blind review concordance.',
+      q2: 'Assumptions',
+      a2:
+        '1. Each case is rated independently by the two raters using the same category system\n' +
+        '2. The two raters share the same set of categories — the tool intersects the levels automatically\n' +
+        '3. Observations are independent of each other\n' +
+        '4. Weighted κ (linear / quadratic) requires ordered categories (e.g. severity 1/2/3); use unweighted for nominal categories.',
+      q3: 'Formulas',
+      a3:
+        'Po = Σ diagonal / N\n' +
+        'Pe = Σᵢ (rowᵢ/N)(colᵢ/N)\n' +
+        'κ  = (Po − Pe) / (1 − Pe)\n' +
+        'Weighted κ: Po_w and Pe_w via a weight matrix w_{ij}\n' +
+        '  linear:     w_{ij} = 1 − |i−j|/(k−1)\n' +
+        '  quadratic:  w_{ij} = 1 − ((i−j)/(k−1))²\n' +
+        'Variance under H₀: Var(κ) = Pe / (N(1 − Pe)); z = κ / √Var\n' +
+        '95% CI uses asymptotic SE: Var = Po(1 − Po) / (N(1 − Pe)²)',
+      q4: 'How to read',
+      a4:
+        '1. Inspect κ. Landis & Koch (1977): < 0 poor, 0.0–0.2 slight, 0.2–0.4 fair, 0.4–0.6 moderate, 0.6–0.8 substantial, 0.8–1.0 almost perfect\n' +
+        '2. Look at the 95% CI: if the lower bound already reaches "moderate", reliability is fairly safe\n' +
+        '3. The p-value tests κ ≠ 0; but a significant tiny κ is still poor agreement — focus on the magnitude\n' +
+        '4. With highly imbalanced marginals (the kappa paradox) κ can be deflated; report Po and inspect the confusion table.',
+    },
+    narrative: {
+      overall:
+        "Cohen's Kappa ({weighting}) was used to assess agreement between two raters across k = {k} common categories. " +
+        'Out of N = {n} paired ratings, observed agreement was Po = {po} and chance agreement Pe = {pe}, ' +
+        'yielding κ = {kappa} (95% CI [{ciLow}, {ciHigh}]), z = {z}, p = {pStr}. ' +
+        'Per Landis & Koch (1977), this corresponds to "{level}" agreement.',
+    },
+  },
+  hierReg: {
+    title: 'Hierarchical regression',
+    config: {
+      yLabel: 'Dependent (Y)',
+      pickY: 'Pick a dependent variable',
+      blocksLabel: 'Predictor blocks (entry order)',
+      hint: 'Each block cumulatively adds to all earlier blocks. Typical: block 1 = controls, block 2+ = focal predictors.',
+      addBlock: '+ Add block',
+      removeBlock: '− Remove last',
+      blockTitle: 'Block {n}',
+      varsUnit: 'var(s)',
+      pickYFirst: 'Pick Y first',
+      noMoreVars: 'No remaining numeric variables (used by earlier blocks)',
+    },
+    result: {
+      stepTitle: 'Step summary (cumulative model after each block is entered)',
+      coefTitle: 'Final-step coefficients (all blocks entered)',
+      nNote: 'All steps use the same N = {n} (listwise deletion across Y and all predictors).',
+      cols: {
+        step: 'Step', added: 'Added this step', r2: 'R²', adjR2: 'Adj. R²',
+        f: 'F', df: 'df₁, df₂', p: 'p',
+        deltaR2: 'ΔR²', deltaF: 'ΔF', deltaDf: 'Δdf₁, Δdf₂', deltaP: 'Δp',
+        predictor: 'Predictor', b: 'b', se: 'SE', beta: 'β', t: 't', vif: 'VIF',
+        intercept: 'Intercept',
+      },
+    },
+    errors: {
+      pickY: 'Pick a dependent variable',
+      needBlock: 'At least 1 block is required',
+      emptyBlock: 'Each block needs at least 1 predictor',
+      dupPredictor: 'A predictor cannot appear in more than one block',
+      yInX: 'The dependent variable cannot also be a predictor',
+      tooFewN: 'Not enough valid cases (need n > number of predictors + 1)',
+      'singular-matrix': "Predictors are too collinear to estimate (X'X is singular)",
+      'length-mismatch': 'Data length mismatch',
+      'need->=1-predictor': 'At least 1 predictor required',
+      'need-n>k+1': 'Sample size must exceed number of predictors + 1',
+    },
+    interp: {
+      header: 'Reading',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      overall:
+        'A {k}-step hierarchical regression was run (N = {n}). The final model was F({df1}, {df2}) = {fFinal}, p = {pFinal}, ' +
+        'R² = {r2Final}, adjusted R² = {adjR2Final}.',
+      deltaSection: 'Step-by-step contribution:',
+      singleStepNote: 'Only one step, so no ΔR² is available.',
+      firstStepLine:
+        'Step 1 ({vars}): baseline model, R² = {r2}, F({df1}, {df2}) = {f}, p = {pStr}',
+      stepLine:
+        'Step {step} (added {vars}): ΔR² = {deltaR2}, ΔF({df1}, {df2}) = {deltaF}, p = {pStr} → {sigWord}',
+      sigSummary: 'Steps that significantly improved fit (Δp < .05): step {steps}.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Enter predictors into the regression in theory-driven blocks and test whether each new block adds significantly to the explanation of Y after controlling for prior blocks.\nCommon uses:\n1. Block 1 = demographic controls, block 2 = focal/theoretical predictors — does theory still matter after controls?\n2. Comparing the incremental validity of competing theoretical sets.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        'Same as ordinary OLS multiple regression:\n' +
+        '1. Linear relationship between Y and Xs\n' +
+        '2. Independent observations\n' +
+        '3. Residuals normally distributed and homoscedastic\n' +
+        '4. No severe multicollinearity\n' +
+        'Additional notes:\n' +
+        '5. Block entry order must be theory-driven, not data-driven (avoid stepwise pitfalls)\n' +
+        '6. All steps must share the same sample (this tool enforces listwise deletion across all predictors)',
+      formulasTitle: 'Core formulas',
+      formulaDeltaR2: 'ΔR²_k = R²_k − R²_{k−1}',
+      formulaDeltaF: 'ΔF = (ΔR²_k / dfNum) / ((1 − R²_k) / dfDen)',
+      formulaDf: 'dfNum = predictors added at step k; dfDen = N − (cumulative predictors) − 1',
+      readingTitle: 'How to read it',
+      reading:
+        '1. Look at R² / Adj. R² across steps — how does explained variance grow?\n' +
+        '2. Look at ΔR² and Δp — does the new block contribute significantly after the prior blocks? This is the core question of hierarchical regression.\n' +
+        '3. Look at the final coefficients — which individual predictors remain significant once all blocks are in?\n' +
+        '4. Note: individual βs shift across steps — that is exactly how hierarchical regression visualizes "controlling for".\n\n' +
+        'Common pitfalls:\n' +
+        '- Letting data choose entry order → it should be theory-driven\n' +
+        '- Different N at different steps → this tool enforces a common sample\n' +
+        "- Reporting only the final R² → readers cannot see each block's unique contribution",
+    },
+    narrative: {
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      copyHint: 'Copy APA narrative',
+      opener:
+        'A hierarchical regression with {k} block(s) (N = {n}) was conducted to examine the incremental contribution of each predictor set to {yLabel}.',
+      step1:
+        'Step 1 entered {vars}; the model yielded R² = {r2} (adjusted R² = {adjR2}), F({df1}, {df2}) = {f}, p = {pStr}.',
+      stepK:
+        'Step {step} added {vars}, with ΔR² = {deltaR2}, ΔF({df1}, {df2}) = {deltaF}, p = {deltaP} ({sigWord}); cumulative R² = {r2} (adjusted R² = {adjR2}).',
+    },
+  },
+  zProp: {
+    title: 'z-test for proportions',
+    types: {
+      one: 'One-sample (vs. p₀)',
+      two: 'Two-sample comparison',
+    },
+    typeHint: {
+      one: 'Test whether the proportion of a level equals a specified p₀',
+      two: 'Test whether two independent groups have the same proportion on an event',
+    },
+    config: {
+      typeLabel: 'Test type',
+      var1: 'Categorical variable',
+      pickVar: 'Pick a categorical variable',
+      varHint: 'Must be a categorical variable',
+      successLevel: 'Success level',
+      pickSuccess: 'Pick the level for which to compute the proportion',
+      p0: 'Hypothesized p₀',
+      p0Hint: 'Between 0 and 1, e.g. 0.5 for "no preference"',
+      groupVar: 'Grouping variable',
+      pickGroup: 'Pick a grouping variable (two groups)',
+      groupHint: 'Only the first two groups are analyzed',
+      valueVar: 'Event variable',
+      pickValueVar: 'Pick the event variable',
+      valueHint: '"Success" level within the event variable',
+    },
+    result: {
+      summaryTitle: 'Descriptives',
+      statsTitle: 'Test statistics',
+      cols: {
+        success: 'Success', n: 'n', x: 'x', phat: 'p̂', p0: 'p₀', ci95: '95% CI',
+        z: 'z', p: 'p', group: 'Group', diff: 'p̂₁ − p̂₂', diffCi95: 'Diff 95% CI',
+        h: "Cohen's h", effect: 'Effect',
+      },
+      effectInterp: {
+        trivial: 'trivial', small: 'small', medium: 'medium', large: 'large',
+      },
+    },
+    errors: {
+      pickVar: 'Pick a categorical variable',
+      pickSuccess: 'Pick a success level',
+      pickGroup: 'Pick a grouping variable',
+      pickValueVar: 'Pick an event variable',
+      sameVar: 'Group and event variables must differ',
+      badP0: 'p₀ must be between 0 and 1',
+      tooFewN: 'Sample too small (n < 5)',
+      needTwoGroups: 'Group variable needs two valid levels',
+      tooManyGroups: 'Group variable has more than two levels — use Chi-square instead',
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      oneOverall:
+        'In N = {n} observations, "{success}" occurred {x} times (p̂ = {phat}). ' +
+        'Compared with p₀ = {p0}, z = {z}, p = {pStr} → {sigWord}.',
+      twoOverall:
+        'Proportion of "{success}": {g1} = {p1}, {g2} = {p2}; difference = {diff}.\n' +
+        'z = {z}, p = {pStr} → {sigWord}.\n' +
+        "Cohen's h = {h}, indicating a {effect} effect.",
+    },
+    notes: {
+      q1: 'When to use?',
+      a1:
+        'Two scenarios:\n' +
+        '1. One-sample: test whether a proportion equals a target (e.g. is "agree" rate above 50%)\n' +
+        '2. Two-sample: test whether two groups have the same proportion (e.g. support rate by gender)',
+      q2: 'Assumptions',
+      a2:
+        '1. Independent observations\n' +
+        '2. Large enough sample (np ≥ 5 and n(1−p) ≥ 5 per group)\n' +
+        '3. Simple random sampling\n' +
+        'If sample is small or expected counts low, use Fisher\'s exact test instead.',
+      q3: 'Formulas',
+      a3:
+        'One-sample: z = (p̂ − p₀) / √(p₀(1−p₀)/n)\n' +
+        'Two-sample: z = (p̂₁ − p̂₂) / √(p̄(1−p̄)(1/n₁ + 1/n₂)), p̄ = (x₁+x₂)/(n₁+n₂)\n' +
+        "Effect size Cohen's h = 2(arcsin√p̂₁ − arcsin√p̂₂); |h| 0.2/0.5/0.8 = small/medium/large",
+      q4: 'How to read',
+      a4:
+        '1. Compare p with .05 to decide on H₀\n' +
+        '2. Use Cohen\'s h (or 95% CI of difference) to gauge practical significance\n' +
+        '3. CI not containing 0 (two-sample) or p₀ (one-sample) ⇔ p < .05',
+    },
+    narrative: {
+      one:
+        'A one-sample proportion z-test was conducted to compare the observed proportion of "{success}" ' +
+        'with p₀ = {p0}. Out of N = {n} observations, {x} were successes (p̂ = {phat}, ' +
+        '95% CI [{ciLow}, {ciHigh}]). The test yielded z = {z}, p = {pStr}.',
+      two:
+        'A two-sample proportion z-test was conducted to compare "{g1}" (n₁ = {n1}, p̂₁ = {p1}) ' +
+        'and "{g2}" (n₂ = {n2}, p̂₂ = {p2}) on the proportion of "{success}". ' +
+        'The difference was {diff} (95% CI [{diffCiLow}, {diffCiHigh}]), z = {z}, p = {pStr}, ' +
+        "Cohen's h = {h}.",
     },
   },
   chiSq: {
@@ -651,6 +1402,8 @@ export default {
     placeholder: 'Placeholder content',
     copy: 'Copy',
     copied: 'Copied',
+    collapse: 'Collapse',
+    expand: 'Expand',
   },
   desc: {
     selectVarsTitle: 'Select variables for analysis',

@@ -4,6 +4,9 @@
 
 @layer base {
   html {
+    /* Base font-size：將 Tailwind 所有 rem-based 尺寸整體放大約一個級距
+       （預設 16px → 17.5px ≈ 9% 增長，介於「1 級」與「2 級」之間） */
+    font-size: 17.5px;
     font-family: theme('fontFamily.sans');
     /* OpenType features for tabular numerals — keep table columns aligned */
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';

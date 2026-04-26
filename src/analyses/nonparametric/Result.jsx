@@ -187,8 +187,74 @@ function KWResult({ result, t, valueLabels, lang }) {
       {result.tieCorrection && (
         <p className="text-[11px] text-duo-cocoa-400 mt-2">{t.np.result.tieNote}</p>
       )}
-      {sig && (
+      {sig && !result.dunn && (
         <p className="text-[11px] text-duo-amber-700 mt-2">{t.np.result.kwSigPosthoc}</p>
+      )}
+
+      {result.dunn && <DunnTable dunn={result.dunn} t={t} labelOf={labelOf} />}
+    </div>
+  )
+}
+
+function DunnTable({ dunn, t, labelOf }) {
+  const c = t.np.result.cols
+  const comps = dunn.comparisons || []
+  return (
+    <div>
+      <Heading>{t.np.result.dunnTitle}</Heading>
+      {comps.length === 0 ? (
+        <p className="text-xs text-duo-cocoa-400">{t.np.result.dunnEmpty}</p>
+      ) : (
+        <div className="overflow-x-auto bg-white border border-duo-cocoa-100 rounded-md">
+          <table className="w-full text-xs">
+            <thead className="bg-duo-cream-50">
+              <tr>
+                <Th align="left">{c.pair}</Th>
+                <Th>{c.meanRankA}</Th>
+                <Th>{c.meanRankB}</Th>
+                <Th>{c.diffRank}</Th>
+                <Th>{c.zDunn}</Th>
+                <Th>{c.pRaw}</Th>
+                <Th>{c.pAdj}</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {comps.map((p, idx) => {
+                const sig = p.pAdj < 0.05
+                const rowCls = sig ? 'bg-duo-amber-50/40' : ''
+                const cellCls = sig ? 'text-duo-amber-700 font-semibold' : ''
+                return (
+                  <tr key={idx} className={rowCls}>
+                    <td className={[
+                      'px-3 py-1.5 border-b border-duo-cream-50 text-left text-duo-cocoa-700',
+                      cellCls,
+                    ].join(' ')}>
+                      {labelOf(p.groupA)} vs. {labelOf(p.groupB)}
+                    </td>
+                    <td className={['px-3 py-1.5 border-b border-duo-cream-50 text-right font-mono text-duo-cocoa-700', cellCls].join(' ')}>
+                      {fmtNum(p.meanRankA, 2)}
+                    </td>
+                    <td className={['px-3 py-1.5 border-b border-duo-cream-50 text-right font-mono text-duo-cocoa-700', cellCls].join(' ')}>
+                      {fmtNum(p.meanRankB, 2)}
+                    </td>
+                    <td className={['px-3 py-1.5 border-b border-duo-cream-50 text-right font-mono text-duo-cocoa-700', cellCls].join(' ')}>
+                      {fmtNum(Math.abs(p.diff), 2)}
+                    </td>
+                    <td className={['px-3 py-1.5 border-b border-duo-cream-50 text-right font-mono text-duo-cocoa-700', cellCls].join(' ')}>
+                      {fmtNum(p.z, 3)}
+                    </td>
+                    <td className={['px-3 py-1.5 border-b border-duo-cream-50 text-right font-mono text-duo-cocoa-700', cellCls].join(' ')}>
+                      {fmtP(p.p)}
+                    </td>
+                    <td className={['px-3 py-1.5 border-b border-duo-cream-50 text-right font-mono text-duo-cocoa-700', cellCls].join(' ')}>
+                      {fmtP(p.pAdj)}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )

@@ -185,3 +185,79 @@ export function kruskalWallis(groups) {
     tieCorrection: tiedGroups.length > 0,
   }
 }
+
+/* ─────────────────────  Dunn's Post-Hoc（KW 事後比較）  ───────────────────── */
+
+/**
+ * Dunn's test — Kruskal-Wallis 顯著後的兩兩比較
+ *
+ * 公式：
+ *   - 對全資料的 pooled ranks 計算各組平均秩 R̄_g
+ *   - 對每對 (i, j)：
+ *       SE = √( [ (N(N+1) − T_correct) / 12 ] · (1/n_i + 1/n_j) )
+ *       其中 T_correct = Σ(t³ − t) / (N − 1)（並列校正）；無並列時 T_correct = 0
+ *       z = (R̄_i − R̄_j) / SE
+ *       p_raw = 2(1 − Φ(|z|))   ← 常態分布
+ *       p_adj = min(1, p_raw · m)，m = k(k−1)/2（Bonferroni）
+ *
+ * 注意：z 用常態分布（並非 t），因 Dunn 的衍生基於 ranks 的常態近似。
+ *
+ * @param {Array<{name, values: number[]}>} groups
+ * @returns {{ comparisons, k, n, tieCorrection } | { error }}
+ */
+export function dunnPostHoc(groups) {
+  const k = groups.length
+  if (k < 3) return { error: 'need->=3-groups' }
+  for (const g of groups) {
+    if (!g.values || g.values.length < 1) return { error: 'group-empty' }
+  }
+
+  const arrays = groups.map((g) => g.values)
+  const { groupSums, groupNs, totalN, tiedGroups } = pooledRanks(arrays)
+  const N = totalN
+  if (N <= k) return { error: 'need-N>k' }
+
+  // tie correction term
+  let tieSum = 0
+  for (const t of tiedGroups) tieSum += (t * t * t - t)
+  // base variance term: N(N+1)/12 with tie correction
+  // SE² = [ (N(N+1) − tieSum/(N−1)) / 12 ] · (1/n_i + 1/n_j)
+  const tieAdjust = N > 1 ? tieSum / (N - 1) : 0
+  const variancePart = (N * (N + 1) - tieAdjust) / 12
+
+  const meanRanks = groupSums.map((s, i) => s / groupNs[i])
+  const m = (k * (k - 1)) / 2
+  const comparisons = []
+  for (let i = 0; i < k; i++) {
+    for (let j = i + 1; j < k; j++) {
+      const ni = groupNs[i]
+      const nj = groupNs[j]
+      const se = Math.sqrt(variancePart * (1 / ni + 1 / nj))
+      const mri = meanRanks[i]
+      const mrj = meanRanks[j]
+      const diff = mri - mrj
+      const z = se > 0 ? diff / se : 0
+      const pRaw = 2 * (1 - normalCdf(Math.abs(z)))
+      const pAdj = Math.min(1, pRaw * m)
+      comparisons.push({
+        groupA: groups[i].name,
+        groupB: groups[j].name,
+        nA: ni,
+        nB: nj,
+        meanRankA: mri,
+        meanRankB: mrj,
+        diff,
+        z,
+        p: Math.max(0, Math.min(1, pRaw)),
+        pAdj: Math.max(0, Math.min(1, pAdj)),
+      })
+    }
+  }
+  return {
+    comparisons,
+    k,
+    n: N,
+    m,
+    tieCorrection: tiedGroups.length > 0,
+  }
+}

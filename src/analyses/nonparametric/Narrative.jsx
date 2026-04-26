@@ -49,7 +49,7 @@ function buildNarrative(result, dataset, lang) {
     })
   }
   // kw
-  return fillTemplate(t.np.apa.kw, {
+  const kwText = fillTemplate(t.np.apa.kw, {
     factor: labelMap[result.factor] || result.factor,
     depLabel: labelMap[result.depVar] || result.depVar,
     df: result.df,
@@ -59,6 +59,20 @@ function buildNarrative(result, dataset, lang) {
     eps2: fmtNum(result.epsilon2, 3),
     sigWord,
   })
+  if (result.dunn && result.dunn.comparisons) {
+    const valueLabels = dataset.valueLabels?.[result.factor]?.[lang === 'zh-TW' ? 'zh' : 'en'] || {}
+    const labelOf = (n) => valueLabels[n] || n
+    const sigPairs = result.dunn.comparisons
+      .filter((c) => c.pAdj < 0.05)
+      .map((c) => `${labelOf(c.groupA)} vs. ${labelOf(c.groupB)} (p = ${fmtP(c.pAdj)})`)
+    const sigPairsStr = sigPairs.length > 0 ? sigPairs.join('、') : t.np.narrative.dunnNoSig
+    const dunnLine = fillTemplate(t.np.narrative.dunnLine, {
+      m: result.dunn.m,
+      sigPairs: sigPairsStr,
+    })
+    return kwText + ' ' + dunnLine
+  }
+  return kwText
 }
 
 function CopyButton({ text, label, hint }) {

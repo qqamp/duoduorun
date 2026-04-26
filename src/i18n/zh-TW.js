@@ -16,6 +16,43 @@ export default {
     subtitle: 'DUODUORUN',
     tagline: '純前端統計分析工具，瀏覽器即可使用，免安裝、免費、隱私不外流',
   },
+  home: {
+    heroTagline: '純前端統計分析工具｜免安裝｜免費｜資料不外流',
+    cards: {
+      purpose: {
+        title: '用途',
+        body:
+          '為臺灣社會科學師生量身打造的統計分析工具。' +
+          '涵蓋敘述統計、t 檢定、ANOVA、相關／迴歸、卡方、無母數、Cronbach\'s α、EFA 等 14 項常用方法，' +
+          '所有運算結果都對齊 SPSS / JASP，並同時提供繁中與英文 APA 格式敘述以便撰寫論文。',
+      },
+      author: {
+        title: '開發',
+        body:
+          '開發者：李洛維助理教授\n' +
+          '所屬單位：臺灣警察專科學校海洋巡防科\n' +
+          '研究領域：生成式AI與智慧政府、數位治理、資料治理、演算法偏誤與課責、科技法與數位人權、社會科學量化研究',
+      },
+      privacy: {
+        title: '隱私聲明',
+        body:
+          '所有資料解析、統計運算、結果產出全部在您的瀏覽器本地執行。' +
+          '本工具不呼叫任何 API、不收集任何使用者資訊，' +
+          '上傳的檔案永遠不會離開您的電腦。',
+      },
+      citation: {
+        title: '學術引用(尚未開放)',
+        body:
+          '若本工具對您的論文有所助益，引用格式建議如下：\n' +
+          '李洛維（2026）。多多快跑：純前端統計分析工具。\n' +
+          '網址：https://qqamp.github.io/duoduorun/\n' +
+          '版本：v1.0',
+      },
+    },
+    footer:
+      '本專案目前為測試版，尚未正式開放，問題回報與功能建議請至 ：' +
+      'serpent910@gmail.com',
+  },
   toolbar: {
     selectDataset: '選擇示範資料集',
     uploadData: '上傳資料',
@@ -36,6 +73,26 @@ export default {
     inferential: '推論統計',
     regression: '相關與迴歸',
     scale: '量表分析',
+    comingSoon: '即將開放功能',
+    comingSoonHint: '規劃中，敬請期待',
+    cbSem: 'CB-SEM 結構方程模型',
+    plsSem: 'PLS-SEM',
+    hlm: 'HLM 多層次模型',
+    mcnemar: 'McNemar 檢定',
+    friedman: 'Friedman 檢定',
+    multinomialLogit: '多項邏輯斯迴歸',
+    ordinalLogit: '順序邏輯斯迴歸',
+    probit: 'Probit 迴歸',
+    poisson: 'Poisson 迴歸',
+    polynomialReg: '多項式迴歸',
+    cox: 'Cox 比例風險（生存分析）',
+    cca: '典型相關分析',
+    bayesT: 'Bayesian t 檢定',
+    bayesAnova: 'Bayesian ANOVA',
+    bayesCorr: 'Bayesian 相關',
+    irt: '項目反應理論 IRT',
+    meta: '統合分析（Meta-analysis）',
+    arima: 'ARIMA 時間序列',
     descStats: '基本敘述統計',
     normality: '常態性檢定',
     visualization: '資料視覺化',
@@ -50,6 +107,13 @@ export default {
     logisticRegression: '邏輯斯迴歸',
     cronbachAlpha: "Cronbach's α",
     efa: '探索性因素分析',
+    zProp: 'z 檢定（比例）',
+    fisherExact: 'Fisher 精確檢定',
+    kappa: "Cohen's Kappa（評分者一致性）",
+    hierReg: '階層迴歸',
+    ancova: 'ANCOVA 共變數分析',
+    icc: 'ICC 組內相關係數',
+    repAnova: '重複量數 ANOVA',
   },
   panels: {
     configTitle: '分析設定',
@@ -215,6 +279,8 @@ export default {
       pickVar2: '請選變項 2',
       groupVarBadGroups: '此變項有 {k} 組，需要剛好 2 組',
       factorBadGroups: '此變項有 {k} 組，需要至少 3 組',
+      showDunn: '顯示事後比較（Dunn）',
+      dunnHint: 'KW 顯著時，用 Dunn 檢定做兩兩比較，並以 Bonferroni 校正多重檢定誤差',
     },
     result: {
       statsTitle: '檢定統計量',
@@ -224,6 +290,8 @@ export default {
         u: 'U', u1: 'U₁', u2: 'U₂', wpos: 'W⁺', wneg: 'W⁻', t: 'T',
         h: 'H', df: 'df', z: 'z', p: 'p', n: 'n', meanRank: '平均秩', sumRank: '秩和',
         eps2: 'ε²', r: 'r（效果量）',
+        pair: '配對組', meanRankA: '平均秩 A', meanRankB: '平均秩 B',
+        diffRank: '|Δ平均秩|', zDunn: 'z', pRaw: '原始 p', pAdj: '校正 p（Bonferroni）',
       },
       tieNote: '結果含並列校正',
       droppedNote: '已剔除 {n} 對 D = 0',
@@ -231,7 +299,9 @@ export default {
         small: '小', medium: '中', large: '大',
       },
       kwSigPosthoc:
-        '整體 H 顯著時，建議用 Dunn 檢定做事後兩兩比較（本工具未內建，可在 R::dunn.test 或 JASP 跑）',
+        '整體 H 顯著時，建議用 Dunn 檢定做事後兩兩比較（可勾選左側「顯示事後比較（Dunn）」啟用）',
+      dunnTitle: 'Dunn 事後比較（Bonferroni 校正）',
+      dunnEmpty: '無可比較之配對',
     },
     notes: {
       purposeTitle: '用途',
@@ -274,6 +344,13 @@ export default {
         '與 t / ANOVA 的選用：\n' +
         '- 樣本量小、常態性可疑、有極端值或順序量表 → 無母數\n' +
         '- 樣本量大且常態性 OK → t / ANOVA 通常更具檢定力',
+      dunnNote:
+        'Dunn 事後比較：當 KW 整體檢定顯著時，用以辨識「哪幾組之間」存在差異。\n' +
+        '統計量：對每對組別計算 z = (R̄_i − R̄_j) / SE，其中 SE 採全資料 pooled rank 的變異並含並列校正；' +
+        '由常態分布求得原始 p。\n' +
+        '多重檢定校正：對 m = k(k−1)/2 個比較數套用 Bonferroni（p_adj = min(1, p × m)）；' +
+        '較保守、family-wise error 控制嚴格。\n' +
+        '判讀：以「校正後 p」為主，校正 p < .05 視為該對差異顯著。',
     },
     apa: {
       mw:
@@ -285,6 +362,11 @@ export default {
       sigYes: '達顯著',
       sigNo: '未達顯著',
       copyHint: '一鍵複製 APA 敘述',
+    },
+    narrative: {
+      dunnLine:
+        '事後採用 Dunn 兩兩比較並以 Bonferroni 校正多重檢定誤差（m = {m}）。校正後 p < .05 之顯著配對為：{sigPairs}。',
+      dunnNoSig: '無顯著配對',
     },
     interp: {
       header: '解讀',
@@ -300,6 +382,683 @@ export default {
       kwPosthoc: '注意：H 顯著後，建議跑 Dunn 兩兩事後比較。',
       sigYes: '達顯著',
       sigNo: '未達顯著',
+    },
+  },
+  ancova: {
+    title: 'ANCOVA 共變數分析',
+    config: {
+      yLabel: '依變項 Y（連續）',
+      pickY: '請選依變項',
+      factorLabel: '因子（類別變項）',
+      pickFactor: '請選因子',
+      factorHint: '需為類別型變數，至少 2 個層級',
+      covLabel: '共變項（≥ 1，連續）',
+      covHint: '勾選下方數值變項作為共變項；不可包含依變項',
+    },
+    errors: {
+      pickDep: '請選擇依變項',
+      pickFactor: '請選擇因子',
+      pickCov: '請至少勾選 1 個共變項',
+      covIsY: '依變項不可同時為共變項',
+      covIsFactor: '因子不可同時為共變項',
+      factorBadGroups: '因子目前僅有 {k} 組，至少需要 2 組',
+      tooFewN: '有效樣本數不足以估計（需 N > k + p + 1）',
+      'singular-matrix': "設計矩陣共線性過高，無法求解（X'X 不可逆）",
+      'length-mismatch': '資料長度不一致',
+    },
+    result: {
+      homoTitle: '斜率同質性檢定',
+      homoLabel: 'Factor × Covariate 交互項',
+      homoOk: '通過',
+      homoViolated: '違反',
+      homoNotComputable: '樣本數或變項組合不足以檢定（如 N − k − p − 交互項數 ≤ 0）。',
+      homoViolationWarn:
+        '警告：斜率同質性假設違反（交互項 p < .05）— 不同因子層級下，共變項對依變項的關係不同，此時 ANCOVA 的調整平均可能誤導，建議改用 moderation 模型或分組分析。',
+      tableTitle: 'ANCOVA 表（Type-III 調整 SS）',
+      rawMeansTitle: '原始平均（未調整）',
+      adjMeansTitle: '調整後平均（LS Means）',
+      adjMeansHint: '調整後平均：將共變項固定於樣本總平均值後的預測值；95% CI 以 ±1.96·SE 計算（大樣本近似）。',
+      cols: {
+        source: '變異來源', ss: 'SS', df: 'df', ms: 'MS', f: 'F', p: 'p',
+        partialEta2: 'partial η²', error: '誤差', total: '總和',
+        level: '層級', mean: '平均', adjMean: '調整後平均', se: 'SE', ci95: '95% CI',
+      },
+      effectInterp: { small: '小效果', medium: '中效果', large: '大效果' },
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      overall:
+        '在控制共變項後，因子「{factor}」對依變項「{yLabel}」的主效應 F({df1}, {df2}) = {f}, p = {pStr} → {sigWord}；partial η² = {eta2}（{etaInterp}）。',
+      covSection: '各共變項的調整後檢定：',
+      covLine: '{name}：F({df1}, {df2}) = {f}, p = {pStr}，partial η² = {eta2} → {sigWord}',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        'ANCOVA 同時保留 ANOVA（比較組間平均）與迴歸（用連續變項解釋變異）的優點。\n常見情境：\n1. 實驗組 vs 控制組比較依變項時，先排除前測分數 / 年齡 / 智商等共變項影響。\n2. 想知道「在控制 X 變項後，組間差異是否仍存在」。\n3. 提高統計檢定力 — 共變項解釋了部分組內變異，使 MS_error 縮小。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 依變項為連續、共變項為連續、因子為類別\n' +
+        '2. 觀察值獨立\n' +
+        '3. 殘差呈常態、同質變異\n' +
+        '4. 共變項與依變項為線性關係\n' +
+        '5. 共變項與因子獨立（共變項不應受實驗操弄影響）\n' +
+        '6. ★ 斜率同質性（homogeneity of regression slopes）— 不同因子層級下，共變項對依變項的迴歸斜率相同；違反時 ANCOVA 的調整失準。',
+      formulasTitle: '核心公式',
+      formulaModel: 'Y = β₀ + Σ β_g · Dummy_g + Σ β_j · Cov_j + ε',
+      formulaSSfactor: 'SS_factor = SS_res(reduced: 只含 covariates) − SS_res(full)',
+      formulaSScov: 'SS_cov_j = SS_res(去除 cov_j 的模型) − SS_res(full)',
+      formulaF: 'F = MS_effect / MS_error；df_factor = k − 1，df_error = N − k − p',
+      formulaPartialEta2: 'partial η² = SS_effect / (SS_effect + SS_error)',
+      formulaAdjMean:
+        '調整後平均_g = β̂₀ + β̂_g + Σ β̂_j · C̄_j（C̄_j 為共變項 j 的總平均）',
+      formulaHomo:
+        '斜率同質性 F = ((SS_res_full − SS_res_homo) / 交互項數) / (SS_res_homo / df_homo)',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. ★ 先看「斜率同質性檢定」：若違反（p < .05），ANCOVA 的解讀都要打折扣，建議改用其他方法。\n' +
+        '2. 看 ANCOVA 表中「因子」的 F 與 p：在控制共變項後，組間差異是否顯著？\n' +
+        '3. 看各共變項的 F 與 p：哪些共變項對依變項有顯著影響？\n' +
+        '4. 看 partial η²：因子或共變項各自的效果量大小（< .06 小、< .14 中、≥ .14 大）。\n' +
+        '5. 看「調整後平均」（LS Means）：這才是 ANCOVA 真正用於組間比較的數值，不是原始平均。\n\n' +
+        '常見陷阱：\n' +
+        '- 共變項本身受處理變項影響 → 違反「共變項與因子獨立」假設，會抹除真實效果\n' +
+        '- 用 ANCOVA 取代隨機分派 → 觀察性研究的 ANCOVA 不能完全消除選擇偏誤\n' +
+        '- 忽略斜率同質性 → 直接報告 ANCOVA 結果可能誤導',
+    },
+    apa: {
+      sentence:
+        '為檢視在控制 {covList} 後，{factor} 對 {yLabel} 是否仍有顯著差異，本研究進行 ANCOVA（N = {n}）。結果顯示，{factor} 主效應達顯著，F({df1}, {df2}) = {f}, p = {pStr}，partial η² = {eta2}。{covSection}{homoSection}',
+      sentenceNs:
+        '為檢視在控制 {covList} 後，{factor} 對 {yLabel} 是否仍有顯著差異，本研究進行 ANCOVA（N = {n}）。結果顯示，{factor} 主效應未達顯著，F({df1}, {df2}) = {f}, p = {pStr}，partial η² = {eta2}。{covSection}{homoSection}',
+      covOpener: '共變項方面，',
+      covLine: '{name}（F({df1}, {df2}) = {f}, p = {pStr}, partial η² = {eta2}）',
+      homoOk: ' 斜率同質性檢定 F({df1}, {df2}) = {f}, p = {pStr}，未違反斜率同質性假設。',
+      homoBad: ' 斜率同質性檢定 F({df1}, {df2}) = {f}, p = {pStr}，已違反斜率同質性假設，結果應審慎解讀。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  icc: {
+    title: 'ICC 組內相關係數',
+    config: {
+      selectRatersTitle: '選擇評分者欄位',
+      selectRatersHint: '勾選每位評分者對應的數值欄（每列 = 一位受試者；每欄 = 一位評分者）。建議至少 2 位評分者，3 位以上更穩定。',
+    },
+    result: {
+      summaryTitle: '摘要',
+      anovaTitle: 'ANOVA 均方分解',
+      variantTitle: 'ICC 六種變體（Shrout & Fleiss, 1979）',
+      designNote: '兩因子 ANOVA（受試者 × 評分者，不含交互項）',
+      droppedNote: '因遺漏值剔除 {n} 列（listwise deletion）',
+      interpRange: '解讀慣例（Koo & Li, 2016）：< .50 不佳、.50–.75 中等、.75–.90 良好、≥ .90 極佳',
+      cols: {
+        n: '有效樣本', k: '評分者數', design: '設計', source: '變異來源',
+        df_short: 'df', ms: 'MS（均方）',
+        variant: '變體', description: '說明', icc: 'ICC', ci95: '95% CI',
+        f: 'F', df: 'df₁, df₂', p: 'p', interp: '解讀',
+      },
+      rows: {
+        between: '受試者間 (Between-subject, MS_R)',
+        raterCol: '評分者間 (Between-rater, MS_C)',
+        residual: '殘差 (Residual, MS_E)',
+        within: '受試者內 (Within-subject, MS_W)',
+      },
+      variantLabel: {
+        icc1_1: 'ICC(1,1)', icc1_k: 'ICC(1,k)',
+        icc2_1: 'ICC(2,1)', icc2_k: 'ICC(2,k)',
+        icc3_1: 'ICC(3,1)', icc3_k: 'ICC(3,k)',
+      },
+      variantDesc: {
+        icc1_1: '單因子隨機・單一評分者',
+        icc1_k: '單因子隨機・平均評分',
+        icc2_1: '雙因子隨機・單一評分者・絕對一致',
+        icc2_k: '雙因子隨機・平均評分・絕對一致',
+        icc3_1: '雙因子混合・單一評分者・一致性',
+        icc3_k: '雙因子混合・平均評分・一致性',
+      },
+    },
+    errors: {
+      needAtLeast2Raters: '請至少選擇 2 位評分者欄位',
+      needAtLeast3Subjects: '有效樣本數不足（每位評分者皆有資料的受試者需至少 3 位）',
+    },
+    interp: { poor: '不佳', moderate: '中等', good: '良好', excellent: '極佳' },
+    decisionTree: {
+      header: '我該報哪一種 ICC？（決策樹）',
+      body:
+        '步驟 1｜評分者是否每位受試者都由同一組（例如固定 3 位評審），還是每位受試者隨機抽到不同評分者？\n  · 每位受試者隨機配到不同評分者 → ICC(1, *)\n  · 同一組評分者評所有受試者，且該組為母體中的隨機樣本 → ICC(2, *)\n  · 同一組評分者評所有受試者，但只想推論到「這幾位評分者」 → ICC(3, *)\n\n步驟 2｜要報「單一評分者」還是「k 位評分者平均分數」的信度？\n  · 實務只用一位 → ICC(*, 1)\n  · 實務取 k 位平均 → ICC(*, k)\n\n步驟 3（僅 ICC(2, *) vs ICC(3, *)）｜要求「絕對一致」還是「相對一致」？\n  · 在意絕對值（含系統性偏差） → 絕對一致（ICC(2, *)）\n  · 只在意排序 → 一致性（ICC(3, *)）\n\n常見場景：\n  · 多人評同一批受試者、要推論到母體評分者 → ICC(2,1) 或 ICC(2,k)\n  · 同一儀器重複測量、評分者固定不外推 → ICC(3,1) 或 ICC(3,k)\n  · 報告慣例：同時提供值 + 95% CI，並依 Koo & Li (2016) 解讀。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '評估「同一受試者由多位評分者（或多次測量）所得分數的一致性」。\n常見情境：\n1. 多位評審打分（rater agreement）\n2. 同一受試者重複測量（test–retest reliability）\n3. 量表項目間的同質性（Cronbach\'s α 為主流）\n\n關鍵：ICC 不是單一公式，而是 6 種變體（Shrout & Fleiss, 1979）。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 受試者為隨機樣本\n' +
+        '2. 兩因子設計下，受試者 × 評分者交互效應假設可忽略\n' +
+        '3. 殘差近似常態、等變異\n' +
+        '4. ICC(1, *)：每位受試者由不同評分者評\n' +
+        '5. ICC(2, *)：同組評分者，且為母體隨機樣本\n' +
+        '6. ICC(3, *)：同組評分者，但為固定（不外推）\n' +
+        '7. listwise deletion：任一評分者欄缺值即剔除該受試者',
+      formulasTitle: '核心公式',
+      formulaAnova:
+        'MS_R = SS_R / (n−1)；MS_C = SS_C / (k−1)；MS_E = SS_E / ((n−1)(k−1))；MS_W = (SS_C + SS_E) / (n(k−1))',
+      formulaIcc1_1: '(MS_R − MS_W) / (MS_R + (k−1)·MS_W)',
+      formulaIcc1_k: '(MS_R − MS_W) / MS_R',
+      formulaIcc2_1: '(MS_R − MS_E) / (MS_R + (k−1)·MS_E + k·(MS_C − MS_E)/n)',
+      formulaIcc2_k: '(MS_R − MS_E) / (MS_R + (MS_C − MS_E)/n)',
+      formulaIcc3_1: '(MS_R − MS_E) / (MS_R + (k−1)·MS_E)',
+      formulaIcc3_k: '(MS_R − MS_E) / MS_R',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 先確認研究設計，選對 ICC 變體（見中欄決策樹）。\n' +
+        '2. 解讀慣例（Koo & Li, 2016）：< .50 不佳、.50–.75 中等、.75–.90 良好、≥ .90 極佳\n' +
+        '3. 報告務必同時呈現 95% CI；單看點估計易高估或低估。\n' +
+        '4. F 檢定虛無假設為 ICC = 0，達顯著僅代表信度顯著大於 0、不代表「夠好」。\n' +
+        '5. 平均評分（*, k）通常高於單一評分者（*, 1），這是 Spearman-Brown 效應；不要直接互比。\n' +
+        '6. ICC 對極端離群值敏感；必要時做 sensitivity analysis。',
+    },
+    narrative: {
+      copyHint: '一鍵複製 APA 敘述',
+      sentence:
+        '本研究以 ICC 評估「{itemList}」這 {k} 位評分者對 {n} 位受試者所給分數的評分者間信度。' +
+        '採 Shrout & Fleiss (1979) 雙因子隨機、絕對一致、單一評分者形式（ICC(2,1)）：' +
+        'ICC = {icc}，95% CI {ci}，F({df1}, {df2}) = {f}, p = {pStr}（{interp}信度）。',
+    },
+  },
+  repAnova: {
+    title: '重複量數 ANOVA',
+    config: {
+      selectConditionsTitle: '選擇重複測量條件',
+      selectConditionsHint: '勾選同一受試者在不同時點 / 條件下的測量欄位（至少 2 欄；每列代表一位受試者，每欄代表一個重複測量條件）',
+    },
+    result: {
+      summaryTitle: '整體摘要',
+      descTitle: '各條件敘述統計',
+      mauchlyTitle: 'Mauchly 球形檢定',
+      mauchlyLabel: '球形假設',
+      mauchlyOk: '球形假設成立',
+      mauchlyViolated: '球形假設違反',
+      mauchlyNotApplicable: '只有 2 個條件，球形假設自動成立，不需 Mauchly 檢定。',
+      anovaTitle: 'RM-ANOVA 表（含球形校正）',
+      recOk: 'Mauchly 球形檢定未違反，建議直接報告 Sphericity Assumed 列。',
+      recViolated: 'Mauchly 球形檢定 p < .05，球形假設違反。建議報告 Greenhouse-Geisser 校正（保守、最常用）；若 ε_GG > 0.75 也可改用 Huynh-Feldt 校正以提高檢定力。',
+      recK2: 'k = 2 時球形假設自動成立，直接報告 Sphericity Assumed 列即可。',
+      cols: {
+        n: 'n（受試者）', kCond: 'k（條件數）',
+        condition: '條件', mean: 'M', sd: 'SD',
+        source: '來源', eps: 'ε', ss: 'SS', df: 'df',
+        dfTreat: 'df（處理）', dfError: 'df（誤差）',
+        ms: 'MS', f: 'F', p: 'p',
+        partialEta2: '偏 η²', etaG2: '一般化 η²_G',
+      },
+      sources: {
+        sa: '球形假設成立',
+        gg: 'Greenhouse-Geisser',
+        hf: 'Huynh-Feldt',
+        lb: '下界（Lower-bound）',
+        error: '誤差（受試者×條件）',
+        bs: '受試者間',
+        total: '總和',
+      },
+      effectInterp: { small: '小', medium: '中', large: '大' },
+    },
+    errors: {
+      needAtLeast2: '請至少勾選 2 個條件欄位',
+      tooFewN: '有效樣本太少（listwise 刪除後 n = {n}）',
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      overall:
+        '本研究在 N = {n} 位受試者的 k = {k} 個重複測量條件上進行 RM-ANOVA。' +
+        '依據{sourceName}列，F({df1}, {df2}) = {f}, p = {pStr}，{sigWord}；' +
+        '\n效果量：偏 η² = {eta2}（{etaInterp}），一般化 η²_G = {etaG2}。',
+      useSA: '※ Mauchly 球形檢定未違反，採用 Sphericity Assumed 列作為主要報告依據。',
+      useGG: '※ Mauchly 球形檢定顯著違反球形假設，已自動以 Greenhouse-Geisser 校正後的 df 與 p 為解讀依據。',
+      k2Note: '※ k = 2，球形假設自動成立，無需校正。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '比較同一群受試者在 ≥ 2 個重複測量條件（時點 / 處理 / 情境）下的平均數是否有差異。\n' +
+        '相較於獨立樣本 ANOVA，本檢定能夠把「個體間差異」單獨抽離（受試者間 SS），讓條件主效應的誤差項變小，檢定力較高。\n' +
+        '常見情境：前測 / 後測 / 追蹤；不同實驗條件下的同一群受試者。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 觀察值在受試者層級獨立\n' +
+        '2. 各條件的依變項近似常態分布\n' +
+        '3. 球形假設（sphericity）：所有條件兩兩差分的變異數相等\n' +
+        '   - k = 2 時自動成立\n' +
+        '   - k ≥ 3 用 Mauchly 檢定；違反需 Greenhouse-Geisser 或 Huynh-Feldt 校正\n' +
+        '4. 寬資料格式：每列 = 一位受試者，每欄 = 一個重複測量條件',
+      formulasTitle: '核心公式',
+      formulaSStotal: 'SS_總 = Σᵢⱼ (Yᵢⱼ − Ȳ)²；df_總 = nk − 1',
+      formulaSSbs: 'SS_受試者間 = k · Σᵢ (Ȳᵢ − Ȳ)²；df = n − 1',
+      formulaSStreat: 'SS_處理 = n · Σⱼ (Ȳⱼ − Ȳ)²；df = k − 1',
+      formulaSSerror: 'SS_誤差 = SS_受試者內 − SS_處理；df = (n − 1)(k − 1)',
+      formulaF: 'F = MS_處理 / MS_誤差',
+      formulaPartialEta2: '偏 η² = SS_處理 / (SS_處理 + SS_誤差)',
+      formulaEtaG2: '一般化 η²_G = SS_處理 / (SS_處理 + SS_受試者間 + SS_誤差)',
+      formulaMauchly:
+        "Mauchly W = det(S) / (tr(S)/(k−1))^(k−1)；S 為 (k−1) 個正交對比的樣本共變異矩陣\n" +
+        "χ² = −[(n−1) − (2(k−1)² + (k−1) + 2) / (6(k−1))] · ln(W)",
+      formulaGG: 'ε_GG = (tr S)² / [(k−1) · tr(S²)]',
+      formulaHF: 'ε_HF = min{ 1, [n(k−1)·ε_GG − 2] / [(k−1)·((n−1) − (k−1)·ε_GG)] }',
+      formulaLB: 'ε_LB = 1 / (k−1)',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 先看 Mauchly 球形檢定（k ≥ 3 才有）：p < .05 → 球形假設違反，需要校正。\n' +
+        '2. 若球形成立 → 報告 Sphericity Assumed 列。\n' +
+        '3. 若球形違反 → 報告 Greenhouse-Geisser 列（最常用）；若 ε_GG > 0.75 也可改用 Huynh-Feldt。\n' +
+        '4. F 值在四列都相同；只有 df（與隨之而來的 p）會被 ε 收縮。\n' +
+        '5. 效果量同時報告偏 η² 與一般化 η²_G。\n\n' +
+        '常見陷阱：\n' +
+        '- 球形違反卻報未校正 F → df 高估、p 失真。\n' +
+        '- 寬資料格式必須對齊：任一欄缺值即整列剔除。\n' +
+        '- 整體 F 顯著只代表至少有兩個條件不同；找哪幾對需另做配對比較。',
+    },
+    apa: {
+      sentence:
+        '針對 N = {n} 位受試者在 {k} 個重複測量條件（{condList}）上執行重複量數變異數分析。' +
+        '{sphericitySection}' +
+        '{correction}下，主效應達顯著，F({df1}, {df2}) = {f}, p = {pStr}，偏 η² = {eta2}，η²_G = {etaG2}。',
+      sentenceNs:
+        '針對 N = {n} 位受試者在 {k} 個重複測量條件（{condList}）上執行重複量數變異數分析。' +
+        '{sphericitySection}' +
+        '{correction}下，主效應未達顯著，F({df1}, {df2}) = {f}, p = {pStr}，偏 η² = {eta2}，η²_G = {etaG2}。',
+      sphericityOk:
+        'Mauchly 球形檢定未違反球形假設（W = {w}，χ²({df}) = {chi2}, p = {pStr}）。',
+      sphericityViolated:
+        'Mauchly 球形檢定顯示球形假設違反（W = {w}，χ²({df}) = {chi2}, p = {pStr}），故採 Greenhouse-Geisser 校正（ε = {epsGG}）報告。',
+      k2Note: '由於僅有 2 個條件，球形假設自動成立，未進行 Mauchly 檢定。',
+      saLabel: '在球形假設成立',
+      ggLabel: '經 Greenhouse-Geisser 校正',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  kappa: {
+    title: "Cohen's Kappa（評分者一致性）",
+    weightings: {
+      none: '不加權',
+      linear: '線性加權',
+      quadratic: '二次加權',
+    },
+    weightingHint: {
+      none: "只看完全一致；類別之間視為無順序（標準 Cohen's κ）",
+      linear: '依 |i − j|/(k − 1) 線性懲罰；適合有序類別',
+      quadratic: '依 ((i − j)/(k − 1))² 平方懲罰；接近 ICC，適合有序類別',
+    },
+    config: {
+      rater1Var: '評分者 1（變數）',
+      rater2Var: '評分者 2（變數）',
+      pickRater1: '請選評分者 1 的類別變數',
+      pickRater2: '請選評分者 2 的類別變數',
+      raterHint: '需為類別型變數；兩位 rater 的層級會取交集後分析',
+      weightingLabel: '加權方式',
+    },
+    result: {
+      tableTitle: 'k×k 一致性列聯表',
+      tableHint: '對角線（暖色 highlight）為兩位評分者一致的次數；k = {k}',
+      statsTitle: 'κ 檢定統計量',
+      variantsTitle: '三種加權對照',
+      variantsHint: '★ 為目前選擇的加權方式；linear / quadratic 僅在類別有順序時適用',
+      cols: {
+        rater1Backslash2: '評分者 1 ＼ 2',
+        total: '總和',
+        po: 'Po',
+        pe: 'Pe',
+        kappa: 'κ',
+        se: 'SE',
+        ci95: '95% CI',
+        z: 'z',
+        p: 'p',
+        weighting: '加權',
+        interp: '解讀',
+      },
+    },
+    errors: {
+      pickRater1: '請選擇評分者 1 的類別變數',
+      pickRater2: '請選擇評分者 2 的類別變數',
+      sameVar: '兩位評分者的變數不可相同',
+      needTwoLevels: '兩位評分者的共同層級不足 2 個，無法計算 κ',
+      noData: '沒有可用的成對觀察值',
+      undefinedKappa: '邊際分布完全傾斜或單一類別佔滿，1 − Pe = 0，κ 在數學上未定義；建議檢查資料分布',
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      levels: {
+        poor: '極差（< 0）',
+        slight: '微弱（0.0–0.2）',
+        fair: '尚可（0.2–0.4）',
+        moderate: '中度（0.4–0.6）',
+        substantial: '良好（0.6–0.8）',
+        almostPerfect: '幾近完美（0.8–1.0）',
+        undefined: '未定義',
+      },
+      overall:
+        '在 N = {n} 對成對評分（k = {k} 個共同類別）中，' +
+        '觀察一致 Po = {po}、隨機一致 Pe = {pe}，' +
+        '{weighting} κ = {kappa}（95% CI [{ciLow}, {ciHigh}]）。\n' +
+        'z = {z}, p = {pStr} → {sigWord}。\n' +
+        '依 Landis & Koch (1977) 標準屬於：{level}。',
+    },
+    notes: {
+      q1: '什麼時候用？',
+      a1:
+        '當兩位評分者各自將同一批個案歸入相同的類別系統，要評估「兩人的判斷一致到什麼程度」時使用。\n' +
+        '常見情境：質性編碼信度、診斷一致性、人工標註資料品質檢核、雙盲評審意見一致性。',
+      q2: '前提假設',
+      a2:
+        '1. 每個個案被獨立評分兩次（同一批個案、相同類別系統）\n' +
+        '2. 兩位 rater 使用「相同的類別集合」——本工具會自動取兩變數的層級交集\n' +
+        '3. 觀察值彼此獨立\n' +
+        '4. 加權版（linear / quadratic）需類別「有順序」（如 1/2/3 級嚴重度）；無順序類別請用不加權。',
+      q3: '核心公式',
+      a3:
+        'Po = Σ 對角線次數 / N\n' +
+        'Pe = Σᵢ (rowᵢ/N)(colᵢ/N)\n' +
+        'κ  = (Po − Pe) / (1 − Pe)\n' +
+        '加權 κ：用權重矩陣 w_{ij} 重新定義 Po_w 與 Pe_w\n' +
+        '  linear：    w_{ij} = 1 − |i−j|/(k−1)\n' +
+        '  quadratic： w_{ij} = 1 − ((i−j)/(k−1))²\n' +
+        'H₀ 變異數：Var(κ) = Pe / (N(1 − Pe))，z = κ / √Var\n' +
+        '95% CI 用 asymptotic SE：Var = Po(1 − Po) / (N(1 − Pe)²)',
+      q4: '怎麼讀',
+      a4:
+        '1. 看 κ 值：依 Landis & Koch (1977)：< 0 極差、0.0–0.2 微弱、0.2–0.4 尚可、0.4–0.6 中度、0.6–0.8 良好、0.8–1.0 幾近完美\n' +
+        '2. 看 95% CI：CI 下限若已落在「中度」以上，信度較有保障\n' +
+        '3. p 值是檢定 κ ≠ 0；但即使顯著，κ 太低仍代表一致性不夠，重點是 κ 的「大小」而非單純的顯著性\n' +
+        '4. 若邊際分布極度不平衡（kappa paradox），κ 可能被低估；此時建議同時報告 Po 與檢視 confusion 表',
+    },
+    narrative: {
+      overall:
+        "採用 Cohen's Kappa（{weighting}）評估兩位評分者在 k = {k} 個類別上的一致性。" +
+        '在 N = {n} 對成對評分中，觀察一致 Po = {po}、隨機一致 Pe = {pe}，' +
+        'κ = {kappa}（95% CI [{ciLow}, {ciHigh}]），z = {z}, p = {pStr}。' +
+        '依 Landis & Koch (1977) 標準屬於「{level}」。',
+    },
+  },
+  hierReg: {
+    title: '階層迴歸',
+    config: {
+      yLabel: '依變項 Y',
+      pickY: '請選依變項',
+      blocksLabel: '預測變項區塊（依進入順序）',
+      hint: '每個區塊累積加入前面所有區塊的變項；典型用法：第 1 區為控制變項、第 2 區起為理論關注變項',
+      addBlock: '+ 新增區塊',
+      removeBlock: '− 刪除最後區塊',
+      blockTitle: '區塊 {n}',
+      varsUnit: '個變項',
+      pickYFirst: '請先選依變項',
+      noMoreVars: '已沒有可用的數值變項（前面區塊已用完）',
+    },
+    result: {
+      stepTitle: '步驟摘要（每一步累積加入區塊變項後的整體模型）',
+      coefTitle: '最終步驟係數表（包含所有區塊的變項）',
+      nNote: '所有步驟皆使用相同 N = {n}（對 Y 與全部預測變項做 listwise deletion）',
+      cols: {
+        step: '步驟', added: '本步加入', r2: 'R²', adjR2: 'Adj. R²',
+        f: 'F', df: 'df₁, df₂', p: 'p',
+        deltaR2: 'ΔR²', deltaF: 'ΔF', deltaDf: 'Δdf₁, Δdf₂', deltaP: 'Δp',
+        predictor: '預測項', b: 'b', se: 'SE', beta: 'β', t: 't', vif: 'VIF',
+        intercept: '常數項',
+      },
+    },
+    errors: {
+      pickY: '請選擇依變項',
+      needBlock: '至少需要 1 個區塊',
+      emptyBlock: '每個區塊至少需要 1 個預測變項',
+      dupPredictor: '同一個變項不可重複出現在多個區塊',
+      yInX: '依變項不可同時為預測變項',
+      tooFewN: '有效樣本數不足（需 n > 變項數 + 1）',
+      'singular-matrix': "預測變項共線性過高，無法估計（X'X 不可逆）",
+      'length-mismatch': '資料長度不一致',
+      'need->=1-predictor': '至少需要 1 個預測變項',
+      'need-n>k+1': '樣本數需大於預測變項數 + 1',
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      overall:
+        '本次階層迴歸共執行 {k} 個步驟（N = {n}）。最終步驟整體模型 F({df1}, {df2}) = {fFinal}, p = {pFinal}，' +
+        'R² = {r2Final}，調整後 R² = {adjR2Final}。',
+      deltaSection: '各步驟貢獻：',
+      singleStepNote: '只有一個步驟，無 ΔR² 可比較。',
+      firstStepLine:
+        '步驟 1（{vars}）：建立基線模型，R² = {r2}，F({df1}, {df2}) = {f}, p = {pStr}',
+      stepLine:
+        '步驟 {step}（加入 {vars}）：ΔR² = {deltaR2}，ΔF({df1}, {df2}) = {deltaF}, p = {pStr} → {sigWord}',
+      sigSummary: '※ 顯著改善整體解釋力的步驟：步驟 {steps}（Δp < .05）。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '依研究者的理論順序，分階段把預測變項投入迴歸模型，逐步檢視「新增的這組變項在控制前面變項後，是否還能顯著解釋依變項」。\n常見情境：\n1. 第 1 區放控制變項（性別、年齡、年資），第 2 區放理論關注變項，檢驗在控制人口變項後理論變項是否仍有獨立貢獻。\n2. 多步驟比較不同理論模型的解釋力增量（incremental validity）。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '與一般 OLS 多元迴歸相同：\n' +
+        '1. Y 與 X 之間為線性關係\n' +
+        '2. 觀察值獨立\n' +
+        '3. 殘差呈常態分布、同質變異\n' +
+        '4. 無嚴重多重共線\n' +
+        '額外注意：\n' +
+        '5. 變項投入順序需有理論依據，不可資料驅動（避免 stepwise 的偏誤）\n' +
+        '6. 各步驟需使用相同樣本（本工具自動以 listwise deletion 確保）',
+      formulasTitle: '核心公式',
+      formulaDeltaR2: 'ΔR²_k = R²_k − R²_{k−1}',
+      formulaDeltaF: 'ΔF = (ΔR²_k / dfNum) / ((1 − R²_k) / dfDen)',
+      formulaDf: 'dfNum = 該步新增的預測變項數；dfDen = N − (累積預測變項數) − 1',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 看每一步的 R² 與 Adj. R²：模型整體解釋力如何隨變項加入而成長？\n' +
+        '2. 看 ΔR² 與 Δp：「在控制前面變項後，本步加入的變項組是否還顯著貢獻？」這是階層迴歸的核心問題。\n' +
+        '3. 看最終係數表：在所有變項都進入後，哪些個別變項仍顯著？\n' +
+        '4. 注意：個別 β 在不同步驟會改變，這正是階層迴歸用來呈現「控制效果」的方式。\n\n' +
+        '常見陷阱：\n' +
+        '- 用資料挑選變項順序 → 應由理論決定\n' +
+        '- 樣本量在不同步驟不同 → 本工具已用 listwise 確保一致\n' +
+        '- 只看最終 R² 不看 ΔR² → 看不出每組變項的獨立貢獻',
+    },
+    narrative: {
+      sigYes: '顯著',
+      sigNo: '未顯著',
+      copyHint: '一鍵複製 APA 敘述',
+      opener:
+        '為檢視各組預測變項對 {yLabel} 的增量解釋力，本研究以階層迴歸（N = {n}）依序投入 {k} 個區塊。',
+      step1:
+        '步驟 1 投入 {vars}，模型 R² = {r2}（調整後 R² = {adjR2}），F({df1}, {df2}) = {f}, p = {pStr}。',
+      stepK:
+        '步驟 {step} 加入 {vars}，ΔR² = {deltaR2}，ΔF({df1}, {df2}) = {deltaF}, p = {deltaP}（{sigWord}）；累積 R² = {r2}（調整後 R² = {adjR2}）。',
+    },
+  },
+  fisherExact: {
+    title: 'Fisher 精確檢定',
+    config: {
+      rowVar: '列變數',
+      pickRow: '請選列變數',
+      rowHint: '需為類別型變數（建議 2 個類別）',
+      colVar: '欄變數',
+      pickCol: '請選欄變數',
+      colHint: '需為類別型變數（建議 2 個類別），不可與列變數相同',
+      successRow: '列變數的「成功」類別',
+      pickSuccessRow: '請選列變數中要視為成功的類別',
+      successCol: '欄變數的「成功」類別',
+      pickSuccessCol: '請選欄變數中要視為成功的類別',
+    },
+    result: {
+      tableTitle: '2×2 列聯表',
+      statsTitle: '檢定統計量',
+      cols: {
+        rowTotal: '列總和',
+        colTotal: '欄總和',
+        p: 'p (exact)',
+        or: '勝算比 OR',
+        orCi95: 'OR 95% CI',
+        lnOr: 'ln OR',
+        effect: '效果量',
+      },
+      effectInterp: {
+        trivial: '微弱', small: '小', medium: '中', large: '大',
+      },
+    },
+    warnings: {
+      tooManyRowLevels: '提醒：列變數「{varLabel}」共有 {count} 個類別，本檢定僅針對 2×2 表設計，已取「成功」類別與第一個非成功類別組成 2×2 表進行分析。',
+      tooManyColLevels: '提醒：欄變數「{varLabel}」共有 {count} 個類別，本檢定僅針對 2×2 表設計，已取「成功」類別與第一個非成功類別組成 2×2 表進行分析。',
+      haldane: '注意：表中存在 0 格，已套用 Haldane 修正（每格 +0.5）以計算 OR 與其 95% CI；exact p 仍以原始觀察次數計算。',
+    },
+    errors: {
+      pickRowVar: '請選擇列變數',
+      pickColVar: '請選擇欄變數',
+      sameVar: '列變數與欄變數不可相同',
+      pickSuccessRow: '請選擇列變數的成功類別',
+      pickSuccessCol: '請選擇欄變數的成功類別',
+      needTwoRowLevels: '列變數需至少有 2 個有效類別',
+      needTwoColLevels: '欄變數需至少有 2 個有效類別',
+      noData: '可分析資料為 0 列',
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      overall:
+        '在 N = {n} 名觀察值中，2×2 表為：(a={a}, b={b}, c={c}, d={d})。\n' +
+        'Fisher 雙尾 exact p = {pStr} → {sigWord}。\n' +
+        '勝算比 OR = {or}（95% CI [{orCiLow}, {orCiHigh}]），ln OR 屬{effect}效果量。',
+    },
+    notes: {
+      q1: '什麼時候用？',
+      a1:
+        '檢定兩個二元類別變數是否獨立（2×2 列聯表）。\n' +
+        '當樣本量小、或卡方檢定的期望次數有 cell < 5 時，Fisher 精確檢定是首選——它不依賴大樣本近似，直接用超幾何分布算精確 p。',
+      q2: '前提假設',
+      a2:
+        '1. 觀察值彼此獨立\n' +
+        '2. 邊際次數（列總和、欄總和）視為固定（理論上的條件性檢定）\n' +
+        '3. 變數為二元類別（若為多類別，建議改用卡方檢定或先合併類別）\n' +
+        '註：Fisher 在小樣本時會略偏保守，但仍是 2×2 小樣本的標準做法。',
+      q3: '核心公式',
+      a3:
+        '單一表格機率（超幾何分布）：\n' +
+        '  P(a) = C(a+b, a) · C(c+d, c) / C(N, a+c)\n' +
+        '雙尾 p = Σ P(a′)，僅加總所有 P(a′) ≤ P(觀察) 的表格機率。\n' +
+        '勝算比 OR = (a·d) / (b·c)；若任一格為 0，套用 Haldane (+0.5) 修正。\n' +
+        '95% CI（Woolf log-scale）：exp(ln OR ± 1.96·√(1/a + 1/b + 1/c + 1/d))',
+      q4: '怎麼讀',
+      a4:
+        '1. 看 exact p 是否 < .05 判斷兩變數是否獨立\n' +
+        '2. 看 OR：> 1 表「列成功」與「欄成功」正相關；< 1 為負相關；= 1 為獨立\n' +
+        '3. 看 OR 95% CI：若不包含 1，等同 p < .05（在大樣本下）\n' +
+        '4. ln OR 的絕對值 < 0.5 微弱、< 1.0 小、< 2.0 中、≥ 2.0 大',
+    },
+    narrative: {
+      main:
+        '採用 Fisher 精確檢定，分析「{rowVar}」與「{colVar}」之關聯。' +
+        '在 N = {n} 名有效觀察值中，2×2 列聯表為「{rSucc}/{cSucc}」= {a}、「{rSucc}/{cFail}」= {b}、' +
+        '「{rFail}/{cSucc}」= {c}、「{rFail}/{cFail}」= {d}。' +
+        '雙尾 exact p = {pStr}，勝算比 OR = {or}（95% CI [{orCiLow}, {orCiHigh}]）。',
+    },
+  },
+  zProp: {
+    title: 'z 檢定（比例）',
+    types: {
+      one: '單樣本（與 p₀ 比較）',
+      two: '雙獨立樣本比例比較',
+    },
+    typeHint: {
+      one: '檢定一個類別變數中某個類別的比例是否等於指定值 p₀',
+      two: '檢定兩個獨立群組在某個事件上的比例是否相同',
+    },
+    config: {
+      typeLabel: '檢定型別',
+      var1: '類別變數',
+      pickVar: '請選類別變數',
+      varHint: '需為類別型變數',
+      successLevel: '成功類別',
+      pickSuccess: '請選擇要計算比例的類別',
+      p0: '理論比例 p₀',
+      p0Hint: '0–1 之間，例如 0.5 為「無偏好」假設',
+      groupVar: '分組變數',
+      pickGroup: '請選分組變數（兩組）',
+      groupHint: '僅前兩個群組納入分析',
+      valueVar: '事件變數',
+      pickValueVar: '請選事件變數',
+      valueHint: '事件變數中要計算的「成功」類別',
+    },
+    result: {
+      summaryTitle: '描述統計',
+      statsTitle: '檢定統計量',
+      cols: {
+        success: '成功類別', n: 'n', x: 'x', phat: 'p̂', p0: 'p₀', ci95: '95% CI',
+        z: 'z', p: 'p', group: '群組', diff: 'p̂₁ − p̂₂', diffCi95: '差距 95% CI',
+        h: "Cohen's h", effect: '效果量',
+      },
+      effectInterp: {
+        trivial: '微弱', small: '小', medium: '中', large: '大',
+      },
+    },
+    errors: {
+      pickVar: '請選擇類別變數',
+      pickSuccess: '請選擇要計算比例的成功類別',
+      pickGroup: '請選擇分組變數',
+      pickValueVar: '請選擇事件變數',
+      sameVar: '分組變數與事件變數不可相同',
+      badP0: 'p₀ 必須介於 0 與 1 之間',
+      tooFewN: '樣本數過少（n < 5）',
+      needTwoGroups: '分組變數需有兩個有效類別',
+      tooManyGroups: '分組變數有 2 個以上類別，請使用卡方檢定',
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      oneOverall:
+        '在 N = {n} 名觀察值中，「{success}」共 {x} 次（p̂ = {phat}），與假設值 p₀ = {p0} 相比，' +
+        'z = {z}，p = {pStr} → {sigWord}。',
+      twoOverall:
+        '兩群組「{success}」比例：{g1} = {p1}、{g2} = {p2}，差距 = {diff}。\n' +
+        'z = {z}，p = {pStr} → {sigWord}。\n' +
+        "Cohen's h = {h}，屬於{effect}效果量。",
+    },
+    notes: {
+      q1: '什麼時候用？',
+      a1:
+        '兩種使用情境：\n' +
+        '1. 單樣本：檢定某類別比例是否等於指定值（例如「同意」比例是否高於 50%）\n' +
+        '2. 雙樣本：檢定兩個群組的比例是否相同（例如男性與女性的支持率差異）',
+      q2: '前提假設',
+      a2:
+        '1. 觀察值彼此獨立\n' +
+        '2. 樣本量足夠大（每組 np ≥ 5 且 n(1−p) ≥ 5）\n' +
+        '3. 簡單隨機抽樣\n' +
+        '若樣本量小或單格期望值過低，建議改用 Fisher 精確檢定。',
+      q3: '核心公式',
+      a3:
+        '單樣本：z = (p̂ − p₀) / √(p₀(1−p₀)/n)\n' +
+        '雙樣本：z = (p̂₁ − p̂₂) / √(p̄(1−p̄)(1/n₁ + 1/n₂))，p̄ = (x₁+x₂)/(n₁+n₂)\n' +
+        "效果量 Cohen's h = 2(arcsin√p̂₁ − arcsin√p̂₂)；|h| 0.2/0.5/0.8 對應小/中/大效果",
+      q4: '怎麼讀',
+      a4:
+        '1. 看 p 值是否 < .05 判斷是否拒絕 H₀\n' +
+        '2. 看效果量（Cohen\'s h 或差距 95% CI）判斷實質意義\n' +
+        '3. 95% CI 不包含 0（雙樣本）或不包含 p₀（單樣本）等同 p < .05',
+    },
+    narrative: {
+      one:
+        '採用單樣本比例 z 檢定，檢定「{success}」之觀察比例是否等於 p₀ = {p0}。' +
+        '在 N = {n} 名觀察值中觀察次數為 {x}（p̂ = {phat}），95% CI [{ciLow}, {ciHigh}]。' +
+        '檢定結果 z = {z}, p = {pStr}。',
+      two:
+        '採用雙獨立樣本比例 z 檢定，比較「{g1}」（n₁ = {n1}, p̂₁ = {p1}）與「{g2}」' +
+        '（n₂ = {n2}, p̂₂ = {p2}）在「{success}」事件上的比例差異。' +
+        '兩群組差距 = {diff}（95% CI [{diffCiLow}, {diffCiHigh}]），' +
+        "z = {z}, p = {pStr}, Cohen's h = {h}。",
     },
   },
   chiSq: {
@@ -660,6 +1419,8 @@ export default {
     placeholder: '占位內容',
     copy: '複製',
     copied: '已複製',
+    collapse: '收起',
+    expand: '展開',
   },
   desc: {
     selectVarsTitle: '選擇要分析的變數',

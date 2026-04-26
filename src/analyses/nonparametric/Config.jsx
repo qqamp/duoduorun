@@ -3,7 +3,7 @@
  */
 import { useApp, useAnalysisState } from '../../context/AppContext'
 
-const DEFAULT = { type: 'mw', depVar: null, groupVar: null, var1: null, var2: null }
+const DEFAULT = { type: 'mw', depVar: null, groupVar: null, var1: null, var2: null, dunnPostHoc: false }
 
 function TypeSelector({ value, onChange, t }) {
   const types = ['mw', 'wilcoxon', 'kw']
@@ -140,6 +140,22 @@ function Config() {
             options={factorOpts}
             placeholder={t.np.config.pickGroup}
           />
+          <div className="pt-2 border-t border-duo-cocoa-100">
+            <label className="flex items-start gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={!!state.dunnPostHoc}
+                onChange={(e) => update({ dunnPostHoc: e.target.checked })}
+                className="mt-0.5 w-3.5 h-3.5 accent-duo-amber-500 cursor-pointer"
+              />
+              <span className="text-xs font-medium text-duo-cocoa-700 leading-snug">
+                {t.np.config.showDunn}
+              </span>
+            </label>
+            <p className="text-[10px] text-duo-cocoa-400 mt-1 leading-snug pl-5">
+              {t.np.config.dunnHint}
+            </p>
+          </div>
         </div>
       )}
     </div>

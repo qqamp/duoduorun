@@ -7,7 +7,7 @@
  *   type ∈ { 'mw', 'wilcoxon', 'kw' }
  */
 import { isMissing } from '../../lib/variableTypes.js'
-import { mannWhitneyU, wilcoxonSignedRank, kruskalWallis } from '../../lib/stats/nonparametric.js'
+import { mannWhitneyU, wilcoxonSignedRank, kruskalWallis, dunnPostHoc } from '../../lib/stats/nonparametric.js'
 
 export function runNonparametric(rows, settings) {
   const type = settings?.type || 'mw'
@@ -61,7 +61,7 @@ function runWilcoxon(rows, { var1, var2 }) {
   return { type: 'wilcoxon', var1, var2, ...r }
 }
 
-function runKW(rows, { depVar, groupVar }) {
+function runKW(rows, { depVar, groupVar, dunnPostHoc: doDunn }) {
   if (!depVar) return { error: 'pickDep' }
   if (!groupVar) return { error: 'pickGroup' }
 
@@ -80,5 +80,10 @@ function runKW(rows, { depVar, groupVar }) {
   const groups = groupNames.map((name) => ({ name, values: buckets[name] }))
   const r = kruskalWallis(groups)
   if (r.error) return { error: r.error }
-  return { type: 'kw', depVar, factor: groupVar, ...r }
+  const out = { type: 'kw', depVar, factor: groupVar, ...r }
+  if (doDunn) {
+    const d = dunnPostHoc(groups)
+    if (!d.error) out.dunn = d
+  }
+  return out
 }

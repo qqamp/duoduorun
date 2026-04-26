@@ -44,6 +44,10 @@ export function AppProvider({ children }) {
   const [transforms, setTransforms] = useState([])
   const [history, setHistory] = useState([])
   const [uploadedDataset, setUploadedDatasetRaw] = useState(null)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [configCollapsed, setConfigCollapsed] = useState(false)
+  const toggleSidebar = useCallback(() => setSidebarCollapsed((v) => !v), [])
+  const toggleConfig = useCallback(() => setConfigCollapsed((v) => !v), [])
 
   const t = useMemo(() => getStrings(lang), [lang])
 
@@ -203,6 +207,8 @@ export function AppProvider({ children }) {
     restoreSnapshot,
     removeSnapshot,
     clearHistory,
+    sidebarCollapsed, toggleSidebar,
+    configCollapsed, toggleConfig,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

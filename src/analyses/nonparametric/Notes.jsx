@@ -55,6 +55,9 @@ function Notes() {
         )}
       </Section>
       <Section title={n.readingTitle}>{n.reading}</Section>
+      {type === 'kw' && n.dunnNote && (
+        <Section title="Dunn's post-hoc">{n.dunnNote}</Section>
+      )}
     </div>
   )
 }

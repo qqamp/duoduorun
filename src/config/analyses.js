@@ -33,6 +33,10 @@ export const ANALYSIS_GROUPS = [
       // priority 3 in spec; implemented in PR-6a
       { id: 'chi-square',      i18nKey: 'chiSquare',       priority: 2 },
       { id: 'nonparametric',   i18nKey: 'nonparametric',   priority: 2 },
+      { id: 'z-prop',          i18nKey: 'zProp',           priority: 2 },
+      { id: 'fisher-exact',    i18nKey: 'fisherExact',     priority: 1 },
+      { id: 'ancova',          i18nKey: 'ancova',          priority: 1 },
+      { id: 'repeated-anova',  i18nKey: 'repAnova',        priority: 1 },
     ],
   },
   {
@@ -43,6 +47,7 @@ export const ANALYSIS_GROUPS = [
       { id: 'simple-regression',     i18nKey: 'simpleRegression',     priority: 1 },
       { id: 'multiple-regression',   i18nKey: 'multipleRegression',   priority: 2 },
       { id: 'logistic-regression',   i18nKey: 'logisticRegression',   priority: 3 },
+      { id: 'hierarchical-regression', i18nKey: 'hierReg',            priority: 1 },
     ],
   },
   {
@@ -51,8 +56,46 @@ export const ANALYSIS_GROUPS = [
     items: [
       { id: 'cronbach-alpha', i18nKey: 'cronbachAlpha', priority: 1 },
       { id: 'efa',            i18nKey: 'efa',           priority: 3 },
+      { id: 'kappa',          i18nKey: 'kappa',         priority: 1 },
+      { id: 'icc',            i18nKey: 'icc',           priority: 1 },
     ],
   },
+]
+
+/**
+ * 即將開放的功能（規劃中、尚未實作）。在 Sidebar 以可摺疊群組顯示，
+ * 項目灰色不可點擊，純粹給使用者「未來會有什麼」的訊號。
+ *
+ * 順序：CB-SEM → PLS-SEM → HLM → 其他依類型分群
+ */
+export const COMING_SOON = [
+  // 結構方程模型
+  { id: 'cb-sem',           i18nKey: 'cbSem' },
+  { id: 'pls-sem',           i18nKey: 'plsSem' },
+  // 多層次模型
+  { id: 'hlm',              i18nKey: 'hlm' },
+  // 無母數補強
+  { id: 'mcnemar',          i18nKey: 'mcnemar' },
+  { id: 'friedman',         i18nKey: 'friedman' },
+  // 迴歸補強
+  { id: 'multinomial-logit', i18nKey: 'multinomialLogit' },
+  { id: 'ordinal-logit',    i18nKey: 'ordinalLogit' },
+  { id: 'probit',           i18nKey: 'probit' },
+  { id: 'poisson',          i18nKey: 'poisson' },
+  { id: 'polynomial-reg',   i18nKey: 'polynomialReg' },
+  { id: 'cox',              i18nKey: 'cox' },
+  // 多變量
+  { id: 'cca',              i18nKey: 'cca' },
+  // Bayesian
+  { id: 'bayes-t',          i18nKey: 'bayesT' },
+  { id: 'bayes-anova',      i18nKey: 'bayesAnova' },
+  { id: 'bayes-corr',       i18nKey: 'bayesCorr' },
+  // 測量學
+  { id: 'irt',              i18nKey: 'irt' },
+  // 合併分析
+  { id: 'meta',             i18nKey: 'meta' },
+  // 時間序列
+  { id: 'arima',            i18nKey: 'arima' },
 ]
 
 /**

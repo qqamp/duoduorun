@@ -22,6 +22,13 @@ import logisticRegression from './logisticRegression'
 import chiSquare from './chiSquare'
 import nonparametric from './nonparametric'
 import efa from './efa'
+import zProp from './zProp'
+import fisherExact from './fisherExact'
+import kappa from './kappa'
+import hierarchicalRegression from './hierarchicalRegression'
+import ancova from './ancova'
+import icc from './icc'
+import repeatedAnova from './repeatedAnova'
 
 const REGISTRY = {
   'desc-stats':         descriptive,
@@ -38,6 +45,13 @@ const REGISTRY = {
   'chi-square':         chiSquare,
   'nonparametric':      nonparametric,
   'efa':                efa,
+  'z-prop':             zProp,
+  'fisher-exact':       fisherExact,
+  'kappa':              kappa,
+  'hierarchical-regression': hierarchicalRegression,
+  'ancova':             ancova,
+  'icc':                icc,
+  'repeated-anova':     repeatedAnova,
 }
 
 export function getAnalysisModule(id) {
