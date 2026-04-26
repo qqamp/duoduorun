@@ -10,7 +10,7 @@
  */
 import { useState } from 'react'
 import { useApp } from '../context/AppContext'
-import duoduoHead from '../assets/duoduo-head.jpg'
+import duoduoBanner from '../assets/duoduo-banner.jpg'
 
 function InfoCard({ title, body }) {
   return (
@@ -110,18 +110,16 @@ function HomePage() {
   return (
     <div className="flex-1 overflow-y-auto bg-duo-cream-50">
       <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* 上：多多照片 */}
-        <div className="flex justify-center">
-          <div
-            className="rounded-full overflow-hidden border-4 border-white shadow-lg ring-1 ring-duo-cocoa-100"
-            style={{ width: 168, height: 168 }}
-          >
-            <img
-              src={duoduoHead}
-              alt="多多"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        {/* 上：多多橫幅 */}
+        <div
+          className="rounded-2xl overflow-hidden shadow-lg ring-1 ring-duo-cocoa-100 bg-duo-cream-100"
+          style={{ aspectRatio: '16 / 7', maxHeight: 320 }}
+        >
+          <img
+            src={duoduoBanner}
+            alt="多多"
+            className="w-full h-full object-cover"
+          />
         </div>
 
         {/* 中：標題與 tagline */}
@@ -149,13 +147,13 @@ function HomePage() {
           </p>
         </div>
 
-        {/* 下：4 張資訊卡 */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
-          {cards.purpose && (
-            <InfoCard title={cards.purpose.title} body={cards.purpose.body} />
-          )}
+        {/* 下：4 張資訊卡（單列、依序：開發 → 用途 → 隱私 → 引用） */}
+        <div className="mt-12 flex flex-col gap-4">
           {cards.author && (
             <InfoCard title={cards.author.title} body={cards.author.body} />
+          )}
+          {cards.purpose && (
+            <InfoCard title={cards.purpose.title} body={cards.purpose.body} />
           )}
           {cards.privacy && (
             <InfoCard title={cards.privacy.title} body={cards.privacy.body} />
