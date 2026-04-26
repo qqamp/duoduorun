@@ -110,10 +110,10 @@ function HomePage() {
   return (
     <div className="flex-1 overflow-y-auto bg-duo-cream-50">
       <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* 上：多多橫幅 */}
+        {/* 上：多多橫幅（寬度與下方卡片對齊） */}
         <div
-          className="rounded-2xl overflow-hidden shadow-lg ring-1 ring-duo-cocoa-100 bg-duo-cream-100"
-          style={{ aspectRatio: '16 / 7', maxHeight: 320 }}
+          className="w-full rounded-2xl overflow-hidden shadow-lg ring-1 ring-duo-cocoa-100 bg-duo-cream-100"
+          style={{ aspectRatio: '16 / 7' }}
         >
           <img
             src={duoduoBanner}

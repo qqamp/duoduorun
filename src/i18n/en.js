@@ -10,7 +10,7 @@ export default {
     tagline: 'A pure-frontend statistical tool — no install, no data leaves your browser.',
   },
   home: {
-    heroTagline: 'Pure-frontend statistical tool · no install · privacy-first',
+    heroTagline: "Can't run stats? Ask Duoduo to run them for you — she'll roll her eyes, but she'll get you the right answer.",
     byAuthor: 'by Lo-Wei Lee',
     authorUrl: 'https://qqamp.github.io/homepage/',
     cards: {

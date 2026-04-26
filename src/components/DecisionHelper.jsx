@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { useApp } from '../context/AppContext'
 import { ANALYSIS_GROUPS } from '../config/analyses'
 import { isAnalysisImplemented } from '../analyses/registry'
-import duoHead from '../assets/duoduo-head.jpg'
+import duoHead from '../assets/duoduo-assistant.png'
 
 /* ─────────────────────  問答樹  ───────────────────── */
 /**
