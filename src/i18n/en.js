@@ -111,6 +111,9 @@ export default {
     repAnova: 'Repeated measures ANOVA',
     mixedAnova: 'Mixed ANOVA',
     manova: 'MANOVA',
+    lda: 'Discriminant analysis (LDA)',
+    cluster: 'Cluster analysis',
+    cfa: 'CFA (confirmatory factor analysis)',
   },
   panels: {
     configTitle: 'Analysis settings',
@@ -752,6 +755,306 @@ export default {
       saLabel: 'sphericity assumed',
       ggLabel: 'the Greenhouse-Geisser correction',
       copyHint: 'Copy APA narrative',
+    },
+  },
+  lda: {
+    title: 'LDA (Linear discriminant analysis)',
+    config: {
+      groupLabel: 'Grouping variable (categorical, >= 2 levels)',
+      pickGroup: 'Pick the grouping variable',
+      groupHint: 'Must be categorical with at least 2 levels; the levels are the target classes',
+      predictorsLabel: 'Predictors (>= 2 continuous)',
+      predictorsHint: 'Tick numeric variables; need at least 2; the grouping variable cannot also be a predictor',
+    },
+    errors: {
+      pickGroup: 'Please pick the grouping variable',
+      pickPredictors: 'Please tick at least 2 predictors',
+      'group-in-predictors': 'The grouping variable cannot also be a predictor',
+      groupBadGroups: 'The grouping variable has only {k} group(s); at least 2 are required',
+      tooFewN: 'Not enough valid cases (N = {N}; need N > k + p; current k = {k}, p = {p})',
+      singularPooled: 'Pooled within-class covariance S_p is singular; consider dropping highly correlated predictors',
+    },
+    result: {
+      groups: 'groups', predictors: 'predictors', functions: 'discriminant functions', cases: 'cases',
+      functionsTitle: 'Discriminant functions',
+      functionsHint: 'At most min(k - 1, p) functions can be retained. Wilks Lambda and chi-sq are sequential tests starting from function j.',
+      stdCoefTitle: 'Standardized canonical coefficients',
+      stdCoefHint: 'Scaled so w^T S_p w = 1. Light < 0.32 (weak), mid 0.32-0.55, amber >= 0.55 (strong).',
+      structureTitle: 'Structure matrix',
+      structureHint: 'Correlation between predictors and discriminant scores. |r| >= 0.30 is meaningful. Preferred for naming the construct.',
+      centroidsTitle: 'Group centroids',
+      centroidsHint: 'Group means projected onto the discriminant axes.',
+      classifyTitle: 'Classification (resubstitution)',
+      overallAccuracy: 'Overall accuracy',
+      classifyHint: 'Diagonal = correctly classified. Note: resubstitution overestimates true performance; report cross-validated accuracy in formal write-ups.',
+      boxMTitle: "Box's M test of equality of covariance matrices",
+      boxMLabel: 'Covariance homogeneity',
+      boxMOk: 'OK (p > .001)', boxMViolated: 'violated (p <= .001)',
+      boxMNotApplicable: 'Not computable.',
+      boxMViolatedWarn: "Warning: Box's M is significant - covariance matrices differ. Consider QDA.",
+      cols: {
+        function: 'Function', eigenvalue: 'Eigenvalue', canonicalR: 'Canonical r',
+        percent: '% of var', cumulative: 'Cumulative %',
+        wilks: "Wilks' Lambda", chi2: 'chi-sq', df: 'df', p: 'p',
+        predictor: 'Predictor', group: 'Group',
+        actualBackslashPredicted: 'Actual \\ Predicted',
+        total: 'Total', classAccuracy: 'Class accuracy',
+      },
+      accuracyInterp: {
+        poor: 'poor (< 50%)', modest: 'modest (50-70%)',
+        good: 'good (70-85%)', excellent: 'excellent (>= 85%)',
+      },
+    },
+    interp: {
+      header: 'Interpretation', sigYes: 'significant', sigNo: 'not significant',
+      overall:
+        'An LDA tested whether {p} predictors discriminate membership in {group} (k = {k} groups; N = {n}).\n' +
+        'Up to {nFns} functions extracted. Function 1: Wilks Lambda = {f1Lambda}, chi-sq({f1Df}) = {f1Chi2}, p = {f1Pstr} -> {sigWord}; canonical r = {f1CanR}, accounting for {f1PctVar}% of discriminant variance.\n' +
+        'Resubstitution classification accuracy = {accPct}% ({accInterp}).',
+      boxLine: "Box's M: chi-sq({df}) = {chi2}, p = {pStr} - {verdict}",
+      boxOk: 'covariance homogeneity satisfied',
+      boxBad: 'covariance homogeneity violated; consider QDA',
+      boxNotApplicable: "Box's M not computable.",
+      sigFollowUp: 'Significant; use the structure matrix to name the construct and centroids to describe group positions.',
+      nsAdvice: 'Not significant; classification use is not recommended.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'LDA is both classifier and dimensionality-reduction. Use cases include diagnosis prediction, firm classification, and MANOVA follow-up.\n\nVs MANOVA: equivalent math; LDA emphasises separation/classification.\nVs logistic regression: LDA needs MVN + common Sigma; logistic does not.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Multivariate normality\n' +
+        "2. Equal covariance across groups (Box's M); switch to QDA if violated\n" +
+        '3. Independent observations\n' +
+        '4. Continuous predictors with no severe collinearity\n' +
+        '5. n_g > p (recommended n_g >= 20 + p)\n' +
+        '6. No severe outliers',
+      formulasTitle: 'Core formulas',
+      formulaW: 'W = sum_g sum_i (X_gi - X_g_bar)^T (X_gi - X_g_bar)',
+      formulaB: 'B = sum_g n_g * (X_g_bar - X_bar)^T (X_g_bar - X_bar)',
+      formulaSp: 'S_p = W / (N - k)',
+      formulaEig: 'Discriminant functions = eigenvectors of W^-1 B',
+      formulaCanR: 'Canonical r = sqrt(lambda / (1 + lambda))',
+      formulaWilks: "Wilks' Lambda_j = prod_{i>=j} 1 / (1 + lambda_i)",
+      formulaDelta: 'delta_g(x) = x^T S_p^-1 mu_g - 0.5 mu_g^T S_p^-1 mu_g + log(pi_g)',
+      readingTitle: 'How to read',
+      reading:
+        "1. Check Box's M.\n" +
+        '2. Wilks Lambda row 1 tests overall.\n' +
+        '3. Canonical r > 0.5 strong.\n' +
+        '4. Standardized vs structure matrix.\n' +
+        '5. Centroids show position.',
+      classifyTitle: 'How to read confusion matrix',
+      classifyHowTo:
+        '1. Diagonal = correctly classified.\n' +
+        '2. Overall accuracy = sum(diag) / N.\n' +
+        '3. Compare to chance (1/k for balanced).\n' +
+        '4. Note: resubstitution overestimates.',
+    },
+    apa: {
+      sentence:
+        'A linear discriminant analysis was conducted to examine whether {predictorList} ({p} predictors) discriminate membership in {group} (k = {k} groups; N = {n}). ' +
+        '{nFns} discriminant function(s) were extracted; the first function was significant, ' +
+        "Wilks' Lambda = {f1Lambda}, chi-sq({f1Df}) = {f1Chi2}, p = {f1Pstr}, canonical r = {f1CanR}, accounting for {f1PctVar}% of discriminant variance. " +
+        'Using linear discriminant scores, the resubstitution classification accuracy was {accPct}%.{boxSection}',
+      sentenceNs:
+        'A linear discriminant analysis was conducted to examine whether {predictorList} ({p} predictors) discriminate membership in {group} (k = {k} groups; N = {n}). ' +
+        '{nFns} discriminant function(s) were extracted; the first function was not significant, ' +
+        "Wilks' Lambda = {f1Lambda}, chi-sq({f1Df}) = {f1Chi2}, p = {f1Pstr}, canonical r = {f1CanR}. " +
+        'Using linear discriminant scores, the resubstitution classification accuracy was {accPct}%.{boxSection}',
+      boxOk: " Box's M test, chi-sq({df}) = {chi2}, p = {pStr}, did not violate the assumption.",
+      boxBad: " Box's M test, chi-sq({df}) = {chi2}, p = {pStr}, violated the assumption; consider QDA.",
+      boxNotApplicable: " Box's M was not computable.",
+      copyHint: 'Copy APA narrative to clipboard',
+    },
+  },
+  cluster: {
+    title: 'Cluster analysis',
+    config: {
+      methodLabel: 'Method',
+      methods: { kmeans: 'k-means', hierarchical: 'Hierarchical (Ward)' },
+      methodHint: {
+        kmeans: 'k-means: k-means++ seeding plus Lloyd iterations; 10 random restarts retain the lowest-WSS solution.',
+        hierarchical: 'Hierarchical Ward: agglomerative bottom-up merging by minimum within-cluster SS increment.',
+      },
+      kLabel: 'Number of clusters k (2-10)',
+      kHint: 'Inspect the elbow curve first.',
+      standardizeLabel: 'Standardize variables (z-score)',
+      standardizeHint: 'Recommended whenever variable scales differ markedly.',
+      varsLabel: 'Clustering variables (>= 2 continuous)',
+      varsHint: 'Tick numeric variables.',
+    },
+    errors: {
+      needAtLeastTwoVars: 'Pick at least 2 clustering variables',
+      kRange: 'k must be an integer between 2 and 10',
+      tooFewN: 'Insufficient effective sample size (N = {N}; needs N > k with k = {k}, p = {p})',
+      kTooSmall: 'k must be at least 2',
+      unknownMethod: 'Unknown clustering method',
+    },
+    result: {
+      vars: 'variables', method: 'Method', iterations: 'iterations', notConverged: 'not converged',
+      elbowTitle: 'Elbow curve (WSS vs. k)',
+      elbowHint: 'Pick k at the bend where WSS levels off. Currently selected k highlighted.',
+      sizesTitle: 'Cluster sizes',
+      centroidsTitle: 'Cluster centroids / variable profile',
+      centroidsHint: 'Each cell shows mean (original scale) plus z-score. |z| >= 1 highlighted.',
+      qualityTitle: 'Quality metrics',
+      qualityHint: 'WSS = within-cluster SS. BSS/TSS analogous to R². Mean silhouette: -1 to 1, >= .50 strong.',
+      dendroTitle: 'Dendrogram (merge steps)',
+      dendroHint: 'X = step. Y = ΔSS. Dashed line marks k cut.',
+      cols: {
+        cluster: 'Cluster', percent: '%', wss: 'WSS', bss: 'BSS',
+        bssRatio: 'BSS / TSS', silhouette: 'Silhouette',
+      },
+      silhouetteInterp: {
+        noStructure: 'no real structure', weak: 'weak structure',
+        reasonable: 'reasonable structure', strong: 'strong structure',
+      },
+    },
+    interp: {
+      header: 'Interpretation',
+      overall:
+        '{method} clustering partitioned N = {n} cases on {p} variables into k = {k} clusters.\n' +
+        'BSS/TSS = {bssRatio}%; mean silhouette = {silhouette} ({sInterp}).',
+      recommendation:
+        'Recommendations: (1) read elbow curve; (2) inspect z-score table to label clusters; (3) if silhouette < .25, reduce k or change method (k-means <-> Ward).',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Cluster analysis partitions cases into internally homogeneous, mutually distinct subgroups (unsupervised).\n' +
+        'Typical: customer segmentation, respondent typology, exploratory natural-grouping check.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Continuous variables.\n' +
+        '2. Comparable scales (standardize otherwise).\n' +
+        '3. Independent observations.\n' +
+        '4. k-means assumes spherical clusters.\n' +
+        '5. No severe outliers.',
+      formulasTitle: 'Core formulas',
+      formulaTSS: 'TSS = sum_i ||x_i - x_bar||^2',
+      formulaWSS: 'WSS = sum_g sum_{i in g} ||x_i - mu_g||^2',
+      formulaBSS: 'BSS = sum_g n_g * ||mu_g - x_bar||^2',
+      formulaWard: "Ward dSS(I,J) = (n_I * n_J / (n_I + n_J)) * ||c_I - c_J||^2",
+      formulaSil: 's(i) = (b(i) - a(i)) / max(a(i), b(i))',
+      readingTitle: 'How to read',
+      reading:
+        '1. Use elbow curve.\n' +
+        '2. Silhouette: >= .50 strong.\n' +
+        '3. Z-score table for naming.\n' +
+        '4. Watch sizes.\n' +
+        '5. Cross-check methods.',
+      chooseTitle: 'Choosing between methods',
+      chooseMethod:
+        'k-means: fast, large samples, spherical clusters, k pre-specified.\n' +
+        'Ward: small samples, exploratory, O(N^2) cost, irreversible merges.\n' +
+        'Run both as cross-validation.',
+    },
+    apa: {
+      sentence:
+        '{method} cluster analysis partitioned N = {n} cases on {varList} ({p} variables, {stdWord}) into k = {k} clusters. ' +
+        'Cluster sizes were {sizesLine}. BSS/TSS = {bssRatio}%, mean silhouette = {silhouette} ({sInterp}).',
+      standardizedYes: 'standardized to z-scores',
+      standardizedNo: 'not standardized',
+      copyHint: 'Copy APA narrative',
+    },
+  },
+  cfa: {
+    title: 'CFA (Confirmatory factor analysis)',
+    config: {
+      factorsTitle: 'Define factor structure',
+      factorsHint: 'Name each factor and select its indicator items',
+      factorLabel: 'Factor',
+      indicatorsLabel: 'Indicators',
+      addFactor: 'Add factor',
+      removeFactor: 'Remove last',
+      noIndicatorsLeft: 'All available indicators are taken by other factors',
+      simpleStructureNote:
+        'Simple-structure CFA: each indicator loads on exactly one factor (no cross-loadings, no correlated residuals). Factor variances fixed at 1.0.',
+    },
+    errors: {
+      'no-factors': 'No factors defined yet',
+      'no-valid-factor': 'Define at least one factor with >= 2 indicators',
+      'too-few-indicators': 'Each factor needs at least 2 indicators',
+      'too-few-total-indicators': 'Total indicators must be >= 3',
+      'duplicate-indicator': 'An indicator cannot belong to two factors',
+      'need-more-data': 'Not enough complete observations',
+      'underidentified': 'Model is under-identified',
+      'sample-cov-not-pd': 'Sample covariance matrix is not positive-definite',
+      'optimization-failed': 'ML estimation did not converge',
+    },
+    result: {
+      summaryTitle: 'Model summary',
+      fitIndicesTitle: 'Fit indices',
+      loadingsTitle: 'Factor loadings',
+      factorCorrTitle: 'Factor correlations',
+      residualsTitle: 'Residual variances',
+      converged: 'Converged',
+      notConverged: 'Not converged (interpret with caution)',
+      iterStr: '{iter} iterations',
+      cols: {
+        n: 'N', pIndicators: 'Indicators (p)', mFactors: 'Factors (m)', df: 'df',
+        factor: 'Factor', indicator: 'Indicator',
+        lambda: 'lambda (unstd.)', lambdaStd: 'lambda (std.)',
+        se: 'SE', z: 'z', p: 'p', r2: 'R²',
+        theta: 'theta (residual var.)', rmseaP: 'RMSEA p (close fit)',
+      },
+      thresholdNote:
+        'Reference (Hu & Bentler, 1999):\n' +
+        'CFI / TLI >= .95 good, >= .90 acceptable, < .90 poor\n' +
+        'RMSEA <= .06 good, <= .08 acceptable, > .08 poor\n' +
+        'SRMR <= .08 good, > .08 poor',
+      rmseaPNote: 'H0: RMSEA <= .05; p > .05 means close-fit not rejected',
+      loadingsNote: 'Std. loading colour: < 0.40 weak, 0.40-0.50 fair, 0.50-0.70 good, >= 0.70 strong',
+      factorCorrNote: 'Diagonal fixed to 1.\nCorrelations >= 0.85 suggest poor discriminability.',
+      seUnavailable: 'Hessian inversion failed; SEs unavailable.',
+    },
+    fitInterp: { good: 'good', acceptable: 'acceptable', poor: 'poor' },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'CFA tests whether a pre-specified factor structure is consistent with the observed covariance.\nVs EFA: EFA explores; CFA verifies.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Multivariate normality\n' +
+        '2. Simple structure\n' +
+        '3. Uncorrelated residuals\n' +
+        '4. N >= 200 or N / free-params >= 5\n' +
+        '5. Identified: df >= 0',
+      formulasTitle: 'Core formulas',
+      formulaModel: 'Model: Sigma(theta) = Lambda Phi Lambda^T + Theta',
+      formulaFitFn: 'F_ML(theta) = log|Sigma| + tr(S Sigma^-1) - log|S| - p',
+      formulaChi2: 'chi-sq = (N - 1) * F_min',
+      formulaCfi: 'CFI = 1 - max(chi-sq - df, 0) / max(chi-sq_null - df_null, 0)',
+      formulaTli: 'TLI = (chi-sq_null/df_null - chi-sq/df) / (chi-sq_null/df_null - 1)',
+      formulaRmsea: 'RMSEA = sqrt(max(chi-sq - df, 0) / (df * (N-1)))',
+      formulaSrmr: 'SRMR = standardized residual root-mean-square',
+      formulaDf: 'df = p(p+1)/2 - t; t = p + m(m-1)/2 + p',
+      thresholdsTitle: 'Fit thresholds',
+      thresholds: 'See above (Hu & Bentler 1999).',
+      readingTitle: 'How to read',
+      reading:
+        '1. Convergence first.\n' +
+        '2. Fit indices.\n' +
+        '3. Std. loadings >= 0.50.\n' +
+        '4. R² >= 0.30.\n' +
+        '5. Factor r <= 0.85.',
+    },
+    apa: {
+      sentence:
+        'A CFA (ML) tested a {m}-factor structure ({factorList}) with {p} indicators (N = {n}). ' +
+        'Fit: chi-sq({df}) = {chi2}, p = {pStr}; CFI = {cfi}; TLI = {tli}; RMSEA = {rmsea} (90% CI {rmseaCi}); SRMR = {srmr}. ' +
+        'Overall fit was {overall}.',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Interpretation',
+      summary:
+        'N = {n}; {p} indicators across {m} factors; df = {df}.\n' +
+        'chi-sq({df}) = {chi2}, p = {pStr}; CFI = {cfi}; TLI = {tli};\n' +
+        'RMSEA = {rmsea}, 90% CI {rmseaCi}; SRMR = {srmr}.\n' +
+        'Overall fit: {overall}.',
     },
   },
   mixedAnova: {

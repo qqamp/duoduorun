@@ -59,6 +59,7 @@ export const ANALYSIS_GROUPS = [
       { id: 'efa',            i18nKey: 'efa',           priority: 3 },
       { id: 'kappa',          i18nKey: 'kappa',         priority: 1 },
       { id: 'icc',            i18nKey: 'icc',           priority: 1 },
+      { id: 'cfa',            i18nKey: 'cfa',           priority: 2 },
     ],
   },
   {
@@ -66,6 +67,8 @@ export const ANALYSIS_GROUPS = [
     i18nKey: 'multivariate',
     items: [
       { id: 'manova',          i18nKey: 'manova',          priority: 2 },
+      { id: 'lda',             i18nKey: 'lda',             priority: 2 },
+      { id: 'cluster',         i18nKey: 'cluster',         priority: 2 },
     ],
   },
 ]

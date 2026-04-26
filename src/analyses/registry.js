@@ -31,6 +31,9 @@ import icc from './icc'
 import repeatedAnova from './repeatedAnova'
 import mixedAnova from './mixedAnova'
 import manova from './manova'
+import lda from './lda'
+import cluster from './cluster'
+import cfa from './cfa'
 
 const REGISTRY = {
   'desc-stats':         descriptive,
@@ -56,6 +59,9 @@ const REGISTRY = {
   'repeated-anova':     repeatedAnova,
   'mixed-anova':        mixedAnova,
   'manova':             manova,
+  'lda':                lda,
+  'cluster':            cluster,
+  'cfa':                cfa,
 }
 
 export function getAnalysisModule(id) {

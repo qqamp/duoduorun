@@ -117,6 +117,9 @@ export default {
     repAnova: '重複量數 ANOVA',
     mixedAnova: 'Mixed ANOVA（被試間×被試內）',
     manova: 'MANOVA 多變量變異數分析',
+    lda: '判別分析（LDA）',
+    cluster: '集群分析',
+    cfa: 'CFA 驗證性因素分析',
   },
   panels: {
     configTitle: '分析設定',
@@ -681,6 +684,319 @@ export default {
       saLabel: '在球形假設成立',
       ggLabel: '經 Greenhouse-Geisser 校正',
       copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  lda: {
+    title: 'LDA 線性判別分析',
+    config: {
+      groupLabel: '分組變項（類別變項，≥ 2 組）',
+      pickGroup: '請選分組變項',
+      groupHint: '需為類別型變數，至少 2 個層級；其層級即為待分類的目標類別',
+      predictorsLabel: '預測變項（≥ 2 個連續變項）',
+      predictorsHint: '勾選下方數值變項作為判別函數的預測變項；至少需要 2 個，分組變項不可同時為預測變項',
+    },
+    errors: {
+      pickGroup: '請選擇分組變項',
+      pickPredictors: '請至少勾選 2 個預測變項',
+      'group-in-predictors': '分組變項不可同時為預測變項',
+      groupBadGroups: '分組變項目前僅有 {k} 組，至少需要 2 組',
+      tooFewN: '有效樣本數不足（N = {N}，至少需要 N > k + p；目前 k = {k}, p = {p}）',
+      singularPooled: '組內共變數矩陣 S_p 不可逆（可能變項共線性過高）；建議移除高度相關的預測變項',
+    },
+    result: {
+      groups: '組', predictors: '個預測變項', functions: '判別函數數', cases: '筆資料',
+      functionsTitle: '判別函數總表',
+      functionsHint: '可保留的判別函數最多為 min(k − 1, p) 個；Wilks Λ 與 χ² 為「從第 j 個函數起」之累積檢定（達 .05 表示該函數仍承載顯著訊息）。',
+      stdCoefTitle: '標準化典型係數（Standardized canonical coefficients）',
+      stdCoefHint: '已縮放使 wᵀ S_p w = 1；絕對值較大者代表該預測變項在判別函數中的相對重要性。淡色 < 0.32（弱），中色 0.32–0.55（中），暖色 ≥ 0.55（強）。',
+      structureTitle: '結構矩陣（Structure matrix）',
+      structureHint: '結構係數 = 預測變項與判別分數之相關。慣例上 |r| ≥ 0.30 視為對該函數有意義；解釋潛在構念時較不受多元共線性干擾，建議優先以結構矩陣命名各函數。',
+      centroidsTitle: '群組重心（Group centroids）',
+      centroidsHint: '各組組平均投影到判別軸上的值；正負與大小可顯示各組在判別空間中的位置。',
+      classifyTitle: '分類結果（Resubstitution）',
+      overallAccuracy: '整體分類準確率',
+      classifyHint: '對角線（暖色 highlight）為正確分類人次；非對角線為被錯分到他組的人次。注意：本準確率為 resubstitution（用全資料分類自己），會高估真實分類效力，正式報告建議再做 cross-validation。',
+      boxMTitle: "Box's M 同質共變數矩陣檢定",
+      boxMLabel: '共變數矩陣同質性',
+      boxMOk: '通過（p > .001）', boxMViolated: '違反（p ≤ .001）',
+      boxMNotApplicable: '無法計算（可能某組樣本太小或共變數矩陣為奇異）。',
+      boxMViolatedWarn: "警告：Box's M 顯著（p ≤ .001）— 各組共變數矩陣不同質，違反 LDA 共同 Σ 假設；建議改用二次判別分析（QDA）或謹慎解讀分類結果。",
+      cols: {
+        function: '函數', eigenvalue: '特徵值 λ', canonicalR: '典型相關 r',
+        percent: '% of var', cumulative: 'Cumulative %',
+        wilks: "Wilks' Λ", chi2: 'χ²', df: 'df', p: 'p',
+        predictor: '預測變項', group: '組別',
+        actualBackslashPredicted: '實際 ＼ 預測',
+        total: '總和', classAccuracy: '分組準確率',
+      },
+      accuracyInterp: {
+        poor: '低（< 50%）', modest: '中等（50–70%）',
+        good: '良好（70–85%）', excellent: '極佳（≥ 85%）',
+      },
+    },
+    interp: {
+      header: '解讀', sigYes: '達顯著', sigNo: '未達顯著',
+      overall:
+        '本研究以 LDA 檢定 {p} 個預測變項是否能有效區分 {group}（k = {k} 組）的成員（N = {n}）。\n' +
+        '可萃取 {nFns} 個判別函數，其中第 1 函數的 Wilks Λ = {f1Lambda}, χ²({f1Df}) = {f1Chi2}, p = {f1Pstr} → {sigWord}；典型相關 = {f1CanR}，解釋 {f1PctVar}% 之判別變異。\n' +
+        '以線性判別分數對訓練樣本進行 resubstitution 分類，整體準確率 = {accPct}%（{accInterp}）。',
+      boxLine: "Box's M：χ²({df}) = {chi2}, p = {pStr} — {verdict}",
+      boxOk: '共變數矩陣同質假設通過',
+      boxBad: '共變數矩陣同質假設違反，LDA 結果建議謹慎解讀，必要時改採 QDA',
+      boxNotApplicable: "Box's M 無法計算（樣本或共變數矩陣條件不足）。",
+      sigFollowUp: '判別函數顯著，可進一步以結構矩陣命名各函數背後的潛在構念，並用 group centroids 描述各組在判別空間中的相對位置。',
+      nsAdvice: '判別函數未達顯著，預測變項對組別差異的整體區分力有限，不建議據此做分類用途。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        'LDA（線性判別分析）同時是「分類工具」與「降維工具」：以多個連續預測變項，找出最能將既有類別分開的線性組合。\n' +
+        '常見情境：\n' +
+        '1. 以心理量表分數預測診斷分類（如焦慮、憂鬱、混合型）。\n' +
+        '2. 以財務指標分類公司（如健康、警示、危機）。\n' +
+        '3. MANOVA 顯著後，想進一步看是哪幾個 DV 組合在區分組別。\n\n' +
+        '與其他方法的關係：\n' +
+        '- 與 MANOVA：數學等價，差別在 LDA 關注「如何把組分開」與「分類」，MANOVA 關注「組別是否影響 DV 向量」。\n' +
+        '- 與邏輯斯迴歸：LDA 假設預測變項多元常態 + 共同 Σ；邏輯斯迴歸不需要，當假設成立 LDA 較有效率，假設違反時邏輯斯迴歸更穩健。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 多變量常態（每組內，預測變項向量服從多元常態）\n' +
+        "2. 共變數矩陣同質（各組 Σ 相同）→ 用 Box's M 檢定；違反時改用 QDA\n" +
+        '3. 觀察值獨立\n' +
+        '4. 預測變項為連續尺度且彼此無嚴重共線（否則 W^-1 數值不穩）\n' +
+        '5. 樣本量：每組 n_g 應大於 p（建議 n_g ≥ 20 + p）\n' +
+        '6. 無嚴重多元離群值',
+      formulasTitle: '核心公式',
+      formulaW: 'W = Σ_g Σ_i (X_gi − X̄_g)ᵀ (X_gi − X̄_g)　（組內 SSCP）',
+      formulaB: 'B = Σ_g n_g · (X̄_g − X̄)ᵀ (X̄_g − X̄)　（組間 SSCP）',
+      formulaSp: 'S_p = W / (N − k)　（共同組內共變數）',
+      formulaEig: '判別函數 = W⁻¹B 的特徵向量；λᵢ 為對應特徵值',
+      formulaCanR: '典型相關 ρᵢ = √(λᵢ / (1 + λᵢ))',
+      formulaWilks: "Wilks' Λⱼ = Π_{i≥j} 1 / (1 + λᵢ)； χ² = −(N − 1 − (p+k)/2) · ln(Λⱼ)， df = (p−j+1)(k−j)",
+      formulaDelta: 'δ_g(x) = xᵀ S_p⁻¹ μ_g − ½ μ_gᵀ S_p⁻¹ μ_g + log(π_g)；分類至 argmax_g δ_g(x)',
+      readingTitle: '怎麼讀',
+      reading:
+        "1. 先看 Box's M：若違反，LDA 假設不成立，建議改採 QDA 或謹慎解讀。\n" +
+        '2. 看判別函數總表的 Wilks Λ：第 1 列為「至少有一個函數承載訊息」的整體檢定。\n' +
+        '3. 看典型相關 ρ：> 0.5 視為強。\n' +
+        '4. 標準化係數（受多元共線性影響） vs 結構矩陣（較穩定，建議用來命名構念）。\n' +
+        '5. group centroids 顯示各組在判別軸上的位置。',
+      classifyTitle: '怎麼讀分類表',
+      classifyHowTo:
+        '1. 對角線 = 正確分類人次。\n' +
+        '2. 整體準確率 = 對角線總和 / N。\n' +
+        '3. 與隨機分類比較：k 組均勻時，隨機 ≈ 1/k。\n' +
+        '4. 注意：本準確率為 resubstitution，會高估真實效力。',
+    },
+    apa: {
+      sentence:
+        '本研究以 LDA 檢視 {predictorList} 等 {p} 個預測變項對 {group}（k = {k} 組）成員身分的判別力（N = {n}）。' +
+        '萃取 {nFns} 個判別函數；第一個判別函數達顯著，' +
+        "Wilks' Λ = {f1Lambda}, χ²({f1Df}) = {f1Chi2}, p = {f1Pstr}，典型相關 = {f1CanR}，解釋 {f1PctVar}% 之判別變異。" +
+        '以線性判別分數對訓練樣本分類，整體 resubstitution 準確率為 {accPct}%。{boxSection}',
+      sentenceNs:
+        '本研究以 LDA 檢視 {predictorList} 等 {p} 個預測變項對 {group}（k = {k} 組）成員身分的判別力（N = {n}）。' +
+        '萃取 {nFns} 個判別函數；第一個判別函數未達顯著，' +
+        "Wilks' Λ = {f1Lambda}, χ²({f1Df}) = {f1Chi2}, p = {f1Pstr}，典型相關 = {f1CanR}。" +
+        '以線性判別分數對訓練樣本分類，整體 resubstitution 準確率為 {accPct}%。{boxSection}',
+      boxOk: " Box's M 檢定 χ²({df}) = {chi2}, p = {pStr}，未違反共變數矩陣同質假設。",
+      boxBad: " Box's M 檢定 χ²({df}) = {chi2}, p = {pStr}，違反共變數矩陣同質假設。",
+      boxNotApplicable: " Box's M 無法計算。",
+      copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  cluster: {
+    title: '集群分析',
+    config: {
+      methodLabel: '方法',
+      methods: { kmeans: 'k-means', hierarchical: '階層 Ward' },
+      methodHint: {
+        kmeans: 'k-means：以 k-means++ 種子 + Lloyd 迭代將樣本分到最近的質心，重啟 10 次取 WSS 最小者。',
+        hierarchical: '階層 Ward：以最小變異數準則由下而上聚合，輸出 dendrogram 後切到 k 群。',
+      },
+      kLabel: '群數 k（2-10）',
+      kHint: '建議先看 elbow 曲線：WSS 下降變平緩的轉折點即為合理的 k。',
+      standardizeLabel: '標準化變項（z-score）',
+      standardizeHint: '勾選後對每個變項減平均、除以標準差再聚類；當變項尺度差距大時建議勾選。',
+      varsLabel: '聚類變項（≥ 2 個連續變項）',
+      varsHint: '勾選下方數值變項作為聚類維度；至少需要 2 個變項。',
+    },
+    errors: {
+      needAtLeastTwoVars: '請至少勾選 2 個聚類變項',
+      kRange: 'k 必須為 2-10 的整數',
+      tooFewN: '有效樣本數不足（N = {N}，至少需要 N > k；目前 k = {k}, p = {p}）',
+      kTooSmall: 'k 至少需要 2',
+      unknownMethod: '未知的聚類方法',
+    },
+    result: {
+      vars: '聚類變項', method: '方法', iterations: '次迭代', notConverged: '未收斂',
+      elbowTitle: 'Elbow 曲線（WSS vs. k）',
+      elbowHint: 'X 軸為 k，Y 軸為 WSS；找下降明顯趨緩的轉折點即為合理的 k。當前選擇的 k 以暖色高亮。',
+      sizesTitle: '各群樣本數',
+      centroidsTitle: '群質心 / 變項側 profile',
+      centroidsHint: '每格為「群在該變項上的平均（原始尺度）+ 對全樣本的 z-score」。|z| ≥ 1 以暖色強調。',
+      qualityTitle: '品質指標',
+      qualityHint: 'WSS = 群內離差平方和；BSS/TSS 類似 R²。Silhouette 平均 −1~1，越大越好（≥ .50 強）。',
+      dendroTitle: 'Dendrogram（樹狀合併圖）',
+      dendroHint: '橫軸為合併步驟，縱軸為 ΔSS。虛線為切到 k 群的位置；最後 k − 1 步以暖色標示。',
+      cols: {
+        cluster: '群', percent: '%', wss: 'WSS', bss: 'BSS',
+        bssRatio: 'BSS / TSS', silhouette: 'Silhouette',
+      },
+      silhouetteInterp: {
+        noStructure: '幾乎無群結構', weak: '弱結構',
+        reasonable: '合理結構', strong: '強結構',
+      },
+    },
+    interp: {
+      header: '解讀',
+      overall:
+        '本研究以 {method} 將 N = {n} 筆樣本依 {p} 個變項分為 k = {k} 群。\n' +
+        '分群解釋了 BSS/TSS = {bssRatio}% 的總離散，平均 silhouette = {silhouette}（{sInterp}）。',
+      recommendation:
+        '建議：(1) 觀察 elbow 曲線；(2) 比對群質心 / z-score 表，為每群命名；(3) 若 silhouette < .25，考慮減少 k 或改用其他變項組合或方法（k-means ↔ Ward）。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '集群分析將樣本依多個連續變項自動分為幾個內部相似、群間相異的子群（無監督學習）。\n' +
+        '常見情境：顧客分群、受訪者類型化、探索資料是否存在天然分群結構。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 變項為連續尺度。\n' +
+        '2. 變項尺度需可比較 — 尺度差距大時務必標準化。\n' +
+        '3. 觀察值獨立。\n' +
+        '4. k-means 假設群為球形且大小相當。\n' +
+        '5. 無嚴重離群值。',
+      formulasTitle: '核心公式',
+      formulaTSS: 'TSS = Σᵢ ‖xᵢ − x̄‖²',
+      formulaWSS: 'WSS = Σ_g Σ_{i∈g} ‖xᵢ − μ_g‖²',
+      formulaBSS: 'BSS = Σ_g n_g · ‖μ_g − x̄‖²',
+      formulaWard: "Ward ΔSS(I,J) = (n_I · n_J / (n_I + n_J)) · ‖c_I − c_J‖²",
+      formulaSil: 's(i) = (b(i) − a(i)) / max(a(i), b(i))',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 看 elbow 曲線找合理的 k。\n' +
+        '2. 看 silhouette：≥ .50 強、.25 ~ .50 弱、< .25 幾乎無結構。\n' +
+        '3. 看群質心 / z-score 表為每群命名。\n' +
+        '4. 看群大小是否懸殊。\n' +
+        '5. 多次比較驗證穩定性。',
+      chooseTitle: '兩種方法的取捨',
+      chooseMethod:
+        'k-means：快、適合大樣本；對球形群表現好；需事前定 k。\n' +
+        '階層 Ward：不需事前定 k；對小樣本與探索好；O(N²) 較慢；merge 不可逆。\n' +
+        '建議兩種都跑作交叉驗證。',
+    },
+    apa: {
+      sentence:
+        '本研究以 {method} 集群分析將 N = {n} 筆樣本依 {varList} 等 {p} 個變項（{stdWord}）分為 k = {k} 群。' +
+        '各群樣本數為 {sizesLine}。分群解釋 BSS/TSS = {bssRatio}% 的總離散，平均 silhouette = {silhouette}（{sInterp}）。',
+      standardizedYes: '已標準化為 z-score',
+      standardizedNo: '未標準化',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  cfa: {
+    title: 'CFA 驗證性因素分析',
+    config: {
+      factorsTitle: '定義因子結構',
+      factorsHint: '為每個因子命名並勾選其指標題（每因子建議 ≥ 3 題、最少 2 題）',
+      factorLabel: '因子',
+      indicatorsLabel: '指標',
+      addFactor: '新增因子',
+      removeFactor: '刪除最後因子',
+      noIndicatorsLeft: '可用指標已被其他因子佔用',
+      simpleStructureNote:
+        '本模組採簡單結構：每個指標只裝載一個因子（無交叉負荷量、無相關殘差）。為了識別性，所有因子變異固定為 1.0。',
+    },
+    errors: {
+      'no-factors': '尚未定義任何因子',
+      'no-valid-factor': '請至少建立一個有 ≥ 2 個指標的因子',
+      'too-few-indicators': '每個因子至少需要 2 個指標',
+      'too-few-total-indicators': '所有因子的指標總數至少需要 3 個',
+      'duplicate-indicator': '同一個指標不能同時屬於多個因子',
+      'need-more-data': '有效樣本數不足以估計模型',
+      'underidentified': '模型不可識別（自由參數 > 共變數矩陣的獨立元素數）',
+      'sample-cov-not-pd': '樣本共變數矩陣非正定，無法計算 ML 適配函數',
+      'optimization-failed': 'ML 估計未收斂；請檢查模型結構與資料',
+    },
+    result: {
+      summaryTitle: '模型摘要',
+      fitIndicesTitle: '適配指標',
+      loadingsTitle: '因子負荷量',
+      factorCorrTitle: '因子相關矩陣',
+      residualsTitle: '殘差變異',
+      converged: '已收斂',
+      notConverged: '未收斂（顯示最後一次估計值，僅供參考）',
+      iterStr: '{iter} 次迭代',
+      cols: {
+        n: 'N', pIndicators: '指標數 (p)', mFactors: '因子數 (m)', df: '自由度 (df)',
+        factor: '因子', indicator: '指標',
+        lambda: 'λ（未標準化）', lambdaStd: 'λ（標準化）',
+        se: 'SE', z: 'z', p: 'p', r2: 'R²',
+        theta: 'θ（殘差變異）', rmseaP: 'RMSEA p（close fit）',
+      },
+      thresholdNote:
+        '門檻參考（Hu & Bentler, 1999）：\n' +
+        'CFI / TLI ≥ .95 良好、≥ .90 可接受、< .90 不佳\n' +
+        'RMSEA ≤ .06 良好、≤ .08 可接受、> .08 不佳\n' +
+        'SRMR ≤ .08 良好、> .08 不佳',
+      rmseaPNote: 'H₀: RMSEA ≤ .05；p > .05 表示「close fit」假設未被拒絕',
+      loadingsNote: '標準化負荷量顏色：< 0.40 偏弱 → 0.40-0.50 普通 → 0.50-0.70 良好 → ≥ 0.70 強',
+      factorCorrNote: '對角線固定為 1。\n相關 ≥ 0.85 暗示兩因子可能無法區辨。',
+      seUnavailable: 'Hessian 反矩陣失敗，標準誤無法估計；僅顯示點估計值。',
+    },
+    fitInterp: { good: '良好', acceptable: '可接受', poor: '不佳' },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '驗證性因素分析（CFA）用來檢驗事先設定的因子結構是否與資料相符。\n' +
+        '回答：(1) 因子—指標歸屬與資料的共變數結構吻合嗎？(2) 每個指標的負荷量夠強？(3) 模型整體適配如何？\n\n' +
+        '與 EFA 差異：EFA 是探索；CFA 是驗證預先設定的結構。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 多元常態分布（ML 估計的前提）\n' +
+        '2. 簡單結構：每個指標只裝載一個因子（本模組設定）\n' +
+        '3. 殘差不相關（本模組設定）\n' +
+        '4. 樣本量充分：建議 N ≥ 200，或 N / 自由參數 ≥ 5\n' +
+        '5. 模型可識別：自由度 ≥ 0',
+      formulasTitle: '核心公式',
+      formulaModel: '模型：Σ(θ) = Λ Φ Λᵀ + Θ',
+      formulaFitFn: 'F_ML(θ) = log|Σ(θ)| + tr(S Σ(θ)⁻¹) − log|S| − p',
+      formulaChi2: 'χ² = (N − 1) · F_min',
+      formulaCfi: 'CFI = 1 − max(χ² − df, 0) / max(χ²_null − df_null, 0)',
+      formulaTli: 'TLI = (χ²_null/df_null − χ²/df) / (χ²_null/df_null − 1)',
+      formulaRmsea: 'RMSEA = √(max(χ² − df, 0) / (df · (N−1)))',
+      formulaSrmr: 'SRMR = √(2 · Σ ((sᵢⱼ − σᵢⱼ) / √(sᵢᵢ sⱼⱼ))² / (p(p+1)))',
+      formulaDf: 'df = p(p+1)/2 − t；t = p + m(m−1)/2 + p',
+      thresholdsTitle: '適配指標的判讀門檻',
+      thresholds:
+        'CFI / TLI：≥ .95 良好、≥ .90 可接受、< .90 不佳\n' +
+        'RMSEA：≤ .06 良好、≤ .08 可接受、> .10 不佳\n' +
+        'SRMR：≤ .08 良好\n' +
+        'χ²：對大樣本過於敏感；以 CFI/TLI/RMSEA/SRMR 為主',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 先看「是否收斂」\n' +
+        '2. 看 CFI / TLI / RMSEA / SRMR 整體適配\n' +
+        '3. 看「標準化負荷量」是否 ≥ 0.50\n' +
+        '4. 看「R²」每個指標 ≥ 0.30\n' +
+        '5. 看「因子相關」是否 ≤ 0.85',
+    },
+    apa: {
+      sentence:
+        '本研究以驗證性因素分析（CFA, ML 估計）檢驗 {m} 因子結構（{factorList}），共 {p} 個指標、N = {n}。' +
+        '模型適配如下：χ²({df}) = {chi2}, p = {pStr}；CFI = {cfi}；TLI = {tli}；RMSEA = {rmsea}（90% CI {rmseaCi}）；SRMR = {srmr}。' +
+        '整體而言，模型適配程度為「{overall}」。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      summary:
+        'N = {n}，{p} 個指標分屬 {m} 個因子；df = {df}。\n' +
+        'χ²({df}) = {chi2}, p = {pStr}；CFI = {cfi}；TLI = {tli}；\n' +
+        'RMSEA = {rmsea}，90% CI {rmseaCi}；SRMR = {srmr}。\n' +
+        '整體適配：{overall}。',
     },
   },
   mixedAnova: {
