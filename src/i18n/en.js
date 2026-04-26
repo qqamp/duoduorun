@@ -1142,6 +1142,113 @@ export default {
       sigNo: 'not significant',
     },
   },
+  efa: {
+    title: 'Exploratory factor analysis',
+    config: {
+      selectVarsTitle: 'Select variables for analysis',
+      selectVarsHint: 'At least 3 numeric variables (continuous or ordinal); ≥ 5 recommended',
+      needAtLeastThree: 'Tick at least 3 variables',
+      nFactorsTitle: 'Number of factors',
+      nFactorsHint: 'Empty → Kaiser rule (eigenvalue > 1); positive integer → force that count',
+      rotationTitle: 'Rotation',
+      rotations: {
+        varimax: 'Varimax (orthogonal)',
+        none: 'No rotation',
+      },
+      rotationHint: {
+        varimax: 'Orthogonal rotation: factors stay independent; cleaner structure',
+        none: 'Raw principal components; usually harder to interpret',
+      },
+    },
+    result: {
+      suitabilityTitle: 'Suitability',
+      eigenvaluesTitle: 'Eigenvalues and variance explained',
+      screeTitle: 'Scree plot',
+      loadingsTitle: 'Factor loadings matrix',
+      communalitiesTitle: 'Communalities (h²)',
+      cols: {
+        kmo: 'KMO (sampling adequacy)',
+        bartlett: "Bartlett's sphericity",
+        chi2: 'χ²',
+        df: 'df',
+        p: 'p',
+        factor: 'Factor',
+        eigenvalue: 'Eigenvalue',
+        percent: '% variance',
+        cumulative: 'Cumulative %',
+        variable: 'Variable',
+        h2: 'h²',
+        communalities: 'Communality',
+      },
+      kmoInterp: {
+        unacceptable: 'unacceptable', miserable: 'miserable', mediocre: 'mediocre',
+        middling: 'middling', meritorious: 'meritorious', marvelous: 'marvelous',
+      },
+      decisionRule: 'Retained {k} factors ({strategy})',
+      strategyKaiser: 'Kaiser: eigenvalue > 1',
+      strategyUser: 'user-specified',
+      bartlettSig: 'Sphericity significant (rejects identity matrix; suitable for EFA)',
+      bartlettNs: 'Sphericity not significant (weak inter-variable correlation; EFA may be unstable)',
+      cumNote: 'Cumulative variance ≥ {pct}% — {k} factors retained',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'Uncover the latent "common factor" structure underlying multiple observed variables. Answers:\n' +
+        '(1) How many latent constructs are there?\n' +
+        '(2) Which factor does each variable mainly load on?\n' +
+        '(3) How much variance does the model explain? (communalities + cumulative %)',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. At least ordinal scale (5+ point Likert OK)\n' +
+        '2. Sample size: 5N or N ≥ 100; KMO ≥ 0.6 for suitability\n' +
+        "3. Bartlett's sphericity must be significant (variables have correlations)\n" +
+        '4. Bivariate normality (for robust Pearson correlation matrix)\n' +
+        '5. Linear relationships',
+      formulasTitle: 'Core formulas',
+      formulaR: 'Correlation matrix R (p × p)',
+      formulaEig: 'R = V · diag(λ) · Vᵀ (Jacobi eigendecomposition)',
+      formulaLoad: 'PC loadings: A = V · diag(√λ); take first k columns → A_k',
+      formulaH2: 'Communality hᵢ² = Σⱼ aᵢⱼ² (proportion of variable i explained by k factors)',
+      formulaVarimax:
+        'Varimax: after Kaiser normalization, iteratively rotate factor pairs to maximize "squared loadings variance"\n' +
+        'V(L) = (1/p) Σⱼ [Σᵢ lᵢⱼ⁴ − (1/p)(Σᵢ lᵢⱼ²)²]',
+      formulaBartlett:
+        "Bartlett's: χ² = -((n-1) - (2p+5)/6) · ln|R|, df = p(p-1)/2",
+      readingTitle: 'How to read it',
+      reading:
+        '1. Check KMO (≥ 0.6 to be suitable) + Bartlett p (significant to be suitable)\n' +
+        '2. Look at the scree plot for an "elbow" — keep factors above it\n' +
+        '3. Compare with Kaiser rule (eigenvalue > 1)\n' +
+        '4. Inspect the rotated loadings matrix — each variable belongs to the factor with the largest |loading|\n' +
+        '5. Look at h² — if < 0.30, the variable is poorly explained; consider dropping\n\n' +
+        'Loading interpretation thresholds (absolute value):\n' +
+        '- ≥ 0.71 excellent\n' +
+        '- ≥ 0.63 very good\n' +
+        '- ≥ 0.55 good\n' +
+        '- ≥ 0.45 fair\n' +
+        '- ≥ 0.32 poor\n' +
+        '- < 0.32 consider dropping',
+    },
+    apa: {
+      sentence:
+        'An exploratory factor analysis (PCA extraction, Varimax rotation) was conducted on {p} variables. ' +
+        "KMO = {kmo} ({kmoInterp}); Bartlett's sphericity was significant, χ²({df}, N = {n}) = {chi2}, p = {pStr}. " +
+        '{k} factors were retained by Kaiser rule, cumulatively explaining {cumPct}% of variance.',
+      sentenceUnsuit:
+        'KMO for the {p} variables was {kmo} ({kmoInterp}); EFA suitability was {suitWord}.',
+      copyHint: 'Copy APA narrative',
+    },
+    interp: {
+      header: 'Reading',
+      summary:
+        "Suitability: KMO = {kmo} ({kmoInterp}); Bartlett's χ²({df}) = {chi2}, p = {pStr}.\n" +
+        '{k} factors retained, cumulative variance = {cumPct}%.\n' +
+        '{rotationLine}',
+      rotationLineYes: 'Varimax orthogonal rotation applied; loadings are easier to interpret.',
+      rotationLineNo: 'No rotation applied; raw PC loadings shown directly.',
+    },
+  },
   alpha: {
     title: "Cronbach's α reliability",
     selectVarsTitle: 'Select scale items',

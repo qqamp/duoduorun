@@ -21,6 +21,7 @@ import multipleRegression from './multipleRegression'
 import logisticRegression from './logisticRegression'
 import chiSquare from './chiSquare'
 import nonparametric from './nonparametric'
+import efa from './efa'
 
 const REGISTRY = {
   'desc-stats':         descriptive,
@@ -36,6 +37,7 @@ const REGISTRY = {
   'cronbach-alpha':     cronbachAlpha,
   'chi-square':         chiSquare,
   'nonparametric':      nonparametric,
+  'efa':                efa,
 }
 
 export function getAnalysisModule(id) {

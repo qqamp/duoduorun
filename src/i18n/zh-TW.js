@@ -1147,6 +1147,114 @@ export default {
       sigNo: '不顯著',
     },
   },
+  efa: {
+    title: '探索性因素分析',
+    config: {
+      selectVarsTitle: '選擇要分析的變數',
+      selectVarsHint: '至少 3 個數值變數（連續或順序）；建議 ≥ 5 個以呈現結構',
+      needAtLeastThree: '請至少勾選 3 個變數',
+      nFactorsTitle: '因子數',
+      nFactorsHint: '留空 → Kaiser 規則（特徵值 > 1）；填入正整數 → 強制使用該數',
+      rotationTitle: '轉軸方法',
+      rotations: {
+        varimax: 'Varimax（正交）',
+        none: '不轉軸',
+      },
+      rotationHint: {
+        varimax: '正交轉軸：因子之間相互獨立；單純結構詮釋',
+        none: '主成分原始 loadings；通常難以詮釋',
+      },
+    },
+    result: {
+      suitabilityTitle: '適合度檢定',
+      eigenvaluesTitle: '特徵值與變異解釋',
+      screeTitle: '陡坡圖（Scree Plot）',
+      loadingsTitle: '因子負荷量矩陣',
+      communalitiesTitle: '共同性（h²）',
+      cols: {
+        kmo: 'KMO（取樣適切性）',
+        bartlett: "Bartlett's 球形檢定",
+        chi2: 'χ²',
+        df: 'df',
+        p: 'p',
+        factor: '因子',
+        eigenvalue: '特徵值',
+        percent: '變異 %',
+        cumulative: '累積 %',
+        variable: '變數',
+        h2: 'h²',
+        communalities: '共同性',
+      },
+      kmoInterp: {
+        unacceptable: '不可接受', miserable: '極差', mediocre: '尚可', middling: '中等',
+        meritorious: '優良', marvelous: '極佳',
+      },
+      decisionRule: '採用 {k} 個因子（{strategy}）',
+      strategyKaiser: 'Kaiser：特徵值 > 1',
+      strategyUser: '使用者指定',
+      bartlettSig: '球形檢定顯著（拒絕單位矩陣假設，適合 EFA）',
+      bartlettNs: '球形檢定未顯著（變數彼此關聯弱，EFA 結果可能不穩）',
+      cumNote: '累積變異 ≥ {pct}% — 採用 {k} 個因子',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '從多個觀察變數中找出潛在的「共同因子」結構。\n' +
+        '回答的問題：\n' +
+        '（1）這些變數背後有幾個潛在構念？\n' +
+        '（2）每個變數主要反映哪個因子？（負荷量）\n' +
+        '（3）模型解釋了多少變異？（共同性 + 累積變異）',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 變數至少為順序測量（5 階以上 Likert 可用）\n' +
+        '2. 樣本量：至少 5N（每變數 5 筆），或 N ≥ 100；KMO ≥ 0.6 才適合\n' +
+        '3. Bartlett\'s 球形檢定須顯著（變數間有相關）\n' +
+        '4. 雙變量常態分布（Pearson 相關矩陣穩健性的需要）\n' +
+        '5. 線性關係',
+      formulasTitle: '核心公式',
+      formulaR: '相關矩陣 R（p × p）',
+      formulaEig: 'R = V · diag(λ) · Vᵀ（特徵分解，Jacobi 旋轉法）',
+      formulaLoad: '主成分負荷量：A = V · diag(√λ)；取前 k 行 → A_k',
+      formulaH2: '共同性 hᵢ² = Σⱼ aᵢⱼ²（採用 k 個因子後第 i 個變數的解釋程度）',
+      formulaVarimax:
+        'Varimax：對 A_k 做 Kaiser 標準化後，迭代旋轉每對因子使「平方負荷量變異」最大\n' +
+        'V(L) = (1/p) Σⱼ [Σᵢ lᵢⱼ⁴ − (1/p)(Σᵢ lᵢⱼ²)²]',
+      formulaBartlett:
+        "Bartlett's: χ² = -((n-1) - (2p+5)/6) · ln|R|，df = p(p-1)/2",
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 看 KMO（≥ 0.6 才適合）+ Bartlett\'s p（顯著才適合）\n' +
+        '2. 看陡坡圖找「斷點」—— 大於斷點的因子保留\n' +
+        '3. 看 Kaiser（特徵值 > 1）建議的因子數，與斷點對照\n' +
+        '4. 看轉軸後負荷量矩陣 — 每個變數歸屬最大絕對值的因子\n' +
+        '5. 看共同性 h² — < 0.30 表示該變數被模型解釋有限，考慮移除\n\n' +
+        '負荷量解讀慣例（絕對值）：\n' +
+        '- ≥ 0.71 優秀（excellent）\n' +
+        '- ≥ 0.63 很好（very good）\n' +
+        '- ≥ 0.55 好（good）\n' +
+        '- ≥ 0.45 普通（fair）\n' +
+        '- ≥ 0.32 可接受（poor）\n' +
+        '- < 0.32 應考慮移除',
+    },
+    apa: {
+      sentence:
+        '對 {p} 個變數進行探索性因素分析（主成分萃取，Varimax 轉軸）。' +
+        'KMO = {kmo}（{kmoInterp}），Bartlett\'s 球形檢定顯著（χ²({df}, N = {n}) = {chi2}, p = {pStr}）。' +
+        '採 Kaiser 規則保留 {k} 個因子，累積解釋變異 {cumPct}%。',
+      sentenceUnsuit:
+        '對 {p} 個變數的 KMO = {kmo}（{kmoInterp}），EFA 適合度{suitWord}。',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+    interp: {
+      header: '解讀',
+      summary:
+        '適合度：KMO = {kmo}（{kmoInterp}）；Bartlett χ²({df}) = {chi2}, p = {pStr}。\n' +
+        '採用 {k} 個因子，累積變異 {cumPct}%。\n' +
+        '{rotationLine}',
+      rotationLineYes: '已套用 Varimax 正交轉軸；負荷量矩陣較易詮釋。',
+      rotationLineNo: '未套用轉軸；單一因子或要求不轉軸時，原始負荷量直接呈現。',
+    },
+  },
   alpha: {
     title: "Cronbach's α 信度分析",
     selectVarsTitle: '選擇量表題',
