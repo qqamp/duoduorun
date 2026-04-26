@@ -37,6 +37,7 @@ export const ANALYSIS_GROUPS = [
       { id: 'fisher-exact',    i18nKey: 'fisherExact',     priority: 1 },
       { id: 'ancova',          i18nKey: 'ancova',          priority: 1 },
       { id: 'repeated-anova',  i18nKey: 'repAnova',        priority: 1 },
+      { id: 'mixed-anova',     i18nKey: 'mixedAnova',      priority: 1 },
     ],
   },
   {
@@ -58,6 +59,13 @@ export const ANALYSIS_GROUPS = [
       { id: 'efa',            i18nKey: 'efa',           priority: 3 },
       { id: 'kappa',          i18nKey: 'kappa',         priority: 1 },
       { id: 'icc',            i18nKey: 'icc',           priority: 1 },
+    ],
+  },
+  {
+    id: 'multivariate',
+    i18nKey: 'multivariate',
+    items: [
+      { id: 'manova',          i18nKey: 'manova',          priority: 2 },
     ],
   },
 ]

@@ -73,6 +73,7 @@ export default {
     inferential: '推論統計',
     regression: '相關與迴歸',
     scale: '量表分析',
+    multivariate: '多變量分析',
     comingSoon: '即將開放功能',
     comingSoonHint: '規劃中，敬請期待',
     cbSem: 'CB-SEM 結構方程模型',
@@ -114,6 +115,8 @@ export default {
     ancova: 'ANCOVA 共變數分析',
     icc: 'ICC 組內相關係數',
     repAnova: '重複量數 ANOVA',
+    mixedAnova: 'Mixed ANOVA（被試間×被試內）',
+    manova: 'MANOVA 多變量變異數分析',
   },
   panels: {
     configTitle: '分析設定',
@@ -677,6 +680,263 @@ export default {
       k2Note: '由於僅有 2 個條件，球形假設自動成立，未進行 Mauchly 檢定。',
       saLabel: '在球形假設成立',
       ggLabel: '經 Greenhouse-Geisser 校正',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  mixedAnova: {
+    title: 'Mixed ANOVA（被試間×被試內）',
+    config: {
+      betweenVar: '被試間因子',
+      pickBetween: '選擇被試間因子（categorical, ≥ 2 組）',
+      betweenHint: '每位受試者只屬於其中一組（例如：實驗組／控制組、男／女）',
+      selectConditionsTitle: '被試內因子（重複測量條件）',
+      selectConditionsHint: '勾選同一受試者在不同時點 / 條件下的測量欄位（至少 2 欄；每列代表一位受試者，每欄代表一個重複測量水準）',
+    },
+    result: {
+      summaryTitle: '整體摘要',
+      descTitle: '描述統計（被試間 × 被試內）',
+      mauchlyTitle: 'Mauchly 球形檢定（被試內因子）',
+      mauchlyLabel: '球形假設',
+      mauchlyOk: '球形假設成立',
+      mauchlyViolated: '球形假設違反',
+      mauchlyNotApplicable: '被試內因子只有 2 個水準，球形假設自動成立，不需 Mauchly 檢定。',
+      anovaTitle: 'Mixed ANOVA 表（含球形校正）',
+      recOk: 'Mauchly 球形檢定未違反，被試內主效應與交互作用均建議報告 Sphericity Assumed 列。',
+      recViolated: 'Mauchly 球形檢定 p < .05，球形假設違反。被試內主效應與交互作用建議報告 Greenhouse-Geisser 校正（保守、最常用）；若 ε_GG > 0.75 也可改用 Huynh-Feldt 校正。被試間主效應不受球形假設影響，照原 df 報告即可。',
+      recK2: '被試內因子只有 2 個水準，球形假設自動成立，被試內與交互作用直接報告 Sphericity Assumed 列即可。',
+      cols: {
+        n: '總 N', aGroups: 'a（組數）', bConditions: 'b（條件數）',
+        group: '組別', condition: '條件', mean: 'M', sd: 'SD',
+        source: '來源', eps: 'ε', ss: 'SS', df: 'df',
+        dfTreat: 'df（效應）', dfError: 'df（誤差）',
+        ms: 'MS', f: 'F', p: 'p',
+        partialEta2: '偏 η²', fAB: 'F (A×B)',
+      },
+      sections: {
+        between: '── 被試間 ──',
+        within: '── 被試內 ──',
+      },
+      sources: {
+        effectA: 'A（被試間主效應）',
+        subjWithinA: 'Subjects within A（誤差）',
+        effectB: 'B（被試內主效應）',
+        effectAB: 'A × B（交互作用）',
+        errorWithin: 'Error（被試內誤差）',
+        sa: '球形假設成立',
+        gg: 'Greenhouse-Geisser',
+        hf: 'Huynh-Feldt',
+        total: '總和',
+      },
+      effectInterp: { small: '小', medium: '中', large: '大' },
+    },
+    errors: {
+      pickBetween: '請先選擇被試間因子',
+      needAtLeast2: '請至少勾選 2 個被試內條件欄位',
+      needAtLeast2Groups: '被試間因子必須至少有 2 組',
+      tooFewN: '有效樣本太少（listwise 刪除後 N = {n}）',
+      tooFewPerGroup: '部分組別的人數不足（每組至少需 2 人）',
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      summary:
+        '本研究在 N = {n} 位受試者上執行混合設計變異數分析（被試間 a = {a} 組 × 被試內 b = {b} 個條件）。' +
+        '\n• 被試間主效應（{factorA}）：F({df1A}, {df2A}) = {fA}, p = {pA}，{sigA}；偏 η² = {peA}（{effectAStr}）。' +
+        '\n• 被試內主效應：F({df1B}, {df2B}) = {fB}, p = {pB}，{sigB}；偏 η² = {peB}（{effectBStr}）。' +
+        '\n• 交互作用（A × B）：F({df1AB}, {df2AB}) = {fAB}, p = {pAB}，{sigAB}；偏 η² = {peAB}（{effectABStr}）。',
+      useSA: '※ Mauchly 球形檢定未違反，被試內與交互作用採 Sphericity Assumed 列作為解讀依據。',
+      useGG: '※ Mauchly 球形檢定顯著違反，被試內主效應與交互作用已自動以 Greenhouse-Geisser 校正後的 df 與 p 為解讀依據。',
+      k2Note: '※ 被試內 b = 2，球形假設自動成立，無需校正。',
+      interactionWarn: '交互作用顯著時，建議優先解讀「在各組內被試內因子的單純主效應」與「在各條件下被試間的單純主效應」，而非直接解讀兩個主效應。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        '同時包含「被試間因子」與「被試內因子」的混合設計：每位受試者只屬於被試間因子的一個水準，但會在被試內因子的所有水準上重複測量。\n' +
+        '常見情境：實驗組 vs. 控制組各自的「前測 / 後測 / 追蹤」軌跡；不同部門的同一群員工在多個時點的態度。\n' +
+        '能同時檢驗：(1) 組間差異是否存在；(2) 條件間（時點間）差異是否存在；(3) 兩者交互作用 — 即「組間差異是否隨時間而變化」。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 受試者間獨立（不同人之間互不影響）\n' +
+        '2. 各組內、各條件下的依變項近似常態分布\n' +
+        '3. 變異數同質性（被試間因子的各組變異相近）\n' +
+        '4. 球形假設（被試內因子的對比變異數相等）\n' +
+        '   - b = 2 時自動成立\n' +
+        '   - b ≥ 3 用 Mauchly 檢定；違反需 Greenhouse-Geisser 或 Huynh-Feldt 校正\n' +
+        '5. 寬資料格式：每列 = 一位受試者；被試間欄為類別變項；被試內為 ≥ 2 個重複測量欄。',
+      formulasTitle: '核心公式',
+      formulaSStotal: 'SS_總 = Σ_g Σ_i Σ_j (Y_gij − Ȳ)²；df_總 = Nb − 1',
+      formulaSSA: 'SS_A = b · Σ_g n_g · (Ȳ_g.. − Ȳ)²；df = a − 1',
+      formulaSSsubj: 'SS_subjects(A) = b · Σ_g Σ_i (Ȳ_gi. − Ȳ_g..)²；df = N − a   ← A 的誤差項',
+      formulaSSB: 'SS_B = N · Σ_j (Ȳ_..j − Ȳ)²；df = b − 1',
+      formulaSSAB: 'SS_AB = Σ_g n_g · Σ_j (Ȳ_g.j − Ȳ_g.. − Ȳ_..j + Ȳ)²；df = (a−1)(b−1)',
+      formulaSSerror: 'SS_error(within) = SS_within − SS_B − SS_AB；df = (b−1)(N−a)   ← B 與 AB 的誤差項',
+      formulaFA: 'F_A = MS_A / MS_subjects(A)；df = (a−1, N−a)',
+      formulaFB: 'F_B = MS_B / MS_error(within)；df = (b−1, (b−1)(N−a))',
+      formulaFAB: 'F_AB = MS_AB / MS_error(within)；df = ((a−1)(b−1), (b−1)(N−a))',
+      formulaPartialEta2: '偏 η²_effect = SS_effect / (SS_effect + SS_對應誤差)',
+      formulaMauchly:
+        "Mauchly W = det(S) / (tr(S)/(b−1))^(b−1)；S 為 a 組合併的組內 (b−1) 維對比共變異矩陣\n" +
+        "χ² = −[ν − (2(b−1)² + (b−1) + 2) / (6(b−1))] · ln(W)；ν = N − a",
+      formulaGG: 'ε_GG = (tr S)² / [(b−1) · tr(S²)]',
+      formulaHF: 'ε_HF = min{ 1, [(N−a)(b−1)·ε_GG − 2] / [(b−1)·((N−a−1) − (b−1)·ε_GG)] }',
+      formulaLB: 'ε_LB = 1 / (b−1)',
+      readingTitle: '怎麼讀',
+      reading:
+        '1. 先看 A × B 交互作用：若顯著，主效應的解釋必須收斂為「在某條件下的組間差異」「在某組內的條件差異」這類單純主效應。\n' +
+        '2. 被試間 A 的 F 用 MS_subjects(A) 當分母，球形假設不影響它，照原 df 報告即可。\n' +
+        '3. 被試內 B 與交互作用 AB 共用 MS_error(within) 當分母，會受球形假設影響：\n' +
+        '   - Mauchly 不顯著 → Sphericity Assumed 列\n' +
+        '   - Mauchly 顯著 → Greenhouse-Geisser 列（最常用），ε_GG > 0.75 時也可採 Huynh-Feldt\n' +
+        '4. F 值在 SA / GG / HF 三列相同；只有 df（與隨之而來的 p）會被 ε 收縮。\n' +
+        '5. 效果量採偏 η²；A 的分母 SS 是 SS_subjects(A)，B 與 AB 的分母 SS 是 SS_error(within)。\n\n' +
+        '常見陷阱：\n' +
+        '- 把 A 的 F 也用 MS_error(within) 當分母 → 錯誤；A 的誤差項是 SS_subjects(A)。\n' +
+        "- 球形違反卻直接報未校正的 B、AB → df 高估、p 失真。\n" +
+        "- 各組人數差距過大時，建議檢查 Box's M 等變異數同質性檢定。",
+    },
+    apa: {
+      sentence:
+        '針對 N = {n} 位受試者執行混合設計變異數分析，被試間因子為 {factorA}（a = {a} 組），被試內因子為 b = {b} 個條件（{condList}）。' +
+        '{sphericitySection}' +
+        '被試間主效應 {factorA} 的 F({df1A}, {df2A}) = {fA}, p = {pA}，偏 η² = {peA}，{sigA}；' +
+        '在{correction}下，被試內主效應 F({df1B}, {df2B}) = {fB}, p = {pB}，偏 η² = {peB}，{sigB}；' +
+        '交互作用（{factorA} × 條件）F({df1AB}, {df2AB}) = {fAB}, p = {pAB}，偏 η² = {peAB}，{sigAB}。',
+      sphericityOk:
+        'Mauchly 球形檢定未違反球形假設（W = {w}，χ²({df}) = {chi2}, p = {pStr}）。',
+      sphericityViolated:
+        'Mauchly 球形檢定顯示球形假設違反（W = {w}，χ²({df}) = {chi2}, p = {pStr}），故被試內主效應與交互作用採 Greenhouse-Geisser 校正（ε = {epsGG}）報告。',
+      k2Note: '由於被試內因子僅 2 個水準，球形假設自動成立，未進行 Mauchly 檢定。',
+      saLabel: '球形假設成立',
+      ggLabel: '經 Greenhouse-Geisser 校正',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      copyHint: '一鍵複製 APA 敘述',
+    },
+  },
+  manova: {
+    title: 'MANOVA 多變量變異數分析',
+    config: {
+      factorLabel: '因子（類別變項，≥ 2 組）',
+      pickFactor: '請選因子',
+      factorHint: '需為類別型變數，至少 2 個層級',
+      dvLabel: '依變項（≥ 2 個連續變項）',
+      dvHint: '勾選下方數值變項作為依變項；至少需要 2 個 DV，因子不可同時為 DV',
+    },
+    errors: {
+      pickFactor: '請選擇因子',
+      pickDVs: '請至少勾選 2 個依變項',
+      'factor-in-dvs': '因子不可同時為依變項',
+      factorBadGroups: '因子目前僅有 {k} 組，至少需要 2 組',
+      tooFewN: '有效樣本數不足（N = {N}，至少需要 N > k + p；目前 k = {k}, p = {p}）',
+      'singular-matrix': "資料共線性過高，E + H 不可逆",
+      'length-mismatch': '資料長度不一致',
+    },
+    result: {
+      groups: '組',
+      dvs: '個 DV',
+      descTitle: '各組敘述統計（M (SD)）',
+      descHint: '每格顯示「平均 (標準差)」，列為組、欄為各依變項。',
+      boxMTitle: "Box's M 同質共變數矩陣檢定",
+      boxMLabel: '共變數矩陣同質性',
+      boxMOk: '通過（p > .001）',
+      boxMViolated: '違反（p ≤ .001）',
+      boxMNotApplicable: '無法計算（可能某組樣本太小或共變數矩陣為奇異）。',
+      boxMViolatedWarn:
+        "警告：Box's M 顯著（p ≤ .001）— 不同組的共變數矩陣不同質，建議優先報告 Pillai's V（對共變數矩陣異質最穩健）；Wilks 與 Hotelling-Lawley 在此情境下可能膨脹型 I 錯誤。",
+      multTitle: '多變量檢定',
+      tests: {
+        wilks: "Wilks' Λ",
+        pillai: "Pillai's V",
+        hotellingLawley: 'Hotelling-Lawley T',
+        roy: "Roy's Largest Root",
+      },
+      upperBound: '上界',
+      cols: {
+        test: '檢定', statistic: '統計量', f: 'F approx',
+        df1: 'df₁', df2: 'df₂', p: 'p', partialEta2: 'partial η²',
+        group: '組', idx: '序', eigenvalue: '特徵值 λᵢ',
+        contribution: 'λ/(1+λ)',
+      },
+      effectInterp: { small: '小效果', medium: '中效果', large: '大效果' },
+      eigenTitle: 'E⁻¹·H 特徵值',
+      eigenHint: "λ/(1+λ) 為各特徵根對 Pillai's V 的貢獻；Roy's 統計量採用最大者。",
+      recommendation:
+        "Pillai's V 對假設違反（特別是共變數矩陣不同質、樣本不平衡）最穩健；Wilks' Λ 為慣例首選；當 Box's M 違反時建議改報 Pillai。Roy's Largest Root 為上界，宜搭配其他統計量呈現。",
+    },
+    interp: {
+      header: '解讀',
+      sigYes: '達顯著',
+      sigNo: '未達顯著',
+      overall:
+        '本研究以 MANOVA 檢定 {factor}（k = {k} 組）對 {p} 個依變項組成的多變量向量是否有差異（N = {n}）。\n' +
+        "Wilks' Λ = {wilks}, F({wDf1}, {wDf2}) = {wF}, p = {wPstr} → {sigWord}；partial η² = {wEta2}（{wEtaInterp}）。\n" +
+        "Pillai's V = {pillai}, F = {pF}, p = {pPstr}；partial η² = {pEta2}（{pEtaInterp}）。",
+      boxLine: "Box's M：χ²({df}) = {chi2}, p = {pStr} — {verdict}",
+      boxOk: '共變數矩陣同質假設通過',
+      boxBad: "共變數矩陣同質假設違反，建議優先報告 Pillai's V",
+      boxNotApplicable: "Box's M 無法計算（樣本或共變數矩陣條件不足）。",
+      sigFollowUp:
+        '整體多變量效應顯著，後續可逐一對每個 DV 跑單變量 ANOVA（建議搭配 Bonferroni 校正 α 水準）以辨識是哪些 DV 驅動差異。',
+      nsAdvice: '整體多變量效應未達顯著，依慣例不建議再追單變量檢定。',
+    },
+    notes: {
+      purposeTitle: '用途',
+      purpose:
+        'MANOVA 用於檢定一個類別因子對「多個連續依變項組成的向量」是否造成差異。\n' +
+        '常見情境：\n' +
+        '1. 比較不同教學法對 [閱讀、寫作、數學] 三項表現的整體差異。\n' +
+        '2. 不同部門員工在 [工作滿意度、組織承諾、離職意圖] 的差異。\n' +
+        '3. 想避免對每個 DV 跑單變量 ANOVA 造成的型 I 錯誤膨脹。\n\n' +
+        '優點：考慮 DV 之間的相關，捕捉到單變量 ANOVA 看不到的多變量模式。',
+      assumpTitle: '前提假設',
+      assumptions:
+        '1. 多變量常態（每組內，DV 向量服從多元常態）\n' +
+        "2. 共變數矩陣同質（各組的 Σ 相同）→ 用 Box's M 檢定\n" +
+        '3. 觀察值獨立\n' +
+        '4. DV 為連續尺度（區間或比率）\n' +
+        '5. 樣本量：每組 n_g 應大於 DV 數 p（建議 n_g ≥ 20+p）\n' +
+        '6. 無嚴重多元離群值（Mahalanobis distance 檢視）',
+      formulasTitle: '核心公式',
+      formulaH: 'H = Σ_g n_g · (Ȳ_g − Ȳ)ᵀ (Ȳ_g − Ȳ)　（組間 SSCP）',
+      formulaE: 'E = Σ_g Σ_i (Y_gi − Ȳ_g)ᵀ (Y_gi − Ȳ_g)　（組內 SSCP）',
+      formulaWilks: "Wilks' Λ = det(E) / det(E + H)",
+      formulaPillai: "Pillai's V = trace((E+H)⁻¹·H) = Σ λᵢ/(1+λᵢ)",
+      formulaHL: 'Hotelling-Lawley T = trace(E⁻¹·H) = Σ λᵢ',
+      formulaRoy: "Roy's Largest Root = max λᵢ（λᵢ 為 E⁻¹H 的特徵值）",
+      formulaBoxM:
+        "Box's M = (N−k)·ln|S_p| − Σ_g (n_g−1)·ln|S_g|；χ² = (1−c1)·M，df = (k−1)·p·(p+1)/2",
+      readingTitle: '怎麼讀',
+      reading:
+        "1. 先看 Box's M：若違反（p ≤ .001），改報 Pillai's V。\n" +
+        '2. 看四個多變量統計量是否一致顯著：Wilks、Pillai、Hotelling-Lawley、Roy。\n' +
+        '   · 結論一致 → 訊號穩定。\n' +
+        '   · 不一致時，優先採用 Pillai（最穩健）。\n' +
+        '3. 看 partial η²（Pillai = V/s；Wilks = 1 − Λ^(1/s)）：< .06 小、< .14 中、≥ .14 大。\n' +
+        '4. 多變量顯著後，再對每個 DV 跑單變量 ANOVA + 適當的多重比較校正（如 Bonferroni）追蹤具體驅動者。\n' +
+        "5. Roy's Largest Root 是「上界」— 不適合單獨報告，搭配其他統計量呈現。\n\n" +
+        '常見陷阱：\n' +
+        '- DV 之間幾乎完全相關 → MANOVA 與其中一個 ANOVA 結果幾乎相同，多變量無增益。\n' +
+        '- DV 之間完全無關 → 多變量檢定力反而下降，不如逐一 ANOVA + Bonferroni。\n' +
+        '- 樣本不平衡 + 共變數矩陣異質 → 必用 Pillai。',
+    },
+    apa: {
+      sentence:
+        '本研究進行單因子 MANOVA，以檢視 {factor}（k = {k} 組）對 {dvList} 等 {p} 個依變項所組成多變量向量的影響（N = {n}）。' +
+        "結果顯示多變量主效應達顯著，Wilks' Λ = {lambda}, F({wDf1}, {wDf2}) = {wF}, p = {wPstr}，partial η² = {wEta2}。" +
+        '{pillaiSection}{boxSection}',
+      sentenceNs:
+        '本研究進行單因子 MANOVA，以檢視 {factor}（k = {k} 組）對 {dvList} 等 {p} 個依變項所組成多變量向量的影響（N = {n}）。' +
+        "結果顯示多變量主效應未達顯著，Wilks' Λ = {lambda}, F({wDf1}, {wDf2}) = {wF}, p = {wPstr}，partial η² = {wEta2}。" +
+        '{pillaiSection}{boxSection}',
+      pillaiLine:
+        " 同時報告 Pillai's V = {v}, F({df1}, {df2}) = {f}, p = {pStr}，partial η² = {eta2}。",
+      boxOk:
+        " Box's M 檢定 χ²({df}) = {chi2}, p = {pStr}，未違反共變數矩陣同質假設。",
+      boxBad:
+        " Box's M 檢定 χ²({df}) = {chi2}, p = {pStr}，違反共變數矩陣同質假設，故以 Pillai's V 為主要解讀依據。",
+      boxNotApplicable: " Box's M 無法計算（樣本或共變數矩陣條件不足）。",
       copyHint: '一鍵複製 APA 敘述',
     },
   },

@@ -29,6 +29,8 @@ import hierarchicalRegression from './hierarchicalRegression'
 import ancova from './ancova'
 import icc from './icc'
 import repeatedAnova from './repeatedAnova'
+import mixedAnova from './mixedAnova'
+import manova from './manova'
 
 const REGISTRY = {
   'desc-stats':         descriptive,
@@ -52,6 +54,8 @@ const REGISTRY = {
   'ancova':             ancova,
   'icc':                icc,
   'repeated-anova':     repeatedAnova,
+  'mixed-anova':        mixedAnova,
+  'manova':             manova,
 }
 
 export function getAnalysisModule(id) {

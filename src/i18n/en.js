@@ -67,6 +67,7 @@ export default {
     inferential: 'Inferential statistics',
     regression: 'Correlation & regression',
     scale: 'Scale analysis',
+    multivariate: 'Multivariate analysis',
     comingSoon: 'Coming soon',
     comingSoonHint: 'Planned, not yet available',
     cbSem: 'CB-SEM (covariance-based)',
@@ -108,6 +109,8 @@ export default {
     ancova: 'ANCOVA',
     icc: 'ICC (intraclass correlation)',
     repAnova: 'Repeated measures ANOVA',
+    mixedAnova: 'Mixed ANOVA',
+    manova: 'MANOVA',
   },
   panels: {
     configTitle: 'Analysis settings',
@@ -749,6 +752,236 @@ export default {
       saLabel: 'sphericity assumed',
       ggLabel: 'the Greenhouse-Geisser correction',
       copyHint: 'Copy APA narrative',
+    },
+  },
+  mixedAnova: {
+    title: 'Mixed ANOVA',
+    config: {
+      betweenVar: 'Between-subjects factor',
+      pickBetween: 'Pick the between-subjects factor (categorical, >= 2 groups)',
+      betweenHint: 'Each subject belongs to exactly one level (e.g. treatment vs. control, male vs. female).',
+      selectConditionsTitle: 'Within-subjects factor (repeated conditions)',
+      selectConditionsHint: 'Pick the columns measured at different time points / conditions on the same subjects (>= 2 columns required; each row = one subject, each column = one repeated level).',
+    },
+    result: {
+      summaryTitle: 'Overall summary',
+      descTitle: 'Descriptives (between x within)',
+      mauchlyTitle: "Mauchly's test of sphericity (within factor)",
+      mauchlyLabel: 'Sphericity assumption',
+      mauchlyOk: 'Sphericity satisfied',
+      mauchlyViolated: 'Sphericity violated',
+      mauchlyNotApplicable: "With only 2 within-subjects levels, sphericity is automatically satisfied; Mauchly's test is not applicable.",
+      anovaTitle: 'Mixed ANOVA table (with sphericity corrections)',
+      recOk: "Mauchly's test is not significant; report the Sphericity-Assumed row for both the within main effect and the interaction.",
+      recViolated: "Mauchly's test is significant (p < .05); report the Greenhouse-Geisser-corrected row for the within main effect and the interaction; if eps_GG > 0.75, the Huynh-Feldt correction can also be reported. The between-subjects main effect is unaffected by sphericity.",
+      recK2: 'With b = 2 the sphericity assumption is automatically satisfied; report the Sphericity-Assumed row directly for the within and interaction effects.',
+      cols: {
+        n: 'Total N', aGroups: 'a (groups)', bConditions: 'b (conditions)',
+        group: 'Group', condition: 'Condition', mean: 'M', sd: 'SD',
+        source: 'Source', eps: 'eps', ss: 'SS', df: 'df',
+        dfTreat: 'df (effect)', dfError: 'df (error)',
+        ms: 'MS', f: 'F', p: 'p',
+        partialEta2: 'partial eta-sq', fAB: 'F (A x B)',
+      },
+      sections: {
+        between: '-- Between-subjects --',
+        within: '-- Within-subjects --',
+      },
+      sources: {
+        effectA: 'A (between-subjects main)',
+        subjWithinA: 'Subjects within A (error)',
+        effectB: 'B (within-subjects main)',
+        effectAB: 'A x B (interaction)',
+        errorWithin: 'Error (within)',
+        sa: 'Sphericity assumed',
+        gg: 'Greenhouse-Geisser',
+        hf: 'Huynh-Feldt',
+        total: 'Total',
+      },
+      effectInterp: { small: 'small', medium: 'medium', large: 'large' },
+    },
+    errors: {
+      pickBetween: 'Please select a between-subjects factor first.',
+      needAtLeast2: 'Please select at least 2 within-subjects condition columns.',
+      needAtLeast2Groups: 'The between-subjects factor must have at least 2 groups.',
+      tooFewN: 'Effective sample is too small (N = {n} after listwise deletion).',
+      tooFewPerGroup: 'Some groups have fewer than 2 subjects.',
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      summary:
+        'A mixed ANOVA was conducted on N = {n} subjects (between-subjects a = {a} groups x within-subjects b = {b} conditions).' +
+        '\n- Between-subjects main effect ({factorA}): F({df1A}, {df2A}) = {fA}, p = {pA}, which is {sigA}; partial eta-sq = {peA} ({effectAStr}).' +
+        '\n- Within-subjects main effect: F({df1B}, {df2B}) = {fB}, p = {pB}, which is {sigB}; partial eta-sq = {peB} ({effectBStr}).' +
+        '\n- Interaction (A x B): F({df1AB}, {df2AB}) = {fAB}, p = {pAB}, which is {sigAB}; partial eta-sq = {peAB} ({effectABStr}).',
+      useSA: "Note: Mauchly's test was not significant; the Sphericity-Assumed row is used for the within and interaction effects.",
+      useGG: "Note: Mauchly's test indicated a sphericity violation; the Greenhouse-Geisser-corrected df and p have been used for the within and interaction effects.",
+      k2Note: 'Note: with within b = 2, sphericity is automatically satisfied; no correction is needed.',
+      interactionWarn: 'When the interaction is significant, prefer interpreting simple main effects rather than marginal main effects.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'A mixed design has both a between-subjects factor and a within-subjects factor.\nTypical uses: treatment vs. control across pretest / posttest / follow-up; departments of employees over multiple time points.\nTests three effects simultaneously: between-group differences, within-condition differences, and the interaction.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Independence of subjects across groups\n' +
+        '2. Approximately normal DV within each group x condition cell\n' +
+        '3. Homogeneity of variance across between-subject groups\n' +
+        '4. Sphericity of the within-subjects contrast covariance\n' +
+        '5. Wide-format data',
+      formulasTitle: 'Core formulae',
+      formulaSStotal: 'SS_total; df_total = Nb - 1',
+      formulaSSA: 'SS_A; df = a - 1',
+      formulaSSsubj: 'SS_subjects(A); df = N - a',
+      formulaSSB: 'SS_B; df = b - 1',
+      formulaSSAB: 'SS_AB; df = (a-1)(b-1)',
+      formulaSSerror: 'SS_error(within); df = (b-1)(N-a)',
+      formulaFA: 'F_A = MS_A / MS_subjects(A)',
+      formulaFB: 'F_B = MS_B / MS_error(within)',
+      formulaFAB: 'F_AB = MS_AB / MS_error(within)',
+      formulaPartialEta2: 'partial eta-sq_effect = SS_effect / (SS_effect + corresponding error)',
+      formulaMauchly: "Mauchly W on pooled within-group covariance",
+      formulaGG: 'eps_GG = (tr S)^2 / [(b-1) * tr(S^2)]',
+      formulaHF: 'eps_HF formula',
+      formulaLB: 'eps_LB = 1 / (b-1)',
+      readingTitle: 'How to read',
+      reading:
+        '1. Inspect the A x B interaction first.\n' +
+        '2. The between A test uses MS_subjects(A) as denominator and is unaffected by sphericity.\n' +
+        '3. The within B and the AB interaction share MS_error(within) and are sphericity-sensitive.\n' +
+        '4. F is identical across SA / GG / HF rows; only df (and p) shrink.\n' +
+        '5. Use partial eta-sq for effect sizes.',
+    },
+    apa: {
+      sentence:
+        'A mixed ANOVA was conducted on N = {n} subjects with {factorA} as the between-subjects factor (a = {a}) and a within-subjects factor of b = {b} conditions ({condList}). ' +
+        '{sphericitySection} ' +
+        '{factorA}: F({df1A}, {df2A}) = {fA}, p = {pA}, partial eta-sq = {peA}, {sigA}; ' +
+        'under {correction}, the within-subjects main effect was {sigB}, F({df1B}, {df2B}) = {fB}, p = {pB}, partial eta-sq = {peB}; ' +
+        'the interaction was {sigAB}, F({df1AB}, {df2AB}) = {fAB}, p = {pAB}, partial eta-sq = {peAB}.',
+      sphericityOk: "Mauchly's test did not indicate a violation (W = {w}, chi-sq({df}) = {chi2}, p = {pStr}).",
+      sphericityViolated: "Mauchly's test indicated a violation (W = {w}, chi-sq({df}) = {chi2}, p = {pStr}); GG correction (eps = {epsGG}) applied to within and interaction effects.",
+      k2Note: 'With only 2 within levels, sphericity is automatically satisfied.',
+      saLabel: 'sphericity assumed',
+      ggLabel: 'the Greenhouse-Geisser correction',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      copyHint: 'Copy APA narrative',
+    },
+  },
+  manova: {
+    title: 'MANOVA (Multivariate ANOVA)',
+    config: {
+      factorLabel: 'Factor (categorical, >= 2 levels)',
+      pickFactor: 'Pick the factor',
+      factorHint: 'Must be categorical with at least 2 levels',
+      dvLabel: 'Dependent variables (>= 2 continuous)',
+      dvHint: 'Tick numeric variables to include as DVs; need at least 2 DVs, factor cannot also be a DV',
+    },
+    errors: {
+      pickFactor: 'Please pick the factor',
+      pickDVs: 'Please tick at least 2 dependent variables',
+      'factor-in-dvs': 'The factor cannot also be a DV',
+      factorBadGroups: 'The factor has only {k} group(s); at least 2 are required',
+      tooFewN: 'Not enough valid cases (N = {N}; need N > k + p; current k = {k}, p = {p})',
+      'singular-matrix': 'Data is too collinear; E + H is singular',
+      'length-mismatch': 'Data length mismatch',
+    },
+    result: {
+      groups: 'groups',
+      dvs: 'DVs',
+      descTitle: 'Group descriptives, M (SD)',
+      descHint: 'Each cell shows mean (SD); rows = groups, columns = DVs.',
+      boxMTitle: "Box's M test of equality of covariance matrices",
+      boxMLabel: 'Covariance homogeneity',
+      boxMOk: 'OK (p > .001)',
+      boxMViolated: 'violated (p <= .001)',
+      boxMNotApplicable: 'Not computable (a group may be too small or the matrix is singular).',
+      boxMViolatedWarn:
+        "Warning: Box's M is significant - covariance matrices differ across groups. Prefer Pillai's V; Wilks and Hotelling-Lawley may inflate Type I error.",
+      multTitle: 'Multivariate tests',
+      tests: {
+        wilks: "Wilks' Lambda",
+        pillai: "Pillai's V",
+        hotellingLawley: 'Hotelling-Lawley T',
+        roy: "Roy's Largest Root",
+      },
+      upperBound: 'upper bound',
+      cols: {
+        test: 'Test', statistic: 'Statistic', f: 'F approx',
+        df1: 'df1', df2: 'df2', p: 'p', partialEta2: 'partial eta-sq',
+        group: 'Group', idx: '#', eigenvalue: 'Eigenvalue lambda_i',
+        contribution: 'lambda/(1+lambda)',
+      },
+      effectInterp: { small: 'small', medium: 'medium', large: 'large' },
+      eigenTitle: 'Eigenvalues of E^-1 H',
+      eigenHint: "lambda/(1+lambda) is each root's contribution to Pillai's V; Roy uses the largest.",
+      recommendation:
+        "Pillai's V is most robust; Wilks' Lambda is the conventional default; report Pillai when Box's M is violated. Roy's largest root is an upper bound and should be paired with another statistic.",
+    },
+    interp: {
+      header: 'Interpretation',
+      sigYes: 'significant',
+      sigNo: 'not significant',
+      overall:
+        'A one-way MANOVA tested whether {factor} (k = {k} groups) affected the multivariate vector of {p} DVs (N = {n}).\n' +
+        "Wilks' Lambda = {wilks}, F({wDf1}, {wDf2}) = {wF}, p = {wPstr} -> {sigWord}; partial eta-sq = {wEta2} ({wEtaInterp}).\n" +
+        "Pillai's V = {pillai}, F = {pF}, p = {pPstr}; partial eta-sq = {pEta2} ({pEtaInterp}).",
+      boxLine: "Box's M: chi-sq({df}) = {chi2}, p = {pStr} - {verdict}",
+      boxOk: 'covariance homogeneity satisfied',
+      boxBad: "covariance homogeneity violated; prefer Pillai's V",
+      boxNotApplicable: "Box's M not computable (insufficient sample or singular matrix).",
+      sigFollowUp: 'Significant; follow-up univariate ANOVAs on each DV (with Bonferroni alpha) can identify which DVs drive the effect.',
+      nsAdvice: 'Not significant; conventional practice does not pursue univariate follow-ups.',
+    },
+    notes: {
+      purposeTitle: 'Purpose',
+      purpose:
+        'MANOVA tests whether a categorical factor affects a vector of multiple continuous DVs simultaneously.\nAdvantage: leverages correlation between DVs to detect multivariate patterns hidden from univariate tests.',
+      assumpTitle: 'Assumptions',
+      assumptions:
+        '1. Multivariate normality\n' +
+        "2. Homogeneity of covariance matrices (Box's M)\n" +
+        '3. Independent observations\n' +
+        '4. DVs continuous\n' +
+        '5. n_g > p (recommended n_g >= 20 + p)\n' +
+        '6. No severe multivariate outliers',
+      formulasTitle: 'Core formulas',
+      formulaH: 'H = sum_g n_g * (Y_g - Y)^T (Y_g - Y)',
+      formulaE: 'E = sum_g sum_i (Y_gi - Y_g)^T (Y_gi - Y_g)',
+      formulaWilks: "Wilks' Lambda = det(E) / det(E + H)",
+      formulaPillai: "Pillai's V = trace((E+H)^-1 H)",
+      formulaHL: 'Hotelling-Lawley T = trace(E^-1 H)',
+      formulaRoy: "Roy = max lambda_i",
+      formulaBoxM: "Box's M with chi-sq approximation",
+      readingTitle: 'How to read',
+      reading:
+        "1. Check Box's M first.\n" +
+        '2. Compare four multivariate tests; prefer Pillai if disagree.\n' +
+        '3. Inspect partial eta-sq.\n' +
+        '4. Significant -> follow-up univariate ANOVAs with Bonferroni.\n' +
+        "5. Roy's largest root is an upper bound.",
+    },
+    apa: {
+      sentence:
+        'A one-way MANOVA was conducted to examine the effect of {factor} (k = {k} groups) on the multivariate vector of {dvList} ({p} DVs; N = {n}). ' +
+        "The multivariate main effect was significant, Wilks' Lambda = {lambda}, F({wDf1}, {wDf2}) = {wF}, p = {wPstr}, partial eta-sq = {wEta2}." +
+        '{pillaiSection}{boxSection}',
+      sentenceNs:
+        'A one-way MANOVA was conducted to examine the effect of {factor} (k = {k} groups) on the multivariate vector of {dvList} ({p} DVs; N = {n}). ' +
+        "The multivariate main effect was not significant, Wilks' Lambda = {lambda}, F({wDf1}, {wDf2}) = {wF}, p = {wPstr}, partial eta-sq = {wEta2}." +
+        '{pillaiSection}{boxSection}',
+      pillaiLine:
+        " Pillai's V was also reported: V = {v}, F({df1}, {df2}) = {f}, p = {pStr}, partial eta-sq = {eta2}.",
+      boxOk:
+        " Box's M test, chi-sq({df}) = {chi2}, p = {pStr}, did not violate the covariance-homogeneity assumption.",
+      boxBad:
+        " Box's M test, chi-sq({df}) = {chi2}, p = {pStr}, violated the covariance-homogeneity assumption, so Pillai's V is treated as the primary statistic.",
+      boxNotApplicable: " Box's M was not computable (insufficient sample or singular matrix).",
+      copyHint: 'Copy APA narrative to clipboard',
     },
   },
   kappa: {
